@@ -1,0 +1,30 @@
+{{define "common/header"}}
+<!doctype html>
+<html lang="zh">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="shortcut icon" type="image/png" href="/static/image/logo.png">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://cdn.bootcss.com/octicons/4.4.0/font/octicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/gocd.css">
+
+    <title>GoCD —— Golang 开源持续交付系统</title>
+</head>
+<body>
+<div class="p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <div class="container d-flex flex-column flex-md-row align-items-center">
+        <h5 class="my-0 mr-md-auto font-weight-normal">GoCD</h5>
+        <nav class="my-2 my-md-0 mr-md-3">
+            <a class="p-2 text-dark" href="#">仓库管理</a>
+            <a class="p-2 text-dark" href="#">部署记录</a>
+            <a class="p-2 text-dark" href="#">通知设置</a>
+        </nav>
+        <a class="btn btn-outline-primary" href="#"><span class="octicon octicon-mark-github"></span> 登陆</a>
+    </div>
+</div>
+{{end}}
