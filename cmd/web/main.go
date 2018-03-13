@@ -14,7 +14,7 @@ import (
 
 func init() {
 	// init sentry dsn
-	var webDSN = "https://b2be1d09de6a4765aa1bf2f02c58d156:f1598a174c9441648e09b7d88e29d7a6@sentry.io/301979"
+	var webDSN = "xxxxxx"
 	hook, err := logrus_sentry.NewSentryHook(webDSN, []logrus.Level{
 		logrus.PanicLevel,
 		logrus.FatalLevel,
