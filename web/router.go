@@ -62,14 +62,14 @@ func initEngine() *gin.Engine {
 			c.Abort()
 		},
 	}))
-	r.Static("/static", "data/static")
-	r.LoadHTMLGlob("data/template/**/*")
+	r.Static("/static", "resource/static")
+	r.LoadHTMLGlob("resource/template/**/*")
 	return r
 }
 
 func initService() {
 	// init service
-	db, err := gorm.Open("sqlite3", "app.db?_loc="+gocd.Conf.Section("gocd").Key("loc").String())
+	db, err := gorm.Open("sqlite3", "conf/app.db?_loc="+gocd.Conf.Section("gocd").Key("loc").String())
 	if err != nil {
 		gocd.Log.Panicln(err)
 	}

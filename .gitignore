@@ -1,4 +1,4 @@
 /.idea
 /cmd/web/web
-/cmd/web/app.ini
-/cmd/web/app.db
+/cmd/web/data
+/cmd/web/conf

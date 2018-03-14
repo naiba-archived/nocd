@@ -14,7 +14,7 @@ import (
 
 func init() {
 	// initial global settings
-	gocd.Initial("app.ini")
+	gocd.Initial("conf/app.ini")
 	// initial sentry dsn
 	hook, err := logrus_sentry.NewSentryHook(gocd.Conf.Section("third_party").Key("sentry_dsn").String(), []logrus.Level{
 		logrus.PanicLevel,
