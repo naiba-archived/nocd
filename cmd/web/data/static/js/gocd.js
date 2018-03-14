@@ -3,3 +3,12 @@
  * All rights reserved.
  */
 
+function login() {
+    $("#loginForm").submit()
+}
+
+function logout() {
+    $.removeCookie("uid", {path: '/'});
+    $.removeCookie("token", {path: '/'});
+    window.location.href = "/"
+}

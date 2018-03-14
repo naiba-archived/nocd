@@ -21,10 +21,27 @@
         <h5 class="my-0 mr-md-auto font-weight-normal">GoCD</h5>
         <nav class="my-2 my-md-0 mr-md-3">
             <a class="p-2 text-dark" href="#">仓库管理</a>
-            <a class="p-2 text-dark" href="#">部署记录</a>
+            <a class="p-2 text-dark" href="#">交付记录</a>
             <a class="p-2 text-dark" href="#">通知设置</a>
         </nav>
-        <a class="btn btn-outline-primary" href="#"><span class="octicon octicon-mark-github"></span> 登陆</a>
+    {{if .isLogin}}
+        <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+               aria-haspopup="true" aria-expanded="false">
+                <span class="octicon octicon-mark-github"></span> {{.user.GName}}
+            </a>
+            <div class="dropdown-menu" style="min-width: auto" aria-labelledby="navbarDropdownMenuLink">
+                <button class="dropdown-item" onclick="logout()">注销</button>
+            </div>
+        </div>
+    {{else}}
+        <form id="loginForm" action="/oauth2/login" method="post">
+            <input type="hidden" name="_csrf" value="{{.csrf_token}}">
+        </form>
+        <button onclick="login()" class="btn btn-outline-primary"><span
+                class="octicon octicon-mark-github"></span> 登陆
+        </button>
+    {{end}}
     </div>
 </div>
 {{end}}
