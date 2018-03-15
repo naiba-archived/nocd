@@ -9,7 +9,7 @@ import (
 	"github.com/evalphobia/logrus_sentry"
 	"github.com/sirupsen/logrus"
 	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/web"
+	"git.cm/naiba/gocd/router"
 )
 
 func init() {
@@ -29,5 +29,5 @@ func init() {
 }
 
 func main() {
-	web.Start()
+	router.Start()
 }

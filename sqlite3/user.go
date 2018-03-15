@@ -23,8 +23,8 @@ func (us *UserService) CreateUser(u *gocd.User) error {
 	return us.DB.Create(u).Error
 }
 
-func (us *UserService) UpdateUser(u *gocd.User) error {
-	return us.DB.Save(u).Error
+func (us *UserService) UpdateUser(u *gocd.User, cols ... string) error {
+	return us.DB.Model(u).Select(cols).Updates(u).Error
 }
 
 func (us *UserService) VerifyUser(uid, token string) (*gocd.User, error) {

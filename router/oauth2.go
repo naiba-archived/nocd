@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package web
+package router
 
 import (
 	"fmt"
@@ -18,6 +18,7 @@ import (
 	"github.com/google/go-github/github"
 	"git.cm/naiba/com"
 	"git.cm/naiba/gocd"
+	"git.cm/naiba/gocd/ssh"
 )
 
 func serveOauth2(r *gin.Engine) {
@@ -68,11 +69,19 @@ func serveOauth2(r *gin.Engine) {
 			if err != nil {
 				// 首次登陆
 				if err == gorm.ErrRecordNotFound {
+					pub, private, err := ssh.GenKeyPair()
+					if err != nil {
+						gocd.Log.Errorln(err)
+						c.String(500, "生成私钥失败，请再次常试")
+						return
+					}
 					u = new(gocd.User)
-					u.GID = user.GetID()
+					u.GID = uint(user.GetID())
 					u.GLogin = user.GetLogin()
 					u.GName = user.GetName()
 					u.GType = user.GetType()
+					u.Pubkey = pub
+					u.PrivateKey = private
 					if userService.CreateUser(u) != nil {
 						gocd.Log.Errorln(err)
 						c.String(500, "数据库错误")
@@ -83,19 +92,18 @@ func serveOauth2(r *gin.Engine) {
 					c.String(500, "数据库错误")
 					return
 				}
+			}
+			// 更新token
+			u.Token = com.MD5(fmt.Sprintf("%d%d%s%d", u.ID, u.GID, u.GLogin, time.Now().UnixNano()))
+			if userService.UpdateUser(u, "token") != nil {
+				gocd.Log.Errorln(err)
+				c.String(500, "数据库错误")
+				return
 			} else {
-				// 已注册
-				u.Token = com.MD5(fmt.Sprintf("%d%d%s%d", u.ID, u.GID, u.GLogin, time.Now().UnixNano()))
-				if userService.UpdateUser(u) != nil {
-					gocd.Log.Errorln(err)
-					c.String(500, "数据库错误")
-					return
-				} else {
-					setCookie(c, "uid", fmt.Sprintf("%d", u.ID))
-					setCookie(c, "token", u.Token)
-					c.Redirect(http.StatusMovedPermanently, "/")
-					return
-				}
+				setCookie(c, "uid", fmt.Sprintf("%d", u.ID))
+				setCookie(c, "token", u.Token)
+				c.Redirect(http.StatusMovedPermanently, "/")
+				return
 			}
 		})
 

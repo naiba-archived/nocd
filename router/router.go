@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package web
+package router
 
 import (
 	"golang.org/x/oauth2"
@@ -15,10 +15,24 @@ import (
 	"github.com/utrack/gin-csrf"
 	"git.cm/naiba/gocd"
 	"git.cm/naiba/gocd/sqlite3"
+	"github.com/naiba/webhooks/github"
+	"gopkg.in/go-playground/webhooks.v3"
+	"github.com/gin-gonic/gin/binding"
+	"gopkg.in/go-playground/validator.v8"
+	"reflect"
+	"git.cm/naiba/com"
 )
 
 var userService gocd.UserService
+var serverService gocd.ServerService
 var oauthConf *oauth2.Config
+
+func init() {
+	// 地址验证
+	binding.Validator.RegisterValidation("address", func(v *validator.Validate, topStruct reflect.Value, currentStruct reflect.Value, field reflect.Value, fieldtype reflect.Type, fieldKind reflect.Kind, param string) bool {
+		return com.IsDomain(field.String()) || com.IsIPv4(field.String())
+	})
+}
 
 func Start() {
 	initService()
@@ -27,13 +41,31 @@ func Start() {
 	r.Use(authMiddleware)
 
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(200, "page/index", commonData(c, gin.H{
-			"csrf_token": csrf.GetToken(c),
+		c.HTML(200, "page/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{
 		}))
 	})
 
 	initOauthConf()
 	serveOauth2(r)
+	ServePipeline(r)
+	ServeServer(r)
+
+	r.Any("/hook", func(c *gin.Context) {
+		g := github.New(&github.Config{Secret: "asdasdasd"})
+		g.RegisterEvents(func(payload interface{}, header webhooks.Header) {
+			switch payload.(type) {
+			case github.PingPayload:
+				break
+			case github.PushPayload:
+				gocd.Log.Debug("receive a webhook")
+				gocd.Log.Debug(payload.(github.PushPayload).Pusher)
+				gocd.Log.Debug(header)
+				break
+			}
+		}, github.PushEvent, github.PingEvent)
+		g.ParsePayload(c.Writer, c.Request)
+		return
+	})
 
 	r.Run(":8000")
 }
@@ -58,8 +90,11 @@ func initEngine() *gin.Engine {
 	r.Use(csrf.Middleware(csrf.Options{
 		Secret: gocd.Conf.Section("gocd").Key("cookie_key_pair").String(),
 		ErrorFunc: func(c *gin.Context) {
-			c.String(400, "CSRF Token 验证失败")
-			c.Abort()
+			if c.Request.URL.Path != "/hook" {
+				gocd.Log.Debug(c.Request.URL.Path)
+				c.String(400, "CSRF Token 验证失败")
+				c.Abort()
+			}
 		},
 	}))
 	r.Static("/static", "resource/static")
@@ -77,7 +112,11 @@ func initService() {
 		db.Debug()
 		db.LogMode(gocd.Debug)
 	}
-	db.AutoMigrate(gocd.User{})
+	db.AutoMigrate(gocd.User{}, gocd.Server{})
+	// user service
 	sus := sqlite3.UserService{DB: db,}
 	userService = &sus
+	// server service
+	ss := sqlite3.ServerService{D: db}
+	serverService = &ss
 }

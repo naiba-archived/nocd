@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package web
+package router
 
 import (
 	"github.com/gin-gonic/gin"
@@ -27,7 +27,7 @@ func authMiddleware(c *gin.Context) {
 		}
 	}
 	c.Set(CtxIsLogin, login)
-	c.Header("X-Developer", "Naiba(1@5.nu)")
+	c.Header("X-Owner", "Naiba(1@5.nu)")
 }
 
 type filterOption struct {

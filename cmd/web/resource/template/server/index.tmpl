@@ -1,0 +1,71 @@
+{{define "server/index"}}
+{{template "common/header" .}}
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">添加服务器</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">必须先在服务器添加公钥</h6>
+                    <form id="formAddServer" onsubmit="return addServer()">
+                        <div class="form-group">
+                            <label for="inputAddress">服务器 IP 地址或域名</label>
+                            <input name="address" required type="text" class="form-control" id="inputAddress"
+                                   placeholder="mjj.cx 或 127.0.0.1">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPort">SSH 端口号</label>
+                            <input name="port" required type="number" class="form-control" id="inputPort"
+                                   placeholder="22">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputLogin">SSH 用户名</label>
+                            <input name="login" required type="text" class="form-control" id="inputLogin"
+                                   placeholder="root">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputName">备注名</label>
+                            <input name="name" required type="text" class="form-control" id="inputName"
+                                   placeholder="华北 s1">
+                        </div>
+                    {{.csrf_token}}
+                        <button type="submit" class="btn btn-primary btn-block"><span class="octicon octicon-plus"></span>添加服务器</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="alert alert-warning" role="alert">
+                <h5 class="alert-heading">服务器配置</h5>
+                <p>您必须将下面的公钥添加到服务器的<code>/home/user/.ssh/authorized_keys</code>中</p>
+                <label style="width: 100%">
+                    <textarea readonly class="form-control" rows="4">{{.user.Pubkey}}</textarea>
+                </label>
+            </div>
+            <div class="card-deck">
+            {{range $server := .servers}}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title"><span class="octicon octicon-server"></span>{{$server.Name}}</h5>
+                        <p class="card-text">
+                            服务器地址：<code>{{$server.Address}}</code><br>
+                            服务器端口：<code>{{$server.Port}}</code><br>
+                            登录用户名：<code>{{$server.Login}}</code>
+                        </p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <small class="text-muted p-2"><span class="octicon octicon-clock"></span>Active 3 mins ago</small>
+                        <div>
+                            <button class="btn btn-sm btn-primary"><span class="octicon octicon-pencil"></span></button>
+                            <button class="btn btn-sm btn-primary"><span class="octicon octicon-trashcan"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {{end}}
+            </div>
+        </div>
+    </div>
+</div>
+{{template "common/footer" .}}
+{{end}}
