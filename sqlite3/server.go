@@ -11,14 +11,14 @@ import (
 )
 
 type ServerService struct {
-	D *gorm.DB
+	DB *gorm.DB
 }
 
 func (ss *ServerService) CreateServer(s *gocd.Server) error {
-	return ss.D.Create(s).Error
+	return ss.DB.Create(s).Error
 }
 
 func (ss *ServerService) GetServersByUser(user *gocd.User) (us []gocd.Server) {
-	ss.D.Model(user).Related(&us)
+	ss.DB.Model(user).Related(&us)
 	return
 }

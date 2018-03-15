@@ -25,6 +25,7 @@ import (
 
 var userService gocd.UserService
 var serverService gocd.ServerService
+var repoService gocd.RepositoryService
 var oauthConf *oauth2.Config
 
 func init() {
@@ -36,19 +37,19 @@ func init() {
 
 func Start() {
 	initService()
+	initOauthConf()
 
 	r := initEngine()
-	r.Use(authMiddleware)
 
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(200, "page/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{
 		}))
 	})
 
-	initOauthConf()
 	serveOauth2(r)
-	ServePipeline(r)
+	servePipeline(r)
 	ServeServer(r)
+	serveRepository(r)
 
 	r.Any("/hook", func(c *gin.Context) {
 		g := github.New(&github.Config{Secret: "asdasdasd"})
@@ -99,6 +100,7 @@ func initEngine() *gin.Engine {
 	}))
 	r.Static("/static", "resource/static")
 	r.LoadHTMLGlob("resource/template/**/*")
+	r.Use(authMiddleware)
 	return r
 }
 
@@ -112,11 +114,14 @@ func initService() {
 		db.Debug()
 		db.LogMode(gocd.Debug)
 	}
-	db.AutoMigrate(gocd.User{}, gocd.Server{})
+	db.AutoMigrate(gocd.User{}, gocd.Server{}, gocd.Repository{})
 	// user service
 	sus := sqlite3.UserService{DB: db,}
 	userService = &sus
 	// server service
-	ss := sqlite3.ServerService{D: db}
+	ss := sqlite3.ServerService{DB: db}
 	serverService = &ss
+	// repo service
+	rs := sqlite3.RepositoryService{DB: db}
+	repoService = &rs
 }

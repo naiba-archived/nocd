@@ -1,0 +1,71 @@
+{{define "repository/index"}}
+{{template "common/header" .}}
+<div class="container">
+    <div class="alert alert-secondary pt-4">
+        <div class="d-flex justify-content-center">
+            <form id="formAddRepo" class="form-inline" onsubmit="return addRepo()">
+                <div class="form-group mx-sm-3 mb-2">
+                    <label for="inputName">项目名：</label>
+                    <input name="name" type="text" class="form-control" id="inputName" placeholder="项目名称">
+                </div>
+                <div class="form-group mx-sm-3 mb-2">
+                    <label for="selectPlatform">托管平台：</label>
+                    <select name="platform" id="selectPlatform" class="form-control">
+                        <option value="1">GitHub</option>
+                        <option value="2">Gitlab</option>
+                        <option value="3">BitBucket</option>
+                        <option value="4">Gogs</option>
+                    </select>
+                </div>
+            {{.csrf_token}}
+                <button type="submit" class="btn btn-secondary mb-2 ml-3">添加项目</button>
+            </form>
+        </div>
+    </div>
+    <div class="card-deck">
+    {{range $repo := .repos}}
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <h5><span class="octicon octicon-repo"></span> {{$repo.Name}}</h5>
+                    <div>
+                        <button onclick="clipSecret(this)" type="button" class="btn btn-sm btn-secondary pr-1 pl-2"
+                                data-toggle="tooltip"
+                                data-placement="top" title="WebHook密钥：{{$repo.Secret}}">
+                            <span class="octicon octicon-gist-secret"></span>
+                        </button>
+                        <button class="btn btn-sm btn-secondary pr-1 pl-2">
+                            <span class="octicon octicon-pencil"></span>
+                        </button>
+                        <button class="btn btn-sm btn-secondary pr-1 pl-2">
+                            <span class="octicon octicon-plus"></span>
+                        </button>
+                    </div>
+                </div>
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">备注</th>
+                        <th scope="col">最后触发</th>
+                        <th scope="col">状态</th>
+                        <th scope="col">管理</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                        <td>@mdo</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {{end}}
+    </div>
+</div>
+{{template "common/footer" .}}
+{{end}}

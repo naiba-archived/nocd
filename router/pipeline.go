@@ -7,7 +7,7 @@ package router
 
 import "github.com/gin-gonic/gin"
 
-func ServePipeline(r *gin.Engine) {
+func servePipeline(r *gin.Engine) {
 	pipeline := r.Group("/pipeline")
 	pipeline.Use(filterMiddleware(filterOption{User: true}))
 	{

@@ -20,14 +20,15 @@
     <div class="container d-flex flex-column flex-md-row align-items-center">
         <h5 class="my-0 mr-md-auto font-weight-normal"><a class="text-secondary" href="/">GoCD</a></h5>
         <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="/server"><span class="octicon octicon-server"></span>部署机器</a>
-            <a class="p-2 text-dark" href="/repository/"><span class="octicon octicon-repo"></span>代码仓库</a>
-            <a class="p-2 text-dark" href="/pipeline/"><span class="octicon octicon-zap"></span>持续交付</a>
-            <a class="p-2 text-dark" href="/settings"><span class="octicon octicon-settings"></span>通知配置</a>
+            <a class="p-2 text-dark" href="/server/"><span class="octicon octicon-server"></span>部署机器</a>
+            <a class="p-2 text-dark" href="/repository/"><span class="octicon octicon-repo"></span>项目列表</a>
+            <a class="p-2 text-dark" href="/pipeline/"><span class="octicon octicon-zap"></span>交付记录</a>
+            <a class="p-2 text-dark" href="/settings/"><span class="octicon octicon-settings"></span>通知配置</a>
         </nav>
     {{if .isLogin}}
         <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-secondary" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+            <a class="nav-link dropdown-toggle text-secondary" href="#" id="navbarDropdownMenuLink"
+               data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
                 <span class="octicon octicon-mark-github"></span> {{.user.GName}}
             </a>
@@ -37,7 +38,7 @@
         </div>
     {{else}}
         <form id="loginForm" action="/oauth2/login" method="post">
-            {{.csrf_token}}
+        {{.csrf_token}}
         </form>
         <button onclick="login()" class="btn btn-outline-primary"><span
                 class="octicon octicon-mark-github"></span> 登陆

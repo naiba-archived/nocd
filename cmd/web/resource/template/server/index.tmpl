@@ -29,13 +29,15 @@
                                    placeholder="华北 s1">
                         </div>
                     {{.csrf_token}}
-                        <button type="submit" class="btn btn-secondary btn-block"><span class="octicon octicon-plus"></span>添加服务器</button>
+                        <button type="submit" class="btn btn-secondary btn-block"><span
+                                class="octicon octicon-plus"></span>添加服务器
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
         <div class="col">
-            <div class="alert alert-warning" role="alert">
+            <div id="alertServerConfig" class="alert alert-warning" role="alert">
                 <h5 class="alert-heading">服务器配置</h5>
                 <p>您必须将下面的公钥添加到服务器的<code>/home/user/.ssh/authorized_keys</code>中</p>
                 <label style="width: 100%">
@@ -54,9 +56,11 @@
                         </p>
                     </div>
                     <div class="card-footer d-flex justify-content-between">
-                        <small class="text-muted p-2"><span class="octicon octicon-clock"></span>Active 3 mins ago</small>
+                        <small class="text-muted p-2"><span class="octicon octicon-clock"></span>Active 3 mins ago
+                        </small>
                         <div>
-                            <button class="btn btn-sm btn-secondary"><span class="octicon octicon-pencil"></span></button>
+                            <button class="btn btn-sm btn-secondary"><span class="octicon octicon-pencil"></span>
+                            </button>
                             <button class="btn btn-sm btn-secondary"><span class="octicon octicon-trashcan"></span>
                             </button>
                         </div>

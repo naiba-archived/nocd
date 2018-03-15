@@ -36,9 +36,10 @@ func addServer(c *gin.Context) {
 		return
 	}
 	s.UserID = user.ID
-	if serverService.CreateServer(&s) == nil {
+	if err := serverService.CreateServer(&s); err == nil {
 		c.String(200, "")
 	} else {
+		gocd.Log.Error(err)
 		c.String(500, "数据库错误")
 	}
 }
