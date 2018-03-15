@@ -29,7 +29,7 @@
                                    placeholder="华北 s1">
                         </div>
                     {{.csrf_token}}
-                        <button type="submit" class="btn btn-primary btn-block"><span class="octicon octicon-plus"></span>添加服务器</button>
+                        <button type="submit" class="btn btn-secondary btn-block"><span class="octicon octicon-plus"></span>添加服务器</button>
                     </form>
                 </div>
             </div>
@@ -48,16 +48,16 @@
                     <div class="card-body">
                         <h5 class="card-title"><span class="octicon octicon-server"></span>{{$server.Name}}</h5>
                         <p class="card-text">
-                            服务器地址：<code>{{$server.Address}}</code><br>
-                            服务器端口：<code>{{$server.Port}}</code><br>
-                            登录用户名：<code>{{$server.Login}}</code>
+                            服务器地址：<samp>{{$server.Address}}</samp><br>
+                            服务器端口：<samp>{{$server.Port}}</samp><br>
+                            登录用户名：<samp>{{$server.Login}}</samp>
                         </p>
                     </div>
                     <div class="card-footer d-flex justify-content-between">
                         <small class="text-muted p-2"><span class="octicon octicon-clock"></span>Active 3 mins ago</small>
                         <div>
-                            <button class="btn btn-sm btn-primary"><span class="octicon octicon-pencil"></span></button>
-                            <button class="btn btn-sm btn-primary"><span class="octicon octicon-trashcan"></span>
+                            <button class="btn btn-sm btn-secondary"><span class="octicon octicon-pencil"></span></button>
+                            <button class="btn btn-sm btn-secondary"><span class="octicon octicon-trashcan"></span>
                             </button>
                         </div>
                     </div>
