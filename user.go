@@ -10,15 +10,16 @@ import "github.com/jinzhu/gorm"
 type User struct {
 	gorm.Model
 	// 用户GitHubID
-	GID          uint `gorm:"unique_index"`
+	GID          uint         `gorm:"unique_index"`
 	GName        string
 	GLogin       string
 	GType        string
 	Pubkey       string
 	PrivateKey   string
 	Avatar       int
-	Servers      []Server
-	Repositories []Repository
+	Servers      []Server     `form:"-"`
+	Repositories []Repository `form:"-"`
+	Pipelines    []Pipeline   `form:"-"`
 	// 用户Token
 	Token string
 }

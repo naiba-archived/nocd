@@ -6,7 +6,7 @@
             <form id="formAddRepo" class="form-inline" onsubmit="return addRepo()">
                 <div class="form-group mx-sm-3 mb-2">
                     <label for="inputName">项目名：</label>
-                    <input name="name" type="text" class="form-control" id="inputName" placeholder="项目名称">
+                    <input required name="name" type="text" class="form-control" id="inputName" placeholder="项目名称">
                 </div>
                 <div class="form-group mx-sm-3 mb-2">
                     <label for="selectPlatform">托管平台：</label>
@@ -22,31 +22,55 @@
         </div>
     </div>
 {{/*modal add pipeline START*/}}
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
+    <script> var events = {{.events}};</script>
+    <div class="modal fade" id="modalAddPipeline" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <h5 class="modal-title">添加交付流程</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <div class="alert alert-warning" role="alert">
+                        请给您的 Git Repo <b>添加 WebHook</b>，WebHook 地址与密钥在项目名称右边的按钮处复制！
+                    </div>
+                    <form id="formAddPipeline" method="post" onsubmit="return addPipeline()">
+                        <input id="inputHDRepoID" name="repo" type="hidden">
                         <div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Recipient:</label>
-                            <input type="text" class="form-control" id="recipient-name">
+                            <label for="inputName" class="col-form-label">流程备注：</label>
+                            <input required name="name" type="text" class="form-control" id="inputName">
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="col-form-label">Message:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
+                            <label for="inputBranch" class="col-form-label">监控分支：</label>
+                            <input required name="branch" type="text" class="form-control" id="inputBranch"
+                                   value="master">
                         </div>
+                        <div class="form-group">
+                            <p>响应事件：
+                                <small>（至少选择一个）</small>
+                            </p>
+                            <div class="d-inline" id="listEventCheckbox"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputBranch" class="col-form-label">部署服务器：</label>
+                            <select name="server" class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                            {{range $server := .servers}}
+                                <option value="{{.ID}}">{{.Name}} - {{.Address}}</option>
+                            {{end}}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputShell" class="col-form-label">执行命令：</label>
+                            <textarea required name="shell" class="form-control" id="inputShell">./nb-deploy</textarea>
+                        </div>
+                    {{.csrf_token}}
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button onclick="saveForm('#formAddPipeline')" class="btn btn-primary">添加</button>
                 </div>
             </div>
         </div>
@@ -79,7 +103,7 @@
                             <span class="octicon octicon-pencil"></span>
                         </button>
                         <button class="btn btn-sm btn-secondary pr-1 pl-2" data-toggle="modal"
-                                data-target="#exampleModal" data-whatever="{{.Platform}}">
+                                data-target="#modalAddPipeline" data-repo="{{.ID}}" data-whatever="{{.Platform}}">
                             <span class="octicon octicon-plus"></span>
                         </button>
                     </div>
@@ -96,13 +120,24 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {{range $p:= RepoPipelines .ID}}
                         <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            <td>@mdo</td>
+                            <th scope="row">{{$p.ID}}</th>
+                            <td>{{$p.Name}}</td>
+                            <td>Naiba</td>
+                            <td>
+                                <button class="btn btn-success btn-sm">Success</button>
+                            </td>
+                            <td>
+                                <button class="btn btn-sm btn-secondary pr-1 pl-2">
+                                    <span class="octicon octicon-pencil"></span>
+                                </button>
+                                <button class="btn btn-sm btn-secondary pr-1 pl-2">
+                                    <span class="octicon octicon-trashcan"></span>
+                                </button>
+                            </td>
                         </tr>
+                        {{end}}
                         </tbody>
                     </table>
                 </div>

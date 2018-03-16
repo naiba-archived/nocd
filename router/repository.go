@@ -11,6 +11,7 @@ import (
 	"git.cm/naiba/com"
 	"fmt"
 	"time"
+	"net/http"
 )
 
 func serveRepository(r *gin.Engine) {
@@ -19,10 +20,11 @@ func serveRepository(r *gin.Engine) {
 	{
 		repo.GET("/", func(c *gin.Context) {
 			user := c.MustGet(CtxUser).(*gocd.User)
-			c.HTML(200, "repository/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{
+			c.HTML(http.StatusOK, "repository/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{
 				"repos":     repoService.GetRepoByUser(user),
 				"platforms": gocd.RepoPlatforms,
-				"events": gocd.RepoEvents,
+				"events":    gocd.RepoEvents,
+				"servers":   serverService.GetServersByUser(user),
 			}))
 		})
 		repo.POST("/", addRepo)
@@ -32,7 +34,7 @@ func serveRepository(r *gin.Engine) {
 func addRepo(c *gin.Context) {
 	var repo gocd.Repository
 	if err := c.Bind(&repo); err != nil {
-		c.String(400, "数据不规范，请检查后重新填写"+err.Error())
+		c.String(http.StatusForbidden, "数据不规范，请检查后重新填写"+err.Error())
 		return
 	}
 	user := c.MustGet(CtxUser).(*gocd.User)
@@ -40,8 +42,8 @@ func addRepo(c *gin.Context) {
 	repo.Secret = com.MD5(fmt.Sprintf("%d%s%s%d", user.ID, repo.Name, user.GLogin, time.Now().UnixNano()))
 	if err := repoService.CreateRepo(&repo); err != nil {
 		gocd.Log.Error(err)
-		c.String(500, "数据库错误")
+		c.String(http.StatusInternalServerError, "数据库错误")
 	} else {
-		c.String(200, "")
+		c.String(http.StatusOK, "")
 	}
 }

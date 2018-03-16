@@ -40,7 +40,7 @@
         <form id="loginForm" action="/oauth2/login" method="post">
         {{.csrf_token}}
         </form>
-        <button onclick="login()" class="btn btn-outline-primary"><span
+        <button onclick="saveForm('#loginForm')" class="btn btn-outline-primary"><span
                 class="octicon octicon-mark-github"></span> 登陆
         </button>
     {{end}}

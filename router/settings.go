@@ -5,14 +5,17 @@
 
 package router
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
 func serveSttings(r *gin.Engine) {
 	settings := r.Group("/settings")
 	settings.Use(filterMiddleware(filterOption{User: true}))
 	{
 		settings.GET("/", func(c *gin.Context) {
-			c.HTML(200, "settings/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{}))
+			c.HTML(http.StatusOK, "settings/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{}))
 		})
 	}
 }

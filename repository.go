@@ -23,17 +23,19 @@ var RepoPlatforms map[int]string
 var RepoEvents map[int]map[string]string
 
 type Repository struct {
-	ID       uint   `form:"id" binding:"min=0"`
+	ID       uint       `form:"id" binding:"min=0"`
 	UserID   uint
-	User     User
+	User     User       `binding:"-"`
 	Secret   string
-	Name     string `form:"name" binding:"required,min=1,max=12"`
-	Platform int    `form:"platform" binding:"required,min=1,max=4"`
+	Name     string     `form:"name" binding:"required,min=1,max=12"`
+	Platform int        `form:"platform" binding:"required,min=1,max=4"`
+	Pipeline []Pipeline `binding:"-"`
 }
 
 type RepositoryService interface {
 	CreateRepo(repo *Repository) error
 	GetRepoByUser(user *User) []Repository
+	GetRepoByUserAndRid(user *User, rid uint) (Repository, error)
 }
 
 func init() {

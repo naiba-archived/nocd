@@ -41,26 +41,26 @@ func serveOauth2(r *gin.Engine) {
 			}
 			var call oauthCallback
 			if err := c.ShouldBindQuery(&call); err != nil {
-				c.String(400, "回调参数有误")
+				c.String(http.StatusForbidden, "回调参数有误")
 				return
 			}
 			// delete oauth_token
 			session := sessions.Default(c)
 			if session.Get("oauth_token").(string) != call.State {
-				c.String(400, "登陆未授权，请从首页重新登录")
+				c.String(http.StatusForbidden, "登陆未授权，请从首页重新登录")
 				return
 			}
 			session.Delete("oauth_token")
 			token, err := oauthConf.Exchange(context.Background(), call.Code)
 			if err != nil {
-				c.String(400, "回调验证失败")
+				c.String(http.StatusForbidden, "回调验证失败")
 				return
 			}
 			client := github.NewClient(oauthConf.Client(context.Background(), token))
 			user, _, err := client.Users.Get(context.Background(), "")
 			if err != nil {
 				gocd.Log.Errorln(err)
-				c.String(500, "GitHub通信失败，请重试")
+				c.String(http.StatusInternalServerError, "GitHub通信失败，请重试")
 				return
 			}
 
@@ -72,7 +72,7 @@ func serveOauth2(r *gin.Engine) {
 					pub, private, err := ssh.GenKeyPair()
 					if err != nil {
 						gocd.Log.Errorln(err)
-						c.String(500, "生成私钥失败，请再次常试")
+						c.String(http.StatusInternalServerError, "生成私钥失败，请再次常试")
 						return
 					}
 					u = new(gocd.User)
@@ -84,12 +84,12 @@ func serveOauth2(r *gin.Engine) {
 					u.PrivateKey = private
 					if userService.CreateUser(u) != nil {
 						gocd.Log.Errorln(err)
-						c.String(500, "数据库错误")
+						c.String(http.StatusInternalServerError, "数据库错误")
 						return
 					}
 				} else {
 					gocd.Log.Errorln(err)
-					c.String(500, "数据库错误")
+					c.String(http.StatusInternalServerError, "数据库错误")
 					return
 				}
 			}
@@ -97,7 +97,7 @@ func serveOauth2(r *gin.Engine) {
 			u.Token = com.MD5(fmt.Sprintf("%d%d%s%d", u.ID, u.GID, u.GLogin, time.Now().UnixNano()))
 			if userService.UpdateUser(u, "token") != nil {
 				gocd.Log.Errorln(err)
-				c.String(500, "数据库错误")
+				c.String(http.StatusInternalServerError, "数据库错误")
 				return
 			} else {
 				setCookie(c, "uid", fmt.Sprintf("%d", u.ID))

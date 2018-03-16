@@ -21,11 +21,14 @@ import (
 	"gopkg.in/go-playground/validator.v8"
 	"reflect"
 	"git.cm/naiba/com"
+	"net/http"
 )
 
 var userService gocd.UserService
 var serverService gocd.ServerService
 var repoService gocd.RepositoryService
+var pipelineService gocd.PipelineService
+
 var oauthConf *oauth2.Config
 
 func init() {
@@ -42,7 +45,7 @@ func Start() {
 	r := initEngine()
 
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(200, "page/index", commonData(c, true, gin.H{
+		c.HTML(http.StatusOK, "page/index", commonData(c, true, gin.H{
 		}))
 	})
 
@@ -87,6 +90,7 @@ func initEngine() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	setFuncMap(r)
 	// csrf protection
 	r.Use(sessions.Sessions("gocd_session", sessions.NewCookieStore([]byte(gocd.Conf.Section("gocd").Key("cookie_key_pair").String()))))
 	r.Use(csrf.Middleware(csrf.Options{
@@ -94,7 +98,7 @@ func initEngine() *gin.Engine {
 		ErrorFunc: func(c *gin.Context) {
 			if c.Request.URL.Path != "/webhook" {
 				gocd.Log.Debug(c.Request.URL.Path)
-				c.String(400, "CSRF Token 验证失败")
+				c.String(http.StatusForbidden, "CSRF Token 验证失败")
 				c.Abort()
 			}
 		},
@@ -115,7 +119,7 @@ func initService() {
 		db.Debug()
 		db.LogMode(gocd.Debug)
 	}
-	db.AutoMigrate(gocd.User{}, gocd.Server{}, gocd.Repository{})
+	db.AutoMigrate(gocd.User{}, gocd.Server{}, gocd.Repository{}, gocd.Pipeline{})
 	// user service
 	sus := sqlite3.UserService{DB: db,}
 	userService = &sus
@@ -125,4 +129,7 @@ func initService() {
 	// repo service
 	rs := sqlite3.RepositoryService{DB: db}
 	repoService = &rs
+	// pipeline service
+	ps := sqlite3.PipelineService{DB: db}
+	pipelineService = &ps
 }
