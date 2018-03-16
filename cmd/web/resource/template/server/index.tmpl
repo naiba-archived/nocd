@@ -29,7 +29,7 @@
                                    placeholder="华北 s1">
                         </div>
                     {{.csrf_token}}
-                        <button type="submit" class="btn btn-secondary btn-block"><span
+                        <button type="submit" class="btn btn-primary btn-block"><span
                                 class="octicon octicon-plus"></span>添加服务器
                         </button>
                     </form>
@@ -48,7 +48,7 @@
             {{range $server := .servers}}
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title"><span class="octicon octicon-server"></span>{{$server.Name}}</h5>
+                        <h5 class="card-title limit-text-length"><span class="octicon octicon-server"></span>{{$server.Name}}</h5>
                         <p class="card-text">
                             服务器地址：<samp>{{$server.Address}}</samp><br>
                             服务器端口：<samp>{{$server.Port}}</samp><br>

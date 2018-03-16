@@ -17,7 +17,7 @@ func setCookie(c *gin.Context, key string, val string) {
 }
 
 func commonData(c *gin.Context, csrfToken bool, data gin.H) gin.H {
-	isLogin := c.MustGet(CtxIsLogin).(bool)
+	isLogin := c.GetBool(CtxIsLogin)
 	data["isLogin"] = isLogin
 	if isLogin {
 		data["user"] = c.MustGet(CtxUser)

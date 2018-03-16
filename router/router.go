@@ -42,7 +42,7 @@ func Start() {
 	r := initEngine()
 
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(200, "page/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{
+		c.HTML(200, "page/index", commonData(c, true, gin.H{
 		}))
 	})
 
@@ -50,8 +50,9 @@ func Start() {
 	servePipeline(r)
 	ServeServer(r)
 	serveRepository(r)
+	serveSttings(r)
 
-	r.Any("/hook", func(c *gin.Context) {
+	r.Any("/webhook", func(c *gin.Context) {
 		g := github.New(&github.Config{Secret: "asdasdasd"})
 		g.RegisterEvents(func(payload interface{}, header webhooks.Header) {
 			switch payload.(type) {
@@ -91,7 +92,7 @@ func initEngine() *gin.Engine {
 	r.Use(csrf.Middleware(csrf.Options{
 		Secret: gocd.Conf.Section("gocd").Key("cookie_key_pair").String(),
 		ErrorFunc: func(c *gin.Context) {
-			if c.Request.URL.Path != "/hook" {
+			if c.Request.URL.Path != "/webhook" {
 				gocd.Log.Debug(c.Request.URL.Path)
 				c.String(400, "CSRF Token 验证失败")
 				c.Abort()

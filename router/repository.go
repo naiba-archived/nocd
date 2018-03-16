@@ -20,7 +20,9 @@ func serveRepository(r *gin.Engine) {
 		repo.GET("/", func(c *gin.Context) {
 			user := c.MustGet(CtxUser).(*gocd.User)
 			c.HTML(200, "repository/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{
-				"repos": repoService.GetRepoByUser(user),
+				"repos":     repoService.GetRepoByUser(user),
+				"platforms": gocd.RepoPlatforms,
+				"events": gocd.RepoEvents,
 			}))
 		})
 		repo.POST("/", addRepo)

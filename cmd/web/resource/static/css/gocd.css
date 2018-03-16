@@ -39,3 +39,9 @@ a:hover {
 .box-shadow {
     box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
+
+.limit-text-length {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

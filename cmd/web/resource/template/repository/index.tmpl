@@ -11,57 +11,101 @@
                 <div class="form-group mx-sm-3 mb-2">
                     <label for="selectPlatform">托管平台：</label>
                     <select name="platform" id="selectPlatform" class="form-control">
-                        <option value="1">GitHub</option>
-                        <option value="2">Gitlab</option>
-                        <option value="3">BitBucket</option>
-                        <option value="4">Gogs</option>
+                    {{range $k,$v := .platforms}}
+                        <option value="{{$k}}">{{$v}}</option>
+                    {{end}}
                     </select>
                 </div>
             {{.csrf_token}}
-                <button type="submit" class="btn btn-secondary mb-2 ml-3">添加项目</button>
+                <button type="submit" class="btn btn-primary mb-2 ml-3">添加项目</button>
             </form>
         </div>
     </div>
+{{/*modal add pipeline START*/}}
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Recipient:</label>
+                            <input type="text" class="form-control" id="recipient-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Send message</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/*modal add pipeline END*/}}
     <div class="card-deck">
     {{range $repo := .repos}}
-        <div class="card">
+        <div class="card mb-3" style="min-width: 300px">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
-                    <h5><span class="octicon octicon-repo"></span> {{$repo.Name}}</h5>
-                    <div>
-                        <button onclick="clipSecret(this)" type="button" class="btn btn-sm btn-secondary pr-1 pl-2"
+                    <h5 class="mt-1 limit-text-length">
+                        <span class="octicon octicon-repo"></span>
+                        <span class="badge badge-light">{{index $.platforms .Platform}}</span>
+                    {{.Name}}
+                    </h5>
+                    <div style="min-width: 150px">
+                        <button type="button" class="btn btn-sm btn-secondary pr-1 pl-2 copy-btn"
+                                data-text="http://0.0.0.0:8000/webhook/{{.ID}}"
                                 data-toggle="tooltip"
-                                data-placement="top" title="WebHook密钥：{{$repo.Secret}}">
+                                data-placement="top" title="点击复制 WebHook 地址">
+                            <span class="octicon octicon-plug"></span>
+                        </button>
+                        <button type="button" class="btn btn-sm btn-secondary pr-1 pl-2 copy-btn"
+                                data-text="{{.Secret}}"
+                                data-toggle="tooltip"
+                                data-placement="top" title="点击复制 WebHook 密钥">
                             <span class="octicon octicon-gist-secret"></span>
                         </button>
                         <button class="btn btn-sm btn-secondary pr-1 pl-2">
                             <span class="octicon octicon-pencil"></span>
                         </button>
-                        <button class="btn btn-sm btn-secondary pr-1 pl-2">
+                        <button class="btn btn-sm btn-secondary pr-1 pl-2" data-toggle="modal"
+                                data-target="#exampleModal" data-whatever="{{.Platform}}">
                             <span class="octicon octicon-plus"></span>
                         </button>
                     </div>
                 </div>
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">备注</th>
-                        <th scope="col">最后触发</th>
-                        <th scope="col">状态</th>
-                        <th scope="col">管理</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                    </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">备注</th>
+                            <th scope="col" style="min-width: 90px">最后触发</th>
+                            <th scope="col">状态</th>
+                            <th scope="col">管理</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                            <td>@mdo</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     {{end}}
