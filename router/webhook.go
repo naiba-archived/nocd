@@ -57,6 +57,7 @@ func webHook(c *gin.Context) {
 	}
 	// 设置监听事件
 	var hook webhooks.Webhook
+	webhooks.DefaultLog = webhooks.NewLogger(gocd.Debug)
 	switch repo.Platform {
 	case gocd.RepoPlatGitHub:
 		gh := github.New(&github.Config{Secret: repo.Secret})
