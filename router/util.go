@@ -17,6 +17,7 @@ func setCookie(c *gin.Context, key string, val string) {
 }
 
 func commonData(c *gin.Context, csrfToken bool, data gin.H) gin.H {
+	data["domain"] = gocd.Conf.Section("gocd").Key("domain").String()
 	isLogin := c.GetBool(CtxIsLogin)
 	data["isLogin"] = isLogin
 	if isLogin {

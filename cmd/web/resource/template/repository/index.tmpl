@@ -88,7 +88,7 @@
                     </h5>
                     <div style="min-width: 150px">
                         <button type="button" class="btn btn-sm btn-secondary pr-1 pl-2 copy-btn"
-                                data-text="http://0.0.0.0:8000/webhook/{{.ID}}"
+                                data-text="https://{{$.domain}}/webhook/{{.ID}}"
                                 data-toggle="tooltip"
                                 data-placement="top" title="点击复制 WebHook 地址">
                             <span class="octicon octicon-plug"></span>
@@ -126,7 +126,7 @@
                             <td>{{$p.Name}}</td>
                             <td>Naiba</td>
                             <td>
-                                <button class="btn btn-success btn-sm">Success</button>
+                                <a href="/pipelog/1" target="_blank" class="btn btn-success btn-sm">Success</a>
                             </td>
                             <td>
                                 <button class="btn btn-sm btn-secondary pr-1 pl-2">

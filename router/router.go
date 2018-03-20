@@ -15,19 +15,19 @@ import (
 	"github.com/utrack/gin-csrf"
 	"git.cm/naiba/gocd"
 	"git.cm/naiba/gocd/sqlite3"
-	"github.com/naiba/webhooks/github"
-	"gopkg.in/go-playground/webhooks.v3"
 	"github.com/gin-gonic/gin/binding"
 	"gopkg.in/go-playground/validator.v8"
 	"reflect"
 	"git.cm/naiba/com"
 	"net/http"
+	"strings"
 )
 
 var userService gocd.UserService
 var serverService gocd.ServerService
 var repoService gocd.RepositoryService
 var pipelineService gocd.PipelineService
+var pipelogService gocd.PipeLogService
 
 var oauthConf *oauth2.Config
 
@@ -51,26 +51,10 @@ func Start() {
 
 	serveOauth2(r)
 	servePipeline(r)
-	ServeServer(r)
+	serveServer(r)
 	serveRepository(r)
 	serveSttings(r)
-
-	r.Any("/webhook", func(c *gin.Context) {
-		g := github.New(&github.Config{Secret: "asdasdasd"})
-		g.RegisterEvents(func(payload interface{}, header webhooks.Header) {
-			switch payload.(type) {
-			case github.PingPayload:
-				break
-			case github.PushPayload:
-				gocd.Log.Debug("receive a webhook")
-				gocd.Log.Debug(payload.(github.PushPayload).Pusher)
-				gocd.Log.Debug(header)
-				break
-			}
-		}, github.PushEvent, github.PingEvent)
-		g.ParsePayload(c.Writer, c.Request)
-		return
-	})
+	serveWebHook(r)
 
 	r.Run(":8000")
 }
@@ -96,7 +80,7 @@ func initEngine() *gin.Engine {
 	r.Use(csrf.Middleware(csrf.Options{
 		Secret: gocd.Conf.Section("gocd").Key("cookie_key_pair").String(),
 		ErrorFunc: func(c *gin.Context) {
-			if c.Request.URL.Path != "/webhook" {
+			if !strings.HasPrefix(c.Request.URL.Path, "/webhook") {
 				gocd.Log.Debug(c.Request.URL.Path)
 				c.String(http.StatusForbidden, "CSRF Token 验证失败")
 				c.Abort()
@@ -119,7 +103,7 @@ func initService() {
 		db.Debug()
 		db.LogMode(gocd.Debug)
 	}
-	db.AutoMigrate(gocd.User{}, gocd.Server{}, gocd.Repository{}, gocd.Pipeline{})
+	db.AutoMigrate(gocd.User{}, gocd.Server{}, gocd.Repository{}, gocd.Pipeline{}, gocd.PipeLog{})
 	// user service
 	sus := sqlite3.UserService{DB: db,}
 	userService = &sus
@@ -132,4 +116,7 @@ func initService() {
 	// pipeline service
 	ps := sqlite3.PipelineService{DB: db}
 	pipelineService = &ps
+	// pipelog service
+	pl := sqlite3.PipeLogService{DB: db}
+	pipelogService = &pl
 }

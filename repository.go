@@ -9,6 +9,7 @@ import (
 	"gopkg.in/go-playground/webhooks.v3/github"
 	"gopkg.in/go-playground/webhooks.v3/bitbucket"
 	"gopkg.in/go-playground/webhooks.v3/gitlab"
+	"github.com/naiba/webhooks/gogs"
 )
 
 const (
@@ -35,7 +36,8 @@ type Repository struct {
 type RepositoryService interface {
 	CreateRepo(repo *Repository) error
 	GetRepoByUser(user *User) []Repository
-	GetRepoByUserAndRid(user *User, rid uint) (Repository, error)
+	GetRepoByID(id uint) (Repository, error)
+	GetRepoByUserAndID(user *User, id uint) (Repository, error)
 }
 
 func init() {
@@ -47,17 +49,16 @@ func init() {
 	}
 	RepoEvents = map[int]map[string]string{
 		RepoPlatGitHub: {
-			string(github.PushEvent):    "推送",
-			string(github.ReleaseEvent): "发布",
-			string(github.CreateEvent):  "创建（Tag、分支）",
+			string(github.PushEvent): "推送(Push)",
 		},
 		RepoPlatBitBucket: {
-			string(bitbucket.RepoPushEvent):          "推送",
-			string(bitbucket.PullRequestMergedEvent): "合并",
+			string(bitbucket.PullRequestMergedEvent): "合并(Merge)",
 		},
 		RepoPlatGitlab: {
-			string(gitlab.PushEvents): "推送",
-			string(gitlab.TagEvents):  "Tag",
+			string(gitlab.PushEvents): "推送(Push)",
+		},
+		RepoPlatGogs: {
+			string(gogs.PushEvent): "推送(Push)",
 		},
 	}
 }

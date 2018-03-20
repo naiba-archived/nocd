@@ -22,7 +22,12 @@ func (rs *RepositoryService) GetRepoByUser(user *gocd.User) (r []gocd.Repository
 	rs.DB.Model(user).Related(&r)
 	return
 }
-func (rs *RepositoryService) GetRepoByUserAndRid(user *gocd.User, rid uint) (r gocd.Repository, err error) {
+func (rs *RepositoryService) GetRepoByUserAndID(user *gocd.User, rid uint) (r gocd.Repository, err error) {
 	err = rs.DB.Where("id = ? AND user_id = ?", rid, user.ID).First(&r).Error
+	return
+}
+
+func (rs *RepositoryService) GetRepoByID(id uint) (r gocd.Repository, err error) {
+	err = rs.DB.First(&r, id).Error
 	return
 }

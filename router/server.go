@@ -12,7 +12,7 @@ import (
 	"net/http"
 )
 
-func ServeServer(r *gin.Engine) {
+func serveServer(r *gin.Engine) {
 	server := r.Group("/server")
 	server.Use(filterMiddleware(filterOption{User: true}))
 	{

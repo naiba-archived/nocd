@@ -22,6 +22,14 @@ func servePipeline(r *gin.Engine) {
 		})
 		pipeline.POST("/", addPipeline)
 	}
+	pipelog := r.Group("/pipelog")
+	pipelog.Use(filterMiddleware(filterOption{User: true}))
+	{
+		pipelog.GET("/", func(c *gin.Context) {
+			c.HTML(http.StatusOK, "pipelog/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{
+			}))
+		})
+	}
 }
 
 func addPipeline(c *gin.Context) {
@@ -38,7 +46,7 @@ func addPipeline(c *gin.Context) {
 	}
 	pl.Events = string(tmp)
 	user := c.MustGet(CtxUser).(*gocd.User)
-	repo, err := repoService.GetRepoByUserAndRid(user, pl.RepositoryID)
+	repo, err := repoService.GetRepoByUserAndID(user, pl.RepositoryID)
 	if err != nil {
 		gocd.Log.Debug(err)
 		c.String(http.StatusForbidden, "这个项目不属于您，您无权操作。")
