@@ -64,26 +64,29 @@ func CheckLogin(address string, port int, privateKey string, login string) error
 	}
 }
 
-func Deploy(pipeline gocd.Pipeline, who string, saveLog func(plog *gocd.PipeLog) error) {
-	var plog gocd.PipeLog
-	plog.PipelineID = pipeline.ID
-	plog.StartedAt = time.Now()
-	plog.Pusher = who
-	defer saveLog(&plog)
+func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) error) {
+	var pLog gocd.PipeLog
+	pLog.PipelineID = pipeline.ID
+	pLog.StartedAt = time.Now()
+	pLog.Pusher = who
+	defer func() {
+		pLog.StoppedAt = time.Now()
+		saveLog(&pLog)
+	}()
 
 	conn, err := dial(pipeline.Server.Address, pipeline.Server.Login, pipeline.User.PrivateKey, pipeline.Server.Port)
 	if err != nil {
 		gocd.Log.Debug(err)
-		plog.Status = gocd.PipeLogStatusErrorServerConn
-		plog.Log = "连接服务器失败"
+		pLog.Status = gocd.PipeLogStatusErrorServerConn
+		pLog.Log = "连接服务器失败"
 		return
 	}
 	defer conn.Close()
 
 	session, err := conn.NewSession()
 	if err != nil {
-		plog.Status = gocd.PipeLogStatusErrorServerConn
-		plog.Log = "建立会话失败"
+		pLog.Status = gocd.PipeLogStatusErrorServerConn
+		pLog.Log = "建立会话失败"
 		return
 	}
 	defer session.Close()
@@ -95,21 +98,19 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(plog *gocd.PipeLog)
 		gocd.Log.Debug("开始执行", pipeline.Shell)
 		out, err := session.CombinedOutput(pipeline.Shell)
 		if err != nil {
-			plog.Log = err.Error()
-			plog.Status = gocd.PipeLogStatusErrorShellExec
+			pLog.Log = err.Error()
+			pLog.Status = gocd.PipeLogStatusErrorShellExec
 		} else {
-			plog.Log = string(out)
-			plog.Status = gocd.PipeLogStatusSuccess
+			pLog.Log = string(out)
+			pLog.Status = gocd.PipeLogStatusSuccess
 		}
-		plog.StoppedAt = time.Now()
 		finish <- true
 	}()
 	select {
 	case <-timer.C:
 		gocd.Log.Debug("执行失败")
-		plog.Log = "Shell 执行超时"
-		plog.Status = gocd.PipeLogStatusErrorShellExec
-		plog.StoppedAt = time.Now()
+		pLog.Log = "Shell 执行超时"
+		pLog.Status = gocd.PipeLogStatusErrorShellExec
 		return
 	case <-finish:
 		gocd.Log.Debug("执行完毕")

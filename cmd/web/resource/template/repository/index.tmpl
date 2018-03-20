@@ -121,14 +121,24 @@
                         </thead>
                         <tbody>
                         {{range $p:= RepoPipelines .ID}}
+                        {{$log := LastPipelineLog $p.ID}}
                         <tr>
                             <th scope="row">{{$p.ID}}</th>
-                            <td>{{$p.Name}}</td>
-                            <td>Naiba</td>
+                            <td style="min-width: 100px">{{$p.Name}}</td>
+                            <td>{{if eq (len $log.Pusher) 0}}Nobody{{else}}{{$log.Pusher}}{{end}}</td>
                             <td>
-                                <a href="/pipelog/1" target="_blank" class="btn btn-success btn-sm">Success</a>
+                            <a href="/pipelog/{{if lt 0 $log.ID }}{{$log.ID}}{{end}}" target="_blank"
+                            {{if eq $log.Status 1}}
+                               class="btn btn-success btn-sm">Success</a>
+                            {{else if eq $log.Status 2}}
+                                class="btn btn-danger btn-sm">Server</a>
+                            {{else if eq $log.Status 3}}
+                                class="btn btn-danger btn-sm">Shell</a>
+                            {{else}}
+                                class="btn btn-secondary btn-sm">None</a>
+                            {{end}}
                             </td>
-                            <td>
+                            <td style="min-width: 90px">
                                 <button class="btn btn-sm btn-secondary pr-1 pl-2">
                                     <span class="octicon octicon-pencil"></span>
                                 </button>

@@ -1,7 +1,45 @@
 {{define "pipelog/index"}}
 {{template "common/header" .}}
 <div class="container">
-    <p>Hello pipelog</p>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">所属流程</th>
+                <th scope="col">状态</th>
+                <th scope="col">触发者</th>
+                <th scope="col">触发时间</th>
+                <th scope="col">部署时长</th>
+                <th scope="col">日志</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{range $l := .logs}}
+            <tr>
+                <th scope="row">{{$l.ID}}</th>
+                <td style="min-width: 200px">{{$l.Pipeline.Name}}</td>
+                <td>
+                <button{{if eq $l.Status 1}}
+                class="btn btn-success btn-sm">Success
+                </button>
+                {{else if eq $l.Status 2}}
+                    class="btn btn-danger btn-sm">Server</button>
+                {{else if eq $l.Status 3}}
+                    class="btn btn-danger btn-sm">Shell</button>
+                {{else}}
+                    class="btn btn-secondary btn-sm">None</button>
+                {{end}}
+                </td>
+                <td>{{$l.Pusher}}</td>
+                <td>{{TimeFormat $l.StartedAt}}</td>
+                <td>{{TimeDiff $l.StartedAt $l.StoppedAt}}</td>
+                <td><a class="btn btn-sm btn-secondary" href="/pipelog/{{$l.ID}}">Log</a></td>
+            </tr>
+            {{end}}
+            </tbody>
+        </table>
+    </div>
 </div>
 {{template "common/footer" .}}
 {{end}}

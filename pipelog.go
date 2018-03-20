@@ -27,4 +27,9 @@ type PipeLog struct {
 
 type PipeLogService interface {
 	Create(plog *PipeLog) error
+	LastServerLog(sid uint) PipeLog
+	LastPipelineLog(pid uint) PipeLog
+	UserLogs(uid uint) []PipeLog
+	Pipeline(log *PipeLog) error
+	GetByUid(uid, lid uint) (PipeLog, error)
 }

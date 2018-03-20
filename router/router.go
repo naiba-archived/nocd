@@ -6,21 +6,26 @@
 package router
 
 import (
+	"reflect"
+	"net/http"
+	"strings"
+
 	"golang.org/x/oauth2"
 	githuboauth "golang.org/x/oauth2/github"
+
+	"gopkg.in/go-playground/validator.v8"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/utrack/gin-csrf"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/gin-contrib/sentry"
+
+	"git.cm/naiba/com"
 	"git.cm/naiba/gocd"
 	"git.cm/naiba/gocd/sqlite3"
-	"github.com/gin-gonic/gin/binding"
-	"gopkg.in/go-playground/validator.v8"
-	"reflect"
-	"git.cm/naiba/com"
-	"net/http"
-	"strings"
+	"github.com/getsentry/raven-go"
 )
 
 var userService gocd.UserService
@@ -70,9 +75,12 @@ func initOauthConf() {
 }
 
 func initEngine() *gin.Engine {
+	// 初始化Sentry
+	raven.SetDSN(gocd.Conf.Section("third_party").Key("sentry_dsn").String())
 	// init router
 	r := gin.New()
 	r.Use(gin.Logger())
+	r.Use(sentry.Recovery(raven.DefaultClient, false))
 	r.Use(gin.Recovery())
 	setFuncMap(r)
 	// csrf protection

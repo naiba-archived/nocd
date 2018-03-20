@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"git.cm/naiba/gocd"
 	"encoding/json"
+	"strconv"
 )
 
 func servePipeline(r *gin.Engine) {
@@ -25,11 +26,38 @@ func servePipeline(r *gin.Engine) {
 	pipelog := r.Group("/pipelog")
 	pipelog.Use(filterMiddleware(filterOption{User: true}))
 	{
-		pipelog.GET("/", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "pipelog/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{
-			}))
-		})
+		pipelog.GET("/", pipeLogs)
+		pipelog.GET("/:id", viewLog)
 	}
+}
+func pipeLogs(c *gin.Context) {
+	user := c.MustGet(CtxUser).(*gocd.User)
+	logs := pipelogService.UserLogs(user.ID)
+	for i, l := range logs {
+		pipelogService.Pipeline(&l)
+		logs[i] = l
+	}
+	c.HTML(http.StatusOK, "pipelog/index", commonData(c, false, gin.H{
+		"logs": logs,
+	}))
+}
+
+func viewLog(c *gin.Context) {
+	lid := c.Param("id")
+	user := c.MustGet(CtxUser).(*gocd.User)
+	u64lid, err := strconv.ParseUint(lid, 10, 64)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "非法ID")
+		return
+	}
+	log, err := pipelogService.GetByUid(user.ID, uint(u64lid))
+	if err != nil {
+		c.String(http.StatusForbidden, "您无权查看此Log")
+		return
+	}
+	c.HTML(http.StatusOK, "pipelog/log", commonData(c, false, gin.H{
+		"log": log,
+	}))
 }
 
 func addPipeline(c *gin.Context) {
