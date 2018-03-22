@@ -14,8 +14,44 @@ type RepositoryService struct {
 	DB *gorm.DB
 }
 
-func (rs *RepositoryService) CreateRepo(r *gocd.Repository) error {
+func (rs *RepositoryService) Create(r *gocd.Repository) error {
 	return rs.DB.Create(r).Error
+}
+
+func (rs *RepositoryService) Delete(rid uint) error {
+	ids := make([]uint, 0)
+	var pipelines []gocd.Pipeline
+	if err := rs.DB.Select("id").Where("repository_id = ?", rid).Find(&pipelines).Error; err != nil {
+		return err
+	}
+	for _, p := range pipelines {
+		ids = append(ids, p.ID)
+	}
+	db := rs.DB.Begin()
+	// 删除关联 PipeLog
+	err := db.Where("pipeline_id IN (?)", ids).Delete(gocd.PipeLog{}).Error
+	if err != nil {
+		db.Rollback()
+		return err
+	}
+	// 删除关联 Pipeline
+	err = db.Where("id IN (?)", ids).Delete(gocd.Pipeline{}).Error
+	if err != nil {
+		db.Rollback()
+		return err
+	}
+	// 删除项目
+	err = db.Where("id = ?", rid).Delete(gocd.Repository{}).Error
+	if err != nil {
+		db.Rollback()
+		return err
+	}
+	db.Commit()
+	return nil
+}
+
+func (rs *RepositoryService) Update(r *gocd.Repository) error {
+	return rs.DB.Save(r).Error
 }
 
 func (rs *RepositoryService) GetRepoByUser(user *gocd.User) (r []gocd.Repository) {

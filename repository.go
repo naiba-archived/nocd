@@ -34,7 +34,9 @@ type Repository struct {
 }
 
 type RepositoryService interface {
-	CreateRepo(repo *Repository) error
+	Create(repo *Repository) error
+	Update(repo *Repository) error
+	Delete(rid uint) error
 	GetRepoByUser(user *User) []Repository
 	GetRepoByID(id uint) (Repository, error)
 	GetRepoByUserAndID(user *User, id uint) (Repository, error)

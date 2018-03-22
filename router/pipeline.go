@@ -26,6 +26,7 @@ func servePipeline(r *gin.Engine) {
 		pipelog.GET("/:id", viewLog)
 	}
 }
+
 func pipeLogs(c *gin.Context) {
 	user := c.MustGet(CtxUser).(*gocd.User)
 	logs := pipelogService.UserLogs(user.ID)

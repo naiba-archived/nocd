@@ -23,7 +23,19 @@ func (ps *PipelineService) Update(p *gocd.Pipeline) error {
 }
 
 func (ps *PipelineService) Delete(pid uint) error {
-	return ps.DB.Where("id = ?", pid).Delete(gocd.Pipeline{}).Error
+	db := ps.DB.Begin()
+	err := db.Where("pipeline_id = ?", pid).Delete(gocd.PipeLog{}).Error
+	if err != nil {
+		db.Rollback()
+		return err
+	}
+	err = db.Where("id = ?", pid).Delete(gocd.Pipeline{}).Error
+	if err != nil {
+		db.Rollback()
+		return err
+	}
+	db.Commit()
+	return nil
 }
 
 func (ps *PipelineService) UserPipelines(u *gocd.User) []gocd.Pipeline {

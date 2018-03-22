@@ -95,6 +95,12 @@ document.ready = function () {
         $("#inputPort").val(button.data('port'));
         $("#inputLogin").val(button.data('login'));
     });
+    $('#modalRepo').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        $(this).find("#inputID").val(button.data('id'));
+        $(this).find("#inputName").val(button.data('name'));
+        $(this).find("#selectPlatform>option[value=" + button.data('platform') + "]").attr('selected', true);
+    });
 };
 
 function saveForm(form) {
@@ -107,27 +113,27 @@ function logout() {
     window.location.href = "/"
 }
 
-function addServer() {
-    return postForm("/server/", "#formAddServer")
+function addServerHandler() {
+    return ajaxUtil("/server/", "#formAddServer", 'POST')
 }
 
-function addRepo() {
-    return postForm("/repository/", "#formAddRepo")
+function addRepoHandler(mth) {
+    return ajaxUtil("/repository/", "#formAddRepo", mth)
 }
 
-function pipeline(mth) {
-    console.log(mth);
-    return postForm("/pipeline/", "#formAddPipeline", mth)
+function editRepoHandler(mth) {
+    return ajaxUtil("/repository/", "#formEditRepo", mth)
 }
 
-function server(mth) {
-    return postForm("/server/", "#formEditServer", mth)
+function pipelineHandler(mth) {
+    return ajaxUtil("/pipeline/", "#formAddPipeline", mth)
 }
 
-function postForm(url, form, mth) {
-    if (mth === undefined) {
-        mth = "POST"
-    }
+function editServerHandler(mth) {
+    return ajaxUtil("/server/", "#formEditServer", mth)
+}
+
+function ajaxUtil(url, form, mth) {
     if (mth === "DELETE") {
         $(form).find(':input:disabled').removeAttr('disabled')
     }
@@ -135,7 +141,7 @@ function postForm(url, form, mth) {
     var ajaxData = mth === "DELETE" ? {} : $(form).serialize();
     $.ajax({
         url: ajaxUrl,
-        type: mth,    // 此处发送的是POST请求
+        type: mth,
         data: ajaxData,
         success: function () {
             alert("成功");
