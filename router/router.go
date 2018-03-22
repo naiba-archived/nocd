@@ -61,7 +61,7 @@ func Start() {
 	serveSttings(r)
 	serveWebHook(r)
 
-	r.Run(":8000")
+	r.Run(":" + gocd.Conf.Section("gocd").Key("http_port").String())
 }
 
 func initOauthConf() {
