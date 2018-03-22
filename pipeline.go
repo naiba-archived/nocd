@@ -22,9 +22,12 @@ type Pipeline struct {
 }
 
 type PipelineService interface {
-	CreatePipeline(p *Pipeline) error
+	Create(p *Pipeline) error
+	Update(p *Pipeline) error
+	Delete(pid uint) error
 	RepoPipelines(r *Repository) []Pipeline
 	UserPipelines(u *User) []Pipeline
+	UserPipeline(uid,pid uint) (Pipeline,error)
 	GetPipelinesByRidAndEventAndBranch(rid uint, event string, branch string) ([]Pipeline, error)
 	Server(p *Pipeline) error
 	User(p *Pipeline) error

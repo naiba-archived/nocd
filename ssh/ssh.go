@@ -69,10 +69,15 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) 
 	var pLog gocd.PipeLog
 	pLog.PipelineID = pipeline.ID
 	pLog.StartedAt = time.Now()
-	pLog.Log = "[GoCD]" + pLog.StartedAt.String() + ": 开始执行"
+	pLog.Log = ""
 	pLog.Pusher = who
 	pLog.Status = gocd.PipeLogStatusRunning
 	defer func() {
+		// 保留最后5000字
+		if len(pLog.Log) > 5000 {
+			pLog.Log = pLog.Log[len(pLog.Log)-5000:]
+		}
+		pLog.Log = "[GoCD]" + pLog.StartedAt.String() + ": 开始执行" + pLog.Log
 		pLog.StoppedAt = time.Now()
 		saveLog(&pLog)
 	}()

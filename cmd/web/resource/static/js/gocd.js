@@ -39,6 +39,35 @@ document.ready = function () {
             $('<label/>', {class: 'form-check-label', for: 'ic' + k, text: platform[k]}).appendTo(container);
             container.appendTo(modal);
         }
+        // 是否是添加
+        mth = button.data('method');
+        var toggle = function (md, togg, clazzold, clazznew, btn) {
+            $('#btnEditRepo').removeClass(clazzold);
+            $('#btnEditRepo').addClass(clazznew);
+            $(md).find('input').attr('disabled', togg);
+            $(md).find('select').attr('disabled', togg);
+            $(md).find('textarea').attr('disabled', togg);
+            $('#btnEditRepo').text(btn);
+        };
+        if (mth === 'POST') {
+            toggle(this, false, 'btn-danger', 'btn-primary', "添加")
+        } else {
+            if (mth === 'PATCH') {
+                toggle(this, false, 'btn-danger', 'btn-primary', "修改")
+            } else if (mth === 'DELETE') {
+                toggle(this, true, 'btn-primary', 'btn-danger', "删除")
+            }
+            // 填充表单
+            $('#iMEditPlName').val(button.data('name'));
+            $('#inputID').val(button.data('id'));
+            $('#inputHDRepoID').val(button.data('repo'));
+            $('#inputBranch').val(button.data('branch'));
+            $('#inputShell').text(button.data('shell'));
+            button.data('events').forEach(function (value) {
+                $('#ic' + value).attr('checked', true)
+            });
+            $('#slMPlatform').find('>option[value=' + button.data('server') + ']').attr('selected', true);
+        }
     });
     $('#modalEditServer').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
@@ -86,26 +115,27 @@ function addRepo() {
     return postForm("/repository/", "#formAddRepo")
 }
 
-function addPipeline() {
-    return postForm("/pipeline/", "#formAddPipeline")
+function pipeline(mth) {
+    console.log(mth);
+    return postForm("/pipeline/", "#formAddPipeline", mth)
 }
 
-function editServer(method) {
-    return postForm("/server/", "#formEditServer", method)
+function server(mth) {
+    return postForm("/server/", "#formEditServer", mth)
 }
 
-function postForm(url, form, method) {
-    if (method === undefined) {
-        method = "POST"
+function postForm(url, form, mth) {
+    if (mth === undefined) {
+        mth = "POST"
     }
-    if (method === "DELETE") {
+    if (mth === "DELETE") {
         $(form).find(':input:disabled').removeAttr('disabled')
     }
-    var ajaxUrl = method === "DELETE" ? url + "?" + $(form).serialize() : url;
-    var ajaxData = method === "DELETE" ? {} : $(form).serialize();
+    var ajaxUrl = mth === "DELETE" ? url + "?" + $(form).serialize() : url;
+    var ajaxData = mth === "DELETE" ? {} : $(form).serialize();
     $.ajax({
         url: ajaxUrl,
-        type: method,    // 此处发送的是POST请求
+        type: mth,    // 此处发送的是POST请求
         data: ajaxData,
         success: function () {
             alert("成功");
