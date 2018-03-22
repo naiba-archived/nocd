@@ -1,34 +1,32 @@
-version: "{build}"
-
-# Source Config
-
+version: '{build}'
 clone_folder: c:\gopath\src\git.cm\naiba\gocd
-
-# Build host
-
+init:
+- cmd: git config --global core.autocrlf input
 environment:
   GOPATH: c:\gopath
   DEPTESTBYPASS501: 1
   GOVERSION: 1.9
-
-init:
-  - git config --global core.autocrlf input
-
-# Build
-
 install:
-  # Install the specific Go version.
-  - rmdir c:\go /s /q
-  - appveyor DownloadFile https://storage.googleapis.com/golang/go%GOVERSION%.windows-amd64.msi
-  - msiexec /i go%GOVERSION%.windows-amd64.msi /q
-  - choco install bzr
-  - set Path=c:\go\bin;c:\gopath\bin;C:\Program Files (x86)\Bazaar\;C:\Program Files\Mercurial\%Path%
-  - go version
-  - go env
+- cmd: >-
+    cd c:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin
 
-build: false
-deploy: false
+    dir
 
+    rmdir c:\go /s /q
+
+    appveyor DownloadFile https://storage.googleapis.com/golang/go%GOVERSION%.windows-amd64.msi
+
+    msiexec /i go%GOVERSION%.windows-amd64.msi /q
+
+    set Path=c:\go\bin;c:\gopath\bin;c:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin
+
+    go version
+
+    go env
+build: off
 test_script:
-  - go build git.cm/naiba/gocd/cmd/web
-  - for /f "" %%G in ('go list git.cm/naiba/gocd/...') do ( go test %%G & IF ERRORLEVEL == 1 EXIT 1)
+- cmd: >-
+    go build git.cm/naiba/gocd/cmd/web
+
+    for /f "" %%G in ('go list git.cm/naiba/gocd/...') do ( go test %%G & IF ERRORLEVEL == 1 EXIT 1)
+deploy: off
