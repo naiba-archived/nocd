@@ -24,13 +24,13 @@ var RepoPlatforms map[int]string
 var RepoEvents map[int]map[string]string
 
 type Repository struct {
-	ID       uint       `form:"id" binding:"min=0"`
+	ID       uint       `form:"id"`
 	UserID   uint
-	User     User       `binding:"-"`
+	User     User       `form:"-" binding:"-"`
 	Secret   string
 	Name     string     `form:"name" binding:"required,min=1,max=12"`
 	Platform int        `form:"platform" binding:"required,min=1,max=4"`
-	Pipeline []Pipeline `binding:"-"`
+	Pipeline []Pipeline `form:"-" binding:"-"`
 }
 
 type RepositoryService interface {

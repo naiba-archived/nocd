@@ -19,6 +19,8 @@ type Server struct {
 
 type ServerService interface {
 	CreateServer(s *Server) error
+	DeleteServer(sid uint) error
+	UpdateServer(s *Server) error
 	GetServersByUser(user *User) []Server
 	GetServersByUserAndSid(user *User, sid uint) (Server, error)
 }

@@ -1,6 +1,50 @@
 {{define "server/index"}}
 {{template "common/header" .}}
 <div class="container">
+{{/*modal edit server START*/}}
+    <script>
+        var isDelete = '';
+    </script>
+    <div class="modal fade" id="modalEditServer" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">操作服务器</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEditServer" method="post" onsubmit="return editServer(isDelete)">
+                        <input id="formMethod" name="_method" type="hidden">
+                        <input id="inputID" name="id" type="hidden">
+                        <div class="form-group">
+                            <label for="inputName" class="col-form-label">备注名：</label>
+                            <input required name="name" type="text" class="form-control" id="inputName">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputAddress" class="col-form-label">服务器地址：</label>
+                            <input required name="address" type="text" class="form-control" id="inputAddress">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPort" class="col-form-label">SSH 端口号：</label>
+                            <input required name="port" type="text" class="form-control" id="inputPort">
+                        </div>
+                        <div class="form-group">
+                            <label for="inputLogin" class="col-form-label">SSH 用户名：</label>
+                            <input required name="login" type="text" class="form-control" id="inputLogin">
+                        </div>
+                    {{.csrf_token}}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    <button id="btnSubmit" onclick="saveForm('#formEditServer')" class="btn btn-primary">操作</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/*modal edit server END*/}}
     <div class="row">
         <div class="col-4">
             <div class="card">
@@ -63,9 +107,17 @@
                             最后活动于{{TimeDiff $log.StoppedAt Now}}前
                         </small>
                         <div>
-                            <button class="btn btn-sm btn-secondary"><span class="octicon octicon-pencil"></span>
+                            <button class="btn btn-sm btn-secondary" data-toggle="modal"
+                                    data-target="#modalEditServer" data-delete="false" data-id="{{$server.ID}}"
+                                    data-name="{{$server.Name}}"
+                                    data-address="{{$server.Address}}" data-port="{{$server.Port}}"
+                                    data-login="{{$server.Login}}"><span class="octicon octicon-pencil"></span>
                             </button>
-                            <button class="btn btn-sm btn-secondary"><span class="octicon octicon-trashcan"></span>
+                            <button class="btn btn-sm btn-secondary" data-toggle="modal"
+                                    data-target="#modalEditServer" data-delete="true" data-id="{{$server.ID}}"
+                                    data-name="{{$server.Name}}"
+                                    data-address="{{$server.Address}}" data-port="{{$server.Port}}"
+                                    data-login="{{$server.Login}}"><span class="octicon octicon-trashcan"></span>
                             </button>
                         </div>
                     </div>

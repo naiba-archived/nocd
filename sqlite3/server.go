@@ -18,6 +18,14 @@ func (ss *ServerService) CreateServer(s *gocd.Server) error {
 	return ss.DB.Create(s).Error
 }
 
+func (ss *ServerService) UpdateServer(s *gocd.Server) error {
+	return ss.DB.Save(s).Error
+}
+
+func (ss *ServerService) DeleteServer(sid uint) error {
+	return ss.DB.Delete(gocd.Server{}, "id = ?", sid).Error
+}
+
 func (ss *ServerService) GetServersByUser(user *gocd.User) (us []gocd.Server) {
 	ss.DB.Model(user).Related(&us)
 	return

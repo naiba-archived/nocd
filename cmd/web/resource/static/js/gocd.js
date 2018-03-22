@@ -39,7 +39,33 @@ document.ready = function () {
             $('<label/>', {class: 'form-check-label', for: 'ic' + k, text: platform[k]}).appendTo(container);
             container.appendTo(modal);
         }
-    })
+    });
+    $('#modalEditServer').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var isd = button.data('delete');
+        isDelete = isd ? "DELETE" : "PATCH";
+        $("#formMethod").val(isDelete);
+        if (isd) {
+            $("#modalEditServer").find("input").each(function () {
+                $(this).attr('disabled', true)
+            });
+            $("#btnSubmit").text("删除");
+            $("#btnSubmit").removeClass("btn-primary");
+            $("#btnSubmit").addClass("btn-danger");
+        } else {
+            $("input").each(function () {
+                $(this).attr('disabled', false)
+            });
+            $("#btnSubmit").text("修改");
+            $("#btnSubmit").removeClass("btn-danger");
+            $("#btnSubmit").addClass("btn-primary");
+        }
+        $("#inputID").val(button.data('id'));
+        $("#inputName").val(button.data('name'));
+        $("#inputAddress").val(button.data('address'));
+        $("#inputPort").val(button.data('port'));
+        $("#inputLogin").val(button.data('login'));
+    });
 };
 
 function saveForm(form) {
@@ -64,12 +90,30 @@ function addPipeline() {
     return postForm("/pipeline/", "#formAddPipeline")
 }
 
-function postForm(url, form) {
-    $.post(url, $(form).serialize(), function () {
-        alert("添加成功");
-        window.location.reload()
-    }).fail(function (jq) {
-        alert("错误[" + jq.status + "，" + jq.responseText + "]请重试")
+function editServer(method) {
+    return postForm("/server/", "#formEditServer", method)
+}
+
+function postForm(url, form, method) {
+    if (method === undefined) {
+        method = "POST"
+    }
+    if (method === "DELETE") {
+        $(form).find(':input:disabled').removeAttr('disabled')
+    }
+    var ajaxUrl = method === "DELETE" ? url + "?" + $(form).serialize() : url;
+    var ajaxData = method === "DELETE" ? {} : $(form).serialize();
+    $.ajax({
+        url: ajaxUrl,
+        type: method,    // 此处发送的是POST请求
+        data: ajaxData,
+        success: function () {
+            alert("成功");
+            window.location.reload()
+        },
+        error: function (jq) {
+            alert("错误[" + jq.status + "，" + jq.responseText + "]请重试")
+        }
     });
     return false
 }
