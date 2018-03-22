@@ -1,10 +1,9 @@
 {{define "pipelog/log"}}
 {{template "common/header" .}}
 <div class="container">
-        <textarea title="编号 #{{.log.ID}} 的详细日志" disabled
-                  style="background: black;color: lawngreen;width: 100%;min-height: 400px">
-        {{.log.Log}}
-        </textarea>
+        <textarea title="编号 #{{.log.ID}} 的详细日志"
+                  disabled
+                  style="background: black;color: lawngreen;width: 100%;min-height: 400px">{{.log.Log}}</textarea>
 </div>
 {{template "common/footer" .}}
 {{end}}

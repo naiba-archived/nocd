@@ -8,10 +8,11 @@ package gocd
 import "time"
 
 const (
-	PipeLogStatusUnknown         = iota
+	_                            = iota
 	PipeLogStatusSuccess
 	PipeLogStatusErrorServerConn
 	PipeLogStatusErrorShellExec
+	PipeLogStatusRunning
 )
 
 type PipeLog struct {

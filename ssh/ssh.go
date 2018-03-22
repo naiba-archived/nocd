@@ -19,6 +19,7 @@ import (
 
 	"github.com/pkg/errors"
 	"git.cm/naiba/gocd"
+	"io"
 )
 
 func GenKeyPair() (string, string, error) {
@@ -68,7 +69,9 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) 
 	var pLog gocd.PipeLog
 	pLog.PipelineID = pipeline.ID
 	pLog.StartedAt = time.Now()
+	pLog.Log = "[GoCD]" + pLog.StartedAt.String() + ": 开始执行"
 	pLog.Pusher = who
+	pLog.Status = gocd.PipeLogStatusRunning
 	defer func() {
 		pLog.StoppedAt = time.Now()
 		saveLog(&pLog)
@@ -78,7 +81,7 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) 
 	if err != nil {
 		gocd.Log.Debug(err)
 		pLog.Status = gocd.PipeLogStatusErrorServerConn
-		pLog.Log = "连接服务器失败"
+		pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 连接服务器失败"
 		return
 	}
 	defer conn.Close()
@@ -86,30 +89,41 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) 
 	session, err := conn.NewSession()
 	if err != nil {
 		pLog.Status = gocd.PipeLogStatusErrorServerConn
-		pLog.Log = "建立会话失败"
+		pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 建立会话失败"
 		return
 	}
 	defer session.Close()
 	session.Wait()
 
-	timer := time.NewTimer(time.Second * 10)
 	finish := make(chan bool, 1)
+	defer close(finish)
+
+	timer := time.NewTimer(time.Minute * 30)
+	buf := new(bytes.Buffer)
 	go func() {
 		gocd.Log.Debug("开始执行", pipeline.Shell)
-		out, err := session.CombinedOutput(pipeline.Shell)
-		if err != nil {
-			pLog.Log = err.Error()
+		session.Stdout = buf
+		err := session.Run(pipeline.Shell)
+		if pLog.Status != gocd.PipeLogStatusRunning {
+			return
+		}
+		if err != nil && err != io.EOF {
+			gocd.Log.Debug("执行失败", err.Error())
+			pLog.Log += err.Error()
+			pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 执行失败"
 			pLog.Status = gocd.PipeLogStatusErrorShellExec
 		} else {
-			pLog.Log = string(out)
+			pLog.Log += buf.String()
+			pLog.Log += buf.String() + "\r\n [GoCD]" + time.Now().String() + ": 执行完毕"
 			pLog.Status = gocd.PipeLogStatusSuccess
 		}
 		finish <- true
 	}()
+
 	select {
 	case <-timer.C:
-		gocd.Log.Debug("执行失败")
-		pLog.Log = "Shell 执行超时"
+		gocd.Log.Debug("执行超时", buf.String())
+		pLog.Log += buf.String() + "\r\n [GoCD]" + time.Now().String() + ": 执行超时"
 		pLog.Status = gocd.PipeLogStatusErrorShellExec
 		return
 	case <-finish:
@@ -126,7 +140,7 @@ func dial(address, user, pk string, port int) (*ssh.Client, error) {
 	}
 	return ssh.Dial("tcp", fmt.Sprintf("%s:%d", address, port), &ssh.ClientConfig{
 		User:    user,
-		Timeout: time.Second * 30,
+		Timeout: time.Second * 10,
 		Auth: []ssh.AuthMethod{
 			ssh.PublicKeys(privateKey),
 		},
