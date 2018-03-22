@@ -1,4 +1,4 @@
-version: "0.0.{build}"
+version: "{build}"
 skip_tags: true
 clone_folder: c:\gopath\src\git.cm\naiba\gocd
 clone_depth: 1

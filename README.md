@@ -1,6 +1,7 @@
 # GoCD 持续交付系统
 
 [![Build status](https://ci.appveyor.com/api/projects/status/aw3p7ayv9lk4ypwn?svg=true)](https://ci.appveyor.com/project/naiba/gocd)
+
 **GoCD** 是一个 Golang 实现的持续交付系统。
 
 ## 部署教程
