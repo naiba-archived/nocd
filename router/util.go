@@ -13,7 +13,7 @@ import (
 )
 
 func setCookie(c *gin.Context, key string, val string) {
-	c.SetCookie(key, val, 60*60*24*365*1.5, "/", gocd.Conf.Section("gocd").Key("domain").String(), false, false)
+	c.SetCookie(key, val, 60*60*24*365*1.5, "/", "", false, false)
 }
 
 func commonData(c *gin.Context, csrfToken bool, data gin.H) gin.H {
