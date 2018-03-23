@@ -6,19 +6,19 @@
 package router
 
 import (
-	"fmt"
-	"time"
 	"context"
+	"fmt"
 	"net/http"
+	"time"
 
-	"github.com/gin-gonic/gin"
-	"golang.org/x/oauth2"
-	"github.com/jinzhu/gorm"
-	"github.com/gin-contrib/sessions"
-	"github.com/google/go-github/github"
 	"git.cm/naiba/com"
 	"git.cm/naiba/gocd"
 	"git.cm/naiba/gocd/ssh"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
+	"github.com/google/go-github/github"
+	"github.com/jinzhu/gorm"
+	"golang.org/x/oauth2"
 )
 
 func serveOauth2(r *gin.Engine) {

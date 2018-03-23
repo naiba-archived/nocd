@@ -6,22 +6,22 @@
 package router
 
 import (
-	"reflect"
 	"net/http"
+	"reflect"
 	"strings"
 
 	"golang.org/x/oauth2"
 	githuboauth "golang.org/x/oauth2/github"
 
-	"gopkg.in/go-playground/validator.v8"
-	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"gopkg.in/go-playground/validator.v8"
 	// sqlite支持
+	"github.com/gin-contrib/sentry"
+	"github.com/gin-gonic/gin/binding"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/utrack/gin-csrf"
-	"github.com/gin-gonic/gin/binding"
-	"github.com/gin-contrib/sentry"
 
 	"git.cm/naiba/com"
 	"git.cm/naiba/gocd"
@@ -52,8 +52,7 @@ func Start() {
 	r := initEngine()
 
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "page/index", commonData(c, true, gin.H{
-		}))
+		c.HTML(http.StatusOK, "page/index", commonData(c, true, gin.H{}))
 	})
 
 	serveOauth2(r)
@@ -115,7 +114,7 @@ func initService() {
 	}
 	db.AutoMigrate(gocd.User{}, gocd.Server{}, gocd.Repository{}, gocd.Pipeline{}, gocd.PipeLog{})
 	// user service
-	sus := sqlite3.UserService{DB: db,}
+	sus := sqlite3.UserService{DB: db}
 	userService = &sus
 	// server service
 	ss := sqlite3.ServerService{DB: db}

@@ -6,10 +6,10 @@
 package router
 
 import (
+	"encoding/json"
+	"git.cm/naiba/gocd"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"git.cm/naiba/gocd"
-	"encoding/json"
 	"strconv"
 )
 
@@ -59,8 +59,7 @@ func viewLog(c *gin.Context) {
 
 func pipelineX(c *gin.Context) {
 	if c.Request.Method == http.MethodGet {
-		c.HTML(http.StatusOK, "pipeline/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{
-		}))
+		c.HTML(http.StatusOK, "pipeline/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{}))
 	} else {
 		// 通用数据校验
 		var pl gocd.Pipeline

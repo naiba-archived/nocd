@@ -6,11 +6,11 @@
 package router
 
 import (
+	"fmt"
+	"git.cm/naiba/gocd"
 	"github.com/gin-gonic/gin"
 	"html/template"
-	"git.cm/naiba/gocd"
 	"time"
-	"fmt"
 )
 
 func setFuncMap(r *gin.Engine) {

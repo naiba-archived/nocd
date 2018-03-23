@@ -6,9 +6,9 @@
 package router
 
 import (
-	"html/template"
 	"github.com/gin-gonic/gin"
 	"github.com/utrack/gin-csrf"
+	"html/template"
 
 	"git.cm/naiba/gocd"
 )

@@ -7,7 +7,7 @@ package gocd
 
 //Server 服务器
 type Server struct {
-	ID        uint       `form:"id" binding:"min=0"`
+	ID        uint `form:"id" binding:"min=0"`
 	UserID    uint
 	User      User       `form:"-" binding:"-"`
 	Pipelines []Pipeline `form:"-" binding:"-"`

@@ -6,8 +6,8 @@
 package gocd
 
 import (
-	"github.com/naiba/webhooks/github"
 	"github.com/naiba/webhooks/bitbucket"
+	"github.com/naiba/webhooks/github"
 	"github.com/naiba/webhooks/gitlab"
 	"github.com/naiba/webhooks/gogs"
 )
@@ -26,14 +26,15 @@ const (
 
 //RepoPlatforms 平台信息索引
 var RepoPlatforms map[int]string
+
 //RepoEvents 各平台支持的事件索引
 var RepoEvents map[int]map[string]string
 
 //Repository 项目
 type Repository struct {
-	ID       uint       `form:"id"`
+	ID       uint `form:"id"`
 	UserID   uint
-	User     User       `form:"-" binding:"-"`
+	User     User `form:"-" binding:"-"`
 	Secret   string
 	Name     string     `form:"name" binding:"required,min=1,max=12"`
 	Platform int        `form:"platform" binding:"required,min=1,max=4"`

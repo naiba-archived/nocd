@@ -6,8 +6,8 @@
 package sqlite3
 
 import (
-	"github.com/jinzhu/gorm"
 	"git.cm/naiba/gocd"
+	"github.com/jinzhu/gorm"
 )
 
 //PipelineService Sqlite3的用户服务实现

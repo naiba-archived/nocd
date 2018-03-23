@@ -7,12 +7,12 @@ package gocd
 
 //Pipeline 部署流程
 type Pipeline struct {
-	ID           uint       `form:"id" binding:"min=0"`
-	Name         string     `form:"name" binding:"required,min=1,max=12"`
-	Branch       string     `form:"branch" binding:"required,alphanum,min=1,max=30"`
+	ID           uint   `form:"id" binding:"min=0"`
+	Name         string `form:"name" binding:"required,min=1,max=12"`
+	Branch       string `form:"branch" binding:"required,alphanum,min=1,max=30"`
 	Events       string
-	EventsSlice  []string   `gorm:"-" form:"events[]" binding:"required,min=1"`
-	Shell        string     `form:"shell" binding:"required,min=3,max=1000"`
+	EventsSlice  []string `gorm:"-" form:"events[]" binding:"required,min=1"`
+	Shell        string   `form:"shell" binding:"required,min=3,max=1000"`
 	UserID       uint
 	User         User       `form:"-" binding:"-"`
 	ServerID     uint       `form:"server" binding:"required,min=1"`

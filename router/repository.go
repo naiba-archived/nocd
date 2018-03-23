@@ -6,12 +6,12 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
-	"git.cm/naiba/gocd"
-	"git.cm/naiba/com"
 	"fmt"
-	"time"
+	"git.cm/naiba/com"
+	"git.cm/naiba/gocd"
+	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
 )
 
 func serveRepository(r *gin.Engine) {

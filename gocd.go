@@ -13,10 +13,13 @@ import (
 
 //Log of sentry logger
 var Log *log.Logger
+
 //Conf of GoCD config
 var Conf *ini.File
+
 //Debug debuggable
 var Debug bool
+
 //Loc system time location
 var Loc *time.Location
 

@@ -6,19 +6,19 @@
 package ssh
 
 import (
-	"crypto/rsa"
-	"encoding/pem"
-	"crypto/x509"
 	"bytes"
 	"crypto/rand"
+	"crypto/rsa"
+	"crypto/x509"
+	"encoding/pem"
 	"fmt"
+	"golang.org/x/crypto/ssh"
 	"net"
 	"strings"
 	"time"
-	"golang.org/x/crypto/ssh"
 
-	"github.com/pkg/errors"
 	"git.cm/naiba/gocd"
+	"github.com/pkg/errors"
 	"io"
 )
 

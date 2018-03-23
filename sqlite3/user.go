@@ -27,7 +27,7 @@ func (us *UserService) CreateUser(u *gocd.User) error {
 }
 
 //UpdateUser 更新用户
-func (us *UserService) UpdateUser(u *gocd.User, cols ... string) error {
+func (us *UserService) UpdateUser(u *gocd.User, cols ...string) error {
 	return us.DB.Model(u).Select(cols).Updates(u).Error
 }
 

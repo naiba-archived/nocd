@@ -6,17 +6,17 @@
 package router
 
 import (
-	"strconv"
 	"net/http"
 	"reflect"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/naiba/webhooks/github"
+	client "github.com/gogits/go-gogs-client"
 	"github.com/naiba/webhooks"
 	"github.com/naiba/webhooks/bitbucket"
+	"github.com/naiba/webhooks/github"
 	"github.com/naiba/webhooks/gitlab"
 	"github.com/naiba/webhooks/gogs"
-	client "github.com/gogits/go-gogs-client"
 
 	"git.cm/naiba/gocd"
 	"git.cm/naiba/gocd/ssh"
@@ -86,7 +86,7 @@ func webHook(c *gin.Context) {
 	hook.ParsePayload(c.Writer, c.Request)
 }
 
-func dispatchWebHook(id uint, ) webhooks.ProcessPayloadFunc {
+func dispatchWebHook(id uint) webhooks.ProcessPayloadFunc {
 	return func(payload interface{}, header webhooks.Header) {
 		payloadType := reflect.TypeOf(payload).String()
 		p, has := webHookSQLIndex[payloadType]

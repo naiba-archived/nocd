@@ -6,8 +6,8 @@
 package sqlite3
 
 import (
-	"github.com/jinzhu/gorm"
 	"git.cm/naiba/gocd"
+	"github.com/jinzhu/gorm"
 )
 
 //PipeLogService 日志服务

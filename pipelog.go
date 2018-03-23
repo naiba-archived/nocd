@@ -8,7 +8,7 @@ package gocd
 import "time"
 
 const (
-	_                            = iota
+	_ = iota
 	//PipeLogStatusSuccess 成功
 	PipeLogStatusSuccess
 	//PipeLogStatusErrorServerConn 服务器链接失败
