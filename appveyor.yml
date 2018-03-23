@@ -1,24 +1,14 @@
 version: '{build}'
-clone_folder: c:\gopath\src\git.cm\naiba\gocd
+clone_folder: c:\go\src\git.cm\naiba\gocd
 init:
 - cmd: git config --global core.autocrlf input
 environment:
-  GOPATH: c:\gopath
+  GOPATH: c:\go
   DEPTESTBYPASS501: 1
-  GOVERSION: 1.9
+  CC: c:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin\gcc.exe
 install:
 - cmd: >-
-    cd c:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin
-
-    dir
-
-    rmdir c:\go /s /q
-
-    appveyor DownloadFile https://storage.googleapis.com/golang/go%GOVERSION%.windows-amd64.msi
-
-    msiexec /i go%GOVERSION%.windows-amd64.msi /q
-
-    set Path=c:\go\bin;c:\gopath\bin;c:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin
+    set Path=c:\go\bin;c:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin
 
     go version
 
