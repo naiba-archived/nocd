@@ -6,9 +6,9 @@
 package gocd
 
 import (
-	"gopkg.in/go-playground/webhooks.v3/github"
-	"gopkg.in/go-playground/webhooks.v3/bitbucket"
-	"gopkg.in/go-playground/webhooks.v3/gitlab"
+	"github.com/naiba/webhooks/github"
+	"github.com/naiba/webhooks/bitbucket"
+	"github.com/naiba/webhooks/gitlab"
 	"github.com/naiba/webhooks/gogs"
 )
 
