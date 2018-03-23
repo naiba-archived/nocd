@@ -13,20 +13,20 @@ import (
 	"golang.org/x/oauth2"
 	githuboauth "golang.org/x/oauth2/github"
 
+	"github.com/getsentry/raven-go"
+	"github.com/gin-contrib/sentry"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 	"github.com/jinzhu/gorm"
+	"github.com/utrack/gin-csrf"
 	"gopkg.in/go-playground/validator.v8"
 	// sqlite支持
-	"github.com/gin-contrib/sentry"
-	"github.com/gin-gonic/gin/binding"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/utrack/gin-csrf"
 
 	"git.cm/naiba/com"
 	"git.cm/naiba/gocd"
 	"git.cm/naiba/gocd/sqlite3"
-	"github.com/getsentry/raven-go"
 )
 
 var userService gocd.UserService
