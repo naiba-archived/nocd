@@ -196,7 +196,7 @@
     "gitlab",
     "gogs"
   ]
-  revision = "6d731433c9c5a249d7c95761503cbb4efe3f50cc"
+  revision = "a831111e2676c296c8493004e31fbdd94fc1b6ce"
 
 [[projects]]
   name = "github.com/parnurzeal/gorequest"
@@ -215,6 +215,12 @@
   packages = ["."]
   revision = "c155da19408a8799da419ed3eeb0cb5db0ad5dbc"
   version = "v1.0.5"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/tmthrgd/go-bindata"
+  packages = ["restore"]
+  revision = "40f4993ede74f673cfe96bed75ef8513a389a00a"
 
 [[projects]]
   name = "github.com/ugorji/go"
@@ -246,7 +252,7 @@
     "ssh",
     "ssh/terminal"
   ]
-  revision = "80db560fac1fb3e6ac81dbc7f8ae4c061f5257bd"
+  revision = "88942b9c40a4c9d203b82b3731787b672d6e809b"
 
 [[projects]]
   branch = "master"
@@ -276,7 +282,7 @@
     "unix",
     "windows"
   ]
-  revision = "c488ab1dd8481ef762f96a79a9577c27825be697"
+  revision = "91ee8cde435411ca3f1cd365e8f20131aed4d0a1"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -346,6 +352,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ef446c35692d307991c63fe2dea6d044e296f08a4d22348401a259229112e641"
+  inputs-digest = "8463e1bbee710247530f650485581b02218794dda02215b121e7d9edd2894f3c"
   solver-name = "gps-cdcl"
   solver-version = 1

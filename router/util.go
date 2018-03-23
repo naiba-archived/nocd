@@ -6,10 +6,11 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
-	"git.cm/naiba/gocd"
 	"html/template"
+	"github.com/gin-gonic/gin"
 	"github.com/utrack/gin-csrf"
+
+	"git.cm/naiba/gocd"
 )
 
 func setCookie(c *gin.Context, key string, val string) {

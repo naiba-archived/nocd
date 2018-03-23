@@ -1,4 +1,4 @@
 /.idea
 /cmd/web/web
-/cmd/web/data
 /cmd/web/conf
+/cmd/web/bindata.go

@@ -1,22 +1,29 @@
 version: '{build}'
-clone_folder: c:\go\src\git.cm\naiba\gocd
+clone_folder: c:\nb\src\git.cm\naiba\gocd
 init:
 - cmd: git config --global core.autocrlf input
 environment:
-  GOPATH: c:\go
-  DEPTESTBYPASS501: 1
+  GOPATH: c:\nb
   CC: c:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin\gcc.exe
 install:
 - cmd: >-
-    set Path=c:\go\bin;c:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin
+    set Path=c:\go\bin;c:\nb\bin;c:\mingw-w64\x86_64-7.2.0-posix-seh-rt_v5-rev1\mingw64\bin;C:\Program Files\Mercurial\%Path%
 
     go version
 
     go env
+
+    go get -u github.com/tmthrgd/go-bindata/...
 build: off
 test_script:
 - cmd: >-
-    go build git.cm/naiba/gocd/cmd/web
-
     for /f "" %%G in ('go list git.cm/naiba/gocd/...') do ( go test %%G & IF ERRORLEVEL == 1 EXIT 1)
+
+    cd cmd/web
+
+    go-bindata resource/...
+
+    dir
+
+    go build git.cm/naiba/gocd/cmd/web
 deploy: off

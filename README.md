@@ -10,12 +10,6 @@
 
 2. 进入应用目录 `gocd/cmd/web`
 
-2. 安装依赖
-
-       ```shell
-       go get
-       ```
-
 3. 编译
 
        ```shell

@@ -90,10 +90,6 @@
   version = "8.18.2"
 
 [[constraint]]
-  name = "gopkg.in/go-playground/webhooks.v3"
-  version = "3.10.0"
-
-[[constraint]]
   name = "gopkg.in/ini.v1"
   version = "1.33.0"
 
