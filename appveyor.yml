@@ -17,13 +17,13 @@ install:
 build: off
 test_script:
 - cmd: >-
-    for /f "" %%G in ('go list git.cm/naiba/gocd/...') do ( go test %%G & IF ERRORLEVEL == 1 EXIT 1)
-
     cd cmd/web
 
     go-bindata resource/...
 
     dir
+
+    for /f "" %%G in ('go list git.cm/naiba/gocd/...') do ( go test %%G & IF ERRORLEVEL == 1 EXIT 1)
 
     go build git.cm/naiba/gocd/cmd/web
 deploy: off
