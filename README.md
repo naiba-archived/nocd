@@ -43,6 +43,8 @@
        ./web
        ```
 
+6. `GitHub` 回调地址：`http://mjj.cx/oauth2/callback`
+
 ## 界面预览
 
 | ![首页截图](https://git.cm/naiba/gocd/raw/master/README/首页截图.png) | ![服务器管理](https://git.cm/naiba/gocd/raw/master/README/服务器管理.png) | ![项目管理](https://git.cm/naiba/gocd/raw/master/README/项目管理.png) |
