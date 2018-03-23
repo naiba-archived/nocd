@@ -7,7 +7,6 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 const CtxIsLogin = "login"
@@ -38,12 +37,10 @@ type filterOption struct {
 func filterMiddleware(o filterOption) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if o.Guest && c.MustGet(CtxIsLogin).(bool) {
-			c.Redirect(http.StatusMovedPermanently, "/")
-			c.Abort()
+			jsAlertAndRedirect("限制已登录用户访问", "/", c)
 		}
 		if o.User && !c.MustGet(CtxIsLogin).(bool) {
-			c.Redirect(http.StatusMovedPermanently, "/")
-			c.Abort()
+			jsAlertAndRedirect("需要登录", "/", c)
 		}
 	}
 }

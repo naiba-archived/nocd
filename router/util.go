@@ -28,3 +28,12 @@ func commonData(c *gin.Context, csrfToken bool, data gin.H) gin.H {
 	}
 	return data
 }
+
+func jsAlertAndRedirect(msg, url string, c *gin.Context) {
+	c.Writer.WriteString(`
+<script>
+alert('` + msg + `');window.location.href='` + url + `'
+</script>
+`)
+	c.Abort()
+}
