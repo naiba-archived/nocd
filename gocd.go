@@ -11,11 +11,16 @@ import (
 	"time"
 )
 
+//Log of sentry logger
 var Log *log.Logger
+//Conf of GoCD config
 var Conf *ini.File
+//Debug debuggable
 var Debug bool
+//Loc system time location
 var Loc *time.Location
 
+//Initial system: load common config
 func Initial(file string) {
 	var err error
 	if Log == nil {

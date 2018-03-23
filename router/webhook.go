@@ -22,18 +22,18 @@ import (
 	"git.cm/naiba/gocd/ssh"
 )
 
-var webHookSqlIndex map[string]string
+var webHookSQLIndex map[string]string
 
 func init() {
-	webHookSqlIndex = make(map[string]string)
+	webHookSQLIndex = make(map[string]string)
 	// github
-	webHookSqlIndex["github.PushPayload"] = string(github.PushEvent)
+	webHookSQLIndex["github.PushPayload"] = string(github.PushEvent)
 	// bitBucket
-	webHookSqlIndex["bitbucket.PullRequestMergedPayload"] = string(bitbucket.PullRequestMergedEvent)
+	webHookSQLIndex["bitbucket.PullRequestMergedPayload"] = string(bitbucket.PullRequestMergedEvent)
 	// gitlab
-	webHookSqlIndex["gitlab.PushEventPayload"] = string(gitlab.PushEvents)
+	webHookSQLIndex["gitlab.PushEventPayload"] = string(gitlab.PushEvents)
 	// gogs
-	webHookSqlIndex["gogs.PushPayload"] = string(gogs.PushEvent)
+	webHookSQLIndex["gogs.PushPayload"] = string(gogs.PushEvent)
 }
 
 func serveWebHook(r *gin.Engine) {
@@ -89,7 +89,7 @@ func webHook(c *gin.Context) {
 func dispatchWebHook(id uint, ) webhooks.ProcessPayloadFunc {
 	return func(payload interface{}, header webhooks.Header) {
 		payloadType := reflect.TypeOf(payload).String()
-		p, has := webHookSqlIndex[payloadType]
+		p, has := webHookSQLIndex[payloadType]
 		if !has {
 			return
 		}

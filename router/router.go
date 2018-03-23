@@ -17,6 +17,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/sessions"
 	"github.com/jinzhu/gorm"
+	// sqlite支持
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/utrack/gin-csrf"
 	"github.com/gin-gonic/gin/binding"
@@ -43,6 +44,7 @@ func init() {
 	})
 }
 
+//Start 运行Web
 func Start() {
 	initService()
 	initOauthConf()

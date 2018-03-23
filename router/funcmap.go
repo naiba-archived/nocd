@@ -40,9 +40,8 @@ func setFuncMap(r *gin.Engine) {
 			}
 			if sec < 60*60*24*30*12 {
 				return fmt.Sprintf(" %.0f 个月", sec/60/60/24/30)
-			} else {
-				return fmt.Sprintf(" %.0f 年", sec/60/60/24/30/12)
 			}
+			return fmt.Sprintf(" %.0f 年", sec/60/60/24/30/12)
 		},
 		"Now": func() time.Time {
 			return time.Now()

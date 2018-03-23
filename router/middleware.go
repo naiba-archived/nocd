@@ -9,7 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//CtxIsLogin 用户是否登录
 const CtxIsLogin = "login"
+
+//CtxUser 用户Key
 const CtxUser = "user"
 
 func authMiddleware(c *gin.Context) {

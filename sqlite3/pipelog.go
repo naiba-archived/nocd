@@ -10,18 +10,22 @@ import (
 	"git.cm/naiba/gocd"
 )
 
+//PipeLogService 日志服务
 type PipeLogService struct {
 	DB *gorm.DB
 }
 
+//Create 创建日志
 func (ps *PipeLogService) Create(log *gocd.PipeLog) error {
 	return ps.DB.Create(log).Error
 }
 
+//Pipeline 获取部署流程信息
 func (ps *PipeLogService) Pipeline(log *gocd.PipeLog) error {
 	return ps.DB.Model(log).Related(&log.Pipeline).Error
 }
 
+//LastServerLog 服务器的最后一次部署
 func (ps *PipeLogService) LastServerLog(sid uint) gocd.PipeLog {
 	var pipelines []gocd.Pipeline
 	var pl gocd.PipeLog
@@ -34,6 +38,7 @@ func (ps *PipeLogService) LastServerLog(sid uint) gocd.PipeLog {
 	return pl
 }
 
+//UserLogs 用户的所有日志
 func (ps *PipeLogService) UserLogs(uid uint) []gocd.PipeLog {
 	var pipelines []gocd.Pipeline
 	var pl []gocd.PipeLog
@@ -49,7 +54,8 @@ func (ps *PipeLogService) UserLogs(uid uint) []gocd.PipeLog {
 	return pl
 }
 
-func (ps *PipeLogService) GetByUid(uid, lid uint) (gocd.PipeLog, error) {
+//GetByUID 通过用户ID和部署流程ID查找日志
+func (ps *PipeLogService) GetByUID(uid, lid uint) (gocd.PipeLog, error) {
 	var pipelines []gocd.Pipeline
 	var user gocd.User
 	user.ID = uid
@@ -63,6 +69,7 @@ func (ps *PipeLogService) GetByUid(uid, lid uint) (gocd.PipeLog, error) {
 	return log, err
 }
 
+//LastPipelineLog 部署流程最后一次部署
 func (ps *PipeLogService) LastPipelineLog(pid uint) gocd.PipeLog {
 	var pl gocd.PipeLog
 	ps.DB.Where("pipeline_id = ?", pid).Order("id desc").First(&pl)

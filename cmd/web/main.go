@@ -16,8 +16,6 @@ import (
 	"git.cm/naiba/gocd/router"
 )
 
-const VERSION = "2"
-
 func init() {
 	// initial global settings
 	gocd.Initial("conf/app.ini")
@@ -32,7 +30,7 @@ func init() {
 	} else {
 		gocd.Log.Panicln(err)
 	}
-	unzipAssets("resource/", VERSION, []string{"resource"}, RestoreAssets)
+	unzipAssets("resource/", "2", []string{"resource"}, RestoreAssets)
 }
 
 func main() {

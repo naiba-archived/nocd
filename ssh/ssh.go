@@ -22,6 +22,7 @@ import (
 	"io"
 )
 
+//GenKeyPair 创建密钥对
 func GenKeyPair() (string, string, error) {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
 	if err != nil {
@@ -44,6 +45,7 @@ func GenKeyPair() (string, string, error) {
 	return string(public), private.String(), nil
 }
 
+//CheckLogin 检查服务器是否存在
 func CheckLogin(address string, port int, privateKey string, login string) error {
 	conn, err := dial(address, login, privateKey, port)
 	if err != nil {
@@ -57,14 +59,14 @@ func CheckLogin(address string, port int, privateKey string, login string) error
 	}
 	defer session.Close()
 	opt, err := session.Output("whoami")
-	if strings.TrimSpace(string(opt)) == login {
-		return nil
-	} else {
-		gocd.Log.Info(string(opt))
+	if strings.TrimSpace(string(opt)) != login {
+		gocd.Log.Info(string(opt) + "|" + err.Error())
 		return errors.New("用户名验证失败")
 	}
+	return nil
 }
 
+//Deploy 进行部署
 func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) error) {
 	var pLog gocd.PipeLog
 	pLog.PipelineID = pipeline.ID

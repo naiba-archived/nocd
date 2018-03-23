@@ -36,7 +36,7 @@ func serveOauth2(r *gin.Engine) {
 		oauth2router.GET("/callback", func(c *gin.Context) {
 			type oauthCallback struct {
 				State       string `form:"state"`
-				RedirectUri string `form:"redirect_uri"`
+				RedirectURI string `form:"redirect_uri"`
 				Code        string `form:"code"`
 			}
 			var call oauthCallback
@@ -99,13 +99,10 @@ func serveOauth2(r *gin.Engine) {
 				gocd.Log.Errorln(err)
 				c.String(http.StatusInternalServerError, "数据库错误")
 				return
-			} else {
-				setCookie(c, "uid", fmt.Sprintf("%d", u.ID))
-				setCookie(c, "token", u.Token)
-				c.Redirect(http.StatusMovedPermanently, "/")
-				return
 			}
+			setCookie(c, "uid", fmt.Sprintf("%d", u.ID))
+			setCookie(c, "token", u.Token)
+			c.Redirect(http.StatusMovedPermanently, "/")
 		})
-
 	}
 }

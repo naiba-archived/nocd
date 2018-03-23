@@ -7,6 +7,7 @@ package gocd
 
 import "github.com/jinzhu/gorm"
 
+//User 用户
 type User struct {
 	gorm.Model
 	// 用户GitHubID
@@ -24,6 +25,7 @@ type User struct {
 	Token string
 }
 
+//UserService 用户服务
 type UserService interface {
 	UserByGID(gid int64) (*User, error)
 	CreateUser(u *User) error

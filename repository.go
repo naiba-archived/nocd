@@ -13,16 +13,23 @@ import (
 )
 
 const (
-	_                 = iota
+	_ = iota
+	//RepoPlatGitHub GitHub
 	RepoPlatGitHub
+	//RepoPlatBitBucket BitBucket
 	RepoPlatBitBucket
+	//RepoPlatGitlab Gitlab
 	RepoPlatGitlab
+	//RepoPlatGogs Gogs
 	RepoPlatGogs
 )
 
+//RepoPlatforms 平台信息索引
 var RepoPlatforms map[int]string
+//RepoEvents 各平台支持的事件索引
 var RepoEvents map[int]map[string]string
 
+//Repository 项目
 type Repository struct {
 	ID       uint       `form:"id"`
 	UserID   uint
@@ -33,6 +40,7 @@ type Repository struct {
 	Pipeline []Pipeline `form:"-" binding:"-"`
 }
 
+//RepositoryService 项目服务
 type RepositoryService interface {
 	Create(repo *Repository) error
 	Update(repo *Repository) error

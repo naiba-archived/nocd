@@ -47,7 +47,7 @@ func viewLog(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "非法ID")
 		return
 	}
-	log, err := pipelogService.GetByUid(user.ID, uint(u64lid))
+	log, err := pipelogService.GetByUID(user.ID, uint(u64lid))
 	if err != nil {
 		c.String(http.StatusForbidden, "您无权查看此Log")
 		return

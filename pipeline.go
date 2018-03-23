@@ -5,6 +5,7 @@
 
 package gocd
 
+//Pipeline 部署流程
 type Pipeline struct {
 	ID           uint       `form:"id" binding:"min=0"`
 	Name         string     `form:"name" binding:"required,min=1,max=12"`
@@ -21,13 +22,14 @@ type Pipeline struct {
 	PipeLog      []PipeLog  `form:"-" binding:"-"`
 }
 
+//PipelineService 部署流程服务
 type PipelineService interface {
 	Create(p *Pipeline) error
 	Update(p *Pipeline) error
 	Delete(pid uint) error
 	RepoPipelines(r *Repository) []Pipeline
 	UserPipelines(u *User) []Pipeline
-	UserPipeline(uid,pid uint) (Pipeline,error)
+	UserPipeline(uid, pid uint) (Pipeline, error)
 	GetPipelinesByRidAndEventAndBranch(rid uint, event string, branch string) ([]Pipeline, error)
 	Server(p *Pipeline) error
 	User(p *Pipeline) error
