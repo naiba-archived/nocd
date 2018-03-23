@@ -25,6 +25,7 @@
        domain = mjj.cx
        web_listen = 0.0.0.0:8000
        loc = Asia/Shanghai
+       google_analysis = "NB-XXXXXX-1"
        [third_party]
        github_oauth2_client_id = example
        github_oauth2_client_secret = example

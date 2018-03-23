@@ -16,7 +16,7 @@ import (
 	"git.cm/naiba/gocd/router"
 )
 
-const VERSION = "1"
+const VERSION = "2"
 
 func init() {
 	// initial global settings
