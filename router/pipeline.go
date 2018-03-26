@@ -8,6 +8,7 @@ package router
 import (
 	"encoding/json"
 	"git.cm/naiba/gocd"
+	"git.cm/naiba/gocd/utils/mgin"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
@@ -15,12 +16,12 @@ import (
 
 func servePipeline(r *gin.Engine) {
 	pipeline := r.Group("/pipeline")
-	pipeline.Use(filterMiddleware(filterOption{User: true}))
+	pipeline.Use(mgin.FilterMiddleware(mgin.FilterOption{User: true}))
 	{
 		pipeline.Any("/", pipelineX)
 	}
 	pipelog := r.Group("/pipelog")
-	pipelog.Use(filterMiddleware(filterOption{User: true}))
+	pipelog.Use(mgin.FilterMiddleware(mgin.FilterOption{User: true}))
 	{
 		pipelog.GET("/", pipeLogs)
 		pipelog.GET("/:id", viewLog)
@@ -28,20 +29,20 @@ func servePipeline(r *gin.Engine) {
 }
 
 func pipeLogs(c *gin.Context) {
-	user := c.MustGet(CtxUser).(*gocd.User)
+	user := c.MustGet(mgin.CtxUser).(*gocd.User)
 	logs := pipelogService.UserLogs(user.ID)
 	for i, l := range logs {
 		pipelogService.Pipeline(&l)
 		logs[i] = l
 	}
-	c.HTML(http.StatusOK, "pipelog/index", commonData(c, false, gin.H{
+	c.HTML(http.StatusOK, "pipelog/index", mgin.CommonData(c, false, gin.H{
 		"logs": logs,
 	}))
 }
 
 func viewLog(c *gin.Context) {
 	lid := c.Param("id")
-	user := c.MustGet(CtxUser).(*gocd.User)
+	user := c.MustGet(mgin.CtxUser).(*gocd.User)
 	u64lid, err := strconv.ParseUint(lid, 10, 64)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "非法ID")
@@ -52,14 +53,14 @@ func viewLog(c *gin.Context) {
 		c.String(http.StatusForbidden, "您无权查看此Log")
 		return
 	}
-	c.HTML(http.StatusOK, "pipelog/log", commonData(c, false, gin.H{
+	c.HTML(http.StatusOK, "pipelog/log", mgin.CommonData(c, false, gin.H{
 		"log": log,
 	}))
 }
 
 func pipelineX(c *gin.Context) {
 	if c.Request.Method == http.MethodGet {
-		c.HTML(http.StatusOK, "pipeline/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{}))
+		c.HTML(http.StatusOK, "pipeline/index", mgin.CommonData(c, true, gin.H{}))
 	} else {
 		// 通用数据校验
 		var pl gocd.Pipeline
@@ -74,7 +75,7 @@ func pipelineX(c *gin.Context) {
 			return
 		}
 		pl.Events = string(tmp)
-		user := c.MustGet(CtxUser).(*gocd.User)
+		user := c.MustGet(mgin.CtxUser).(*gocd.User)
 		repo, err := repoService.GetRepoByUserAndID(user, pl.RepositoryID)
 		if err != nil {
 			gocd.Log.Debug(err)

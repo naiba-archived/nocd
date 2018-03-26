@@ -21,6 +21,7 @@ type User struct {
 	Servers      []Server     `form:"-"`
 	Repositories []Repository `form:"-"`
 	Pipelines    []Pipeline   `form:"-"`
+	IsAdmin      bool
 	// 用户Token
 	Token string
 }

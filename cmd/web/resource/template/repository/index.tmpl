@@ -128,7 +128,7 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <h5 class="mt-1 limit-text-length">
-                        <span class="octicon octicon-repo"></span>
+                        <i class="octicon octicon-repo"></i>
                         <span class="badge badge-light">{{index $.platforms .Platform}}</span>
                     {{.Name}}
                     </h5>
@@ -137,21 +137,21 @@
                                 data-text="https://{{$.domain}}/webhook/{{.ID}}"
                                 data-toggle="tooltip"
                                 data-placement="top" title="点击复制 WebHook 地址">
-                            <span class="octicon octicon-plug"></span>
+                            <i class="octicon octicon-plug"></i>
                         </button>
                         <button type="button" class="btn btn-sm btn-secondary pr-1 pl-2 copy-btn"
                                 data-text="{{.Secret}}"
                                 data-toggle="tooltip"
                                 data-placement="top" title="点击复制 WebHook 密钥">
-                            <span class="octicon octicon-gist-secret"></span>
+                            <i class="octicon octicon-gist-secret"></i>
                         </button>
                         <button class="btn btn-sm btn-secondary pr-1 pl-2" data-toggle="modal"
                                 data-target="#modalRepo" data-id="{{.ID}}" data-name="{{.Name}}" data-platform="{{.Platform}}">
-                            <span class="octicon octicon-pencil"></span>
+                            <i class="octicon octicon-pencil"></i>
                         </button>
                         <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="POST" data-toggle="modal"
                                 data-target="#modalAddPipeline" data-repo="{{.ID}}" data-whatever="{{.Platform}}">
-                            <span class="octicon octicon-plus"></span>
+                            <i class="octicon octicon-plus"></i>
                         </button>
                     </div>
                 </div>
@@ -193,7 +193,7 @@
                                         data-branch="{{$p.Branch}}" data-server="{{$p.ServerID}}"
                                         data-shell="{{$p.Shell}}"
                                         data-events="{{$p.Events}}" data-whatever="{{$repo.Platform}}">
-                                    <span class="octicon octicon-pencil"></span>
+                                    <i class="octicon octicon-pencil"></i>
                                 </button>
                                 <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="DELETE"
                                         data-toggle="modal"
@@ -202,7 +202,7 @@
                                         data-branch="{{$p.Branch}}" data-server="{{$p.ServerID}}"
                                         data-shell="HIDDEN"
                                         data-events="{{$p.Events}}" data-whatever="{{$repo.Platform}}">
-                                    <span class="octicon octicon-trashcan"></span>
+                                    <i class="octicon octicon-trashcan"></i>
                                 </button>
                             </td>
                         </tr>

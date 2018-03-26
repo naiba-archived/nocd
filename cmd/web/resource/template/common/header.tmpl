@@ -20,28 +20,36 @@
     <div class="container d-flex flex-column flex-md-row align-items-center">
         <h5 class="my-0 mr-md-auto font-weight-normal"><a class="text-secondary" href="/">GoCD</a></h5>
         <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 text-dark" href="/server/"><span class="octicon octicon-server"></span>服务器</a>
-            <a class="p-2 text-dark" href="/repository/"><span class="octicon octicon-repo"></span>项目</a>
-            <a class="p-2 text-dark" href="/pipelog/"><span class="octicon octicon-zap"></span>交付</a>
-            <a class="p-2 text-dark" href="#"><span class="octicon octicon-settings"></span>配置</a>
+            <a class="p-2 {{if HasPrefix .router "/server/"}}text-dark{{else}}text-secondary{{end}}" href="/server/"><i
+                    class="octicon octicon-server"></i> 服务器</a>
+            <a class="p-2 {{if HasPrefix .router "/repository/"}}text-dark{{else}}text-secondary{{end}}"
+               href="/repository/"><i class="octicon octicon-repo"></i> 项目</a>
+            <a class="p-2 {{if HasPrefix .router "/pipelog/"}}text-dark{{else}}text-secondary{{end}}"
+               href="/pipelog/"><i class="octicon octicon-zap"></i> 交付</a>
+            <a class="p-2 {{if HasPrefix .router "/undefind/"}}text-dark{{else}}text-secondary{{end}}" href="#"><i
+                    class="octicon octicon-settings"></i> 配置</a>
         </nav>
     {{if .isLogin}}
         <div class="nav-item dropdown">
             <a class="nav-link dropdown-toggle text-secondary" href="#" id="navbarDropdownMenuLink"
                data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
-                <span class="octicon octicon-mark-github"></span> {{.user.GName}}
+                <i class="octicon octicon-mark-github"></i> {{.user.GName}}
             </a>
             <div class="dropdown-menu" style="min-width: auto" aria-labelledby="navbarDropdownMenuLink">
-                <button class="dropdown-item" onclick="logout()">注销</button>
+            {{if .user.IsAdmin}}
+                <a class="dropdown-item" href="/admin"><i class="octicon octicon-settings"></i> 管理面板</a>
+                <div class="dropdown-divider"></div>
+            {{end}}
+                <button class="dropdown-item" onclick="logout()"><i class="octicon octicon-sign-out"></i> 注销</button>
             </div>
         </div>
     {{else}}
         <form id="loginForm" action="/oauth2/login" method="post">
         {{.csrf_token}}
         </form>
-        <button onclick="saveForm('#loginForm')" class="btn btn-outline-primary"><span
-                class="octicon octicon-mark-github"></span> 登陆
+        <button onclick="saveForm('#loginForm')" class="btn btn-outline-primary"><i
+                class="octicon octicon-mark-github"></i> 登陆
         </button>
     {{end}}
     </div>

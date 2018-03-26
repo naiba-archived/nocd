@@ -19,7 +19,7 @@ import (
 	"github.com/naiba/webhooks/gogs"
 
 	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/ssh"
+	"git.cm/naiba/gocd/utils/ssh"
 )
 
 var webHookSQLIndex map[string]string

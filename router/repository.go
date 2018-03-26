@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"git.cm/naiba/com"
 	"git.cm/naiba/gocd"
+	"git.cm/naiba/gocd/utils/mgin"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
@@ -16,7 +17,7 @@ import (
 
 func serveRepository(r *gin.Engine) {
 	repo := r.Group("/repository")
-	repo.Use(filterMiddleware(filterOption{User: true}))
+	repo.Use(mgin.FilterMiddleware(mgin.FilterOption{User: true}))
 	{
 		repo.Any("/", repoHandler)
 	}
@@ -24,8 +25,8 @@ func serveRepository(r *gin.Engine) {
 
 func repoHandler(c *gin.Context) {
 	if c.Request.Method == http.MethodGet {
-		user := c.MustGet(CtxUser).(*gocd.User)
-		c.HTML(http.StatusOK, "repository/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{
+		user := c.MustGet(mgin.CtxUser).(*gocd.User)
+		c.HTML(http.StatusOK, "repository/index", mgin.CommonData(c, c.GetBool(mgin.CtxIsLogin), gin.H{
 			"repos":     repoService.GetRepoByUser(user),
 			"platforms": gocd.RepoPlatforms,
 			"events":    gocd.RepoEvents,
@@ -38,7 +39,7 @@ func repoHandler(c *gin.Context) {
 			c.String(http.StatusForbidden, "数据不规范，请检查后重新填写"+err.Error())
 			return
 		}
-		user := c.MustGet(CtxUser).(*gocd.User)
+		user := c.MustGet(mgin.CtxUser).(*gocd.User)
 		if c.Request.Method == http.MethodPost {
 			// 添加
 			repo.UserID = user.ID

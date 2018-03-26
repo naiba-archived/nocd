@@ -27,6 +27,7 @@ import (
 	"git.cm/naiba/com"
 	"git.cm/naiba/gocd"
 	"git.cm/naiba/gocd/sqlite3"
+	"git.cm/naiba/gocd/utils/mgin"
 )
 
 var userService gocd.UserService
@@ -52,15 +53,16 @@ func Start() {
 	r := initEngine()
 
 	r.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "page/index", commonData(c, true, gin.H{}))
+		c.HTML(http.StatusOK, "page/index", mgin.CommonData(c, true, gin.H{}))
 	})
 
 	serveOauth2(r)
 	servePipeline(r)
 	serveServer(r)
 	serveRepository(r)
-	serveSttings(r)
+	serveSettings(r)
 	serveWebHook(r)
+	serveAdmin(r)
 
 	r.Run(gocd.Conf.Section("gocd").Key("web_listen").String())
 }
@@ -83,7 +85,7 @@ func initEngine() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(sentry.Recovery(raven.DefaultClient, false))
 	r.Use(gin.Recovery())
-	setFuncMap(r)
+	r.SetFuncMap(mgin.FuncMap(pipelineService, pipelogService))
 	// csrf protection
 	r.Use(sessions.Sessions("gocd_session", sessions.NewCookieStore([]byte(gocd.Conf.Section("gocd").Key("cookie_key_pair").String()))))
 	r.Use(csrf.Middleware(csrf.Options{
@@ -98,7 +100,7 @@ func initEngine() *gin.Engine {
 	}))
 	r.Static("/static", "resource/static")
 	r.LoadHTMLGlob("resource/template/**/*")
-	r.Use(authMiddleware)
+	r.Use(mgin.AuthMiddleware(userService))
 	return r
 }
 
@@ -113,6 +115,9 @@ func initService() {
 		db.LogMode(gocd.Debug)
 	}
 	db.AutoMigrate(gocd.User{}, gocd.Server{}, gocd.Repository{}, gocd.Pipeline{}, gocd.PipeLog{})
+
+	upgradeV001(db)
+
 	// user service
 	sus := sqlite3.UserService{DB: db}
 	userService = &sus
@@ -128,4 +133,14 @@ func initService() {
 	// pipelog service
 	pl := sqlite3.PipeLogService{DB: db}
 	pipelogService = &pl
+}
+
+func upgradeV001(db *gorm.DB) {
+	// 赋予管理员权限
+	var admin gocd.User
+	db.Where("id = 1").First(&admin)
+	if !admin.IsAdmin {
+		admin.IsAdmin = true
+		db.Save(admin)
+	}
 }

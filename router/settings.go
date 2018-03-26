@@ -6,16 +6,17 @@
 package router
 
 import (
+	"git.cm/naiba/gocd/utils/mgin"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func serveSttings(r *gin.Engine) {
+func serveSettings(r *gin.Engine) {
 	settings := r.Group("/settings")
-	settings.Use(filterMiddleware(filterOption{User: true}))
+	settings.Use(mgin.FilterMiddleware(mgin.FilterOption{User: true}))
 	{
 		settings.GET("/", func(c *gin.Context) {
-			c.HTML(http.StatusOK, "settings/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{}))
+			c.HTML(http.StatusOK, "settings/index", mgin.CommonData(c, c.GetBool(mgin.CtxIsLogin), gin.H{}))
 		})
 	}
 }

@@ -7,14 +7,15 @@ package router
 
 import (
 	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/ssh"
+	"git.cm/naiba/gocd/utils/mgin"
+	"git.cm/naiba/gocd/utils/ssh"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 func serveServer(r *gin.Engine) {
 	server := r.Group("/server")
-	server.Use(filterMiddleware(filterOption{User: true}))
+	server.Use(mgin.FilterMiddleware(mgin.FilterOption{User: true}))
 	{
 		server.Any("/", serverHandler)
 	}
@@ -23,12 +24,12 @@ func serveServer(r *gin.Engine) {
 func serverHandler(c *gin.Context) {
 	method := c.Request.Method
 	if method == http.MethodGet {
-		c.HTML(http.StatusOK, "server/index", commonData(c, c.GetBool(CtxIsLogin), gin.H{
-			"servers": serverService.GetServersByUser(c.MustGet(CtxUser).(*gocd.User)),
+		c.HTML(http.StatusOK, "server/index", mgin.CommonData(c, c.GetBool(mgin.CtxIsLogin), gin.H{
+			"servers": serverService.GetServersByUser(c.MustGet(mgin.CtxUser).(*gocd.User)),
 		}))
 	} else {
 		var s gocd.Server
-		user := c.MustGet(CtxUser).(*gocd.User)
+		user := c.MustGet(mgin.CtxUser).(*gocd.User)
 		if err := c.Bind(&s); err != nil {
 			c.String(http.StatusForbidden, "数据不规范，请检查后重新填写"+err.Error())
 			return

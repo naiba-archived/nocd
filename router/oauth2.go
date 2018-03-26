@@ -13,7 +13,8 @@ import (
 
 	"git.cm/naiba/com"
 	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/ssh"
+	"git.cm/naiba/gocd/utils/mgin"
+	"git.cm/naiba/gocd/utils/ssh"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/go-github/github"
@@ -23,7 +24,7 @@ import (
 
 func serveOauth2(r *gin.Engine) {
 	oauth2router := r.Group("/oauth2")
-	oauth2router.Use(filterMiddleware(filterOption{Guest: true}))
+	oauth2router.Use(mgin.FilterMiddleware(mgin.FilterOption{Guest: true}))
 	{
 		oauth2router.POST("/login", func(c *gin.Context) {
 			session := sessions.Default(c)
@@ -87,6 +88,11 @@ func serveOauth2(r *gin.Engine) {
 						c.String(http.StatusInternalServerError, "数据库错误")
 						return
 					}
+					// 首位用户赋管理员权限
+					if u.ID == 1 {
+						u.IsAdmin = true
+						userService.UpdateUser(u, "is_admin")
+					}
 				} else {
 					gocd.Log.Errorln(err)
 					c.String(http.StatusInternalServerError, "数据库错误")
@@ -100,8 +106,8 @@ func serveOauth2(r *gin.Engine) {
 				c.String(http.StatusInternalServerError, "数据库错误")
 				return
 			}
-			setCookie(c, "uid", fmt.Sprintf("%d", u.ID))
-			setCookie(c, "token", u.Token)
+			mgin.SetCookie(c, "uid", fmt.Sprintf("%d", u.ID))
+			mgin.SetCookie(c, "token", u.Token)
 			c.Redirect(http.StatusMovedPermanently, "/")
 		})
 	}

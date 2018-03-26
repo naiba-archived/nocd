@@ -3,18 +3,19 @@
  * All rights reserved.
  */
 
-package router
+package mgin
 
 import (
 	"fmt"
 	"git.cm/naiba/gocd"
-	"github.com/gin-gonic/gin"
 	"html/template"
 	"time"
+	"strings"
 )
 
-func setFuncMap(r *gin.Engine) {
-	r.SetFuncMap(template.FuncMap{
+//FuncMap 自定义模板函数
+func FuncMap(pipelineService gocd.PipelineService, pipelogService gocd.PipeLogService) template.FuncMap {
+	return template.FuncMap{
 		"RepoPipelines": func(rid uint) []gocd.Pipeline {
 			return pipelineService.RepoPipelines(&gocd.Repository{ID: rid})
 		},
@@ -49,5 +50,6 @@ func setFuncMap(r *gin.Engine) {
 		"TimeFormat": func(t time.Time) string {
 			return t.In(gocd.Loc).Format("2006-01-02 15:04:05")
 		},
-	})
+		"HasPrefix": strings.HasPrefix,
+	}
 }

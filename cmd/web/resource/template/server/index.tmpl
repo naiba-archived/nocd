@@ -73,8 +73,8 @@
                                    placeholder="华北 s1">
                         </div>
                     {{.csrf_token}}
-                        <button type="submit" class="btn btn-primary btn-block"><span
-                                class="octicon octicon-plus"></span>添加服务器
+                        <button type="submit" class="btn btn-primary btn-block"><i
+                                class="octicon octicon-plus"></i>添加服务器
                         </button>
                     </form>
                 </div>
@@ -92,8 +92,8 @@
             {{range $server := .servers}}
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h5 class="card-title limit-text-length"><span
-                                class="octicon octicon-server"></span>{{$server.Name}}</h5>
+                        <h5 class="card-title limit-text-length"><i
+                                class="octicon octicon-server"></i>{{$server.Name}}</h5>
                         <p class="card-text">
                             服务器地址：<samp>{{$server.Address}}</samp><br>
                             服务器端口：<samp>{{$server.Port}}</samp><br>
@@ -102,7 +102,7 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between">
                         <small class="text-muted p-2">
-                            <span class="octicon octicon-clock"></span>
+                            <i class="octicon octicon-clock"></i>
                         {{$log := LastServerLog .ID}}
                             最后活动于{{TimeDiff $log.StoppedAt Now}}前
                         </small>
@@ -111,13 +111,13 @@
                                     data-target="#modalEditServer" data-delete="false" data-id="{{$server.ID}}"
                                     data-name="{{$server.Name}}"
                                     data-address="{{$server.Address}}" data-port="{{$server.Port}}"
-                                    data-login="{{$server.Login}}"><span class="octicon octicon-pencil"></span>
+                                    data-login="{{$server.Login}}"><i class="octicon octicon-pencil"></i>
                             </button>
                             <button class="btn btn-sm btn-secondary" data-toggle="modal"
                                     data-target="#modalEditServer" data-delete="true" data-id="{{$server.ID}}"
                                     data-name="{{$server.Name}}"
                                     data-address="{{$server.Address}}" data-port="{{$server.Port}}"
-                                    data-login="{{$server.Login}}"><span class="octicon octicon-trashcan"></span>
+                                    data-login="{{$server.Login}}"><i class="octicon octicon-trashcan"></i>
                             </button>
                         </div>
                     </div>

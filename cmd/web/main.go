@@ -30,7 +30,7 @@ func init() {
 	} else {
 		gocd.Log.Panicln(err)
 	}
-	unzipAssets("resource/", "2", []string{"resource"}, RestoreAssets)
+	unzipAssets("resource/", "3", []string{"resource"}, RestoreAssets)
 }
 
 func main() {
