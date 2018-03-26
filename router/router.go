@@ -117,6 +117,7 @@ func initService() {
 	db.AutoMigrate(gocd.User{}, gocd.Server{}, gocd.Repository{}, gocd.Pipeline{}, gocd.PipeLog{})
 
 	upgradeV001(db)
+	gocd.InitStats(db)
 
 	// user service
 	sus := sqlite3.UserService{DB: db}

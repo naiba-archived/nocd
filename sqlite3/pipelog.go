@@ -75,3 +75,10 @@ func (ps *PipeLogService) LastPipelineLog(pid uint) gocd.PipeLog {
 	ps.DB.Where("pipeline_id = ?", pid).Order("id desc").First(&pl)
 	return pl
 }
+
+//LastLogs 全站最后部署记录
+func (ps *PipeLogService) LastLogs(num uint) []gocd.PipeLog {
+	var pl []gocd.PipeLog
+	ps.DB.Order("id desc").Limit(num).Find(&pl)
+	return pl
+}

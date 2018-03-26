@@ -20,6 +20,7 @@ func SetCookie(c *gin.Context, key string, val string) {
 
 //CommonData 公共参数
 func CommonData(c *gin.Context, csrfToken bool, data gin.H) gin.H {
+	data["stat"] = gocd.GetStats()
 	data["domain"] = gocd.Conf.Section("gocd").Key("domain").String()
 	data["router"] = c.Request.RequestURI
 	data["GA_id"] = gocd.Conf.Section("gocd").Key("google_analysis").String()

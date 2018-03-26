@@ -14,9 +14,13 @@ install:
     go env
 
     go get -u github.com/tmthrgd/go-bindata/...
+
+    go get -u golang.org/x/lint/golint
 build: off
 test_script:
 - cmd: >-
+    go list ./... | xargs -L1 golint
+
     cd cmd/web
 
     go-bindata resource/...

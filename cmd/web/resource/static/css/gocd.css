@@ -45,3 +45,9 @@ a:hover {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.list-group-item.active {
+    color: #495057;
+    background-color: #f8f9fa !important;
+    border-color: rgba(0, 0, 0, .125);
+}

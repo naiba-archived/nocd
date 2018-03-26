@@ -1,8 +1,20 @@
 {{define "admin/index"}}
 {{template "common/header" .}}
 <div class="container">
-{{template "common/admin_sidebar"}}
-    <h1>World</h1>
-</div>
+    <div class="row">
+        <div class="col-md-3 text-center pt-2">
+        {{template "common/admin_sidebar" .}}
+        </div>
+        <div class="col-md-9 pt-2">
+            <div class="card">
+                <div class="card-header">
+                    欢迎您，{{.user.GName}}
+                </div>
+                <div class="card-body">
+                    欢迎来到管理面板，这里还没有想好要放什么。
+                </div>
+            </div>
+        </div>
+    </div>
 {{template "common/footer" .}}
 {{end}}

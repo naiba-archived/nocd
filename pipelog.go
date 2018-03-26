@@ -39,4 +39,5 @@ type PipeLogService interface {
 	UserLogs(uid uint) []PipeLog
 	Pipeline(log *PipeLog) error
 	GetByUID(uid, lid uint) (PipeLog, error)
+	LastLogs(num uint)[]PipeLog
 }

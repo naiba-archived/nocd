@@ -23,8 +23,8 @@ var Debug bool
 //Loc system time location
 var Loc *time.Location
 
-//Initial system: load common config
-func Initial(file string) {
+//InitSysConfig system: load common config
+func InitSysConfig(file string) {
 	var err error
 	if Log == nil {
 		Log = log.New()

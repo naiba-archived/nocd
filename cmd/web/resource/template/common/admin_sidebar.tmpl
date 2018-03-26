@@ -1,5 +1,13 @@
 {{define "common/admin_sidebar"}}
-<div>
-    <h1>Hello</h1>
+<div class="card">
+    <div class="card-header">
+        管理面板
+    </div>
+    <div class="list-group list-group-flush">
+        <a href="/admin/"
+           class="list-group-item list-group-item-action{{if eq .router "/admin/"}} active{{end}}">控制面板</a>
+        <a href="/admin/user/"
+           class="list-group-item list-group-item-action{{if eq .router "/admin/user/"}} active{{end}}">用户管理</a>
+    </div>
 </div>
 {{end}}

@@ -1,6 +1,9 @@
 {{define "common/footer"}}
 <div class="container">
-    <footer class="pt-4 my-md-5 pt-md-5 border-top">
+    <div class="mt-md-5 pt-2 py-2 border-top text-center">
+        <p class="text-secondary" style="margin-bottom: 0">[站点统计] 用户 <b>{{.stat.UserCount}}</b> 位, 服务器 <b>{{.stat.ServerCount}}</b> 台, 部署流程 <b>{{.stat.PipelineCount}}</b> 个, 历史部署 <b>{{.stat.PipeLogCount}}</b> 次, 最后部署: <b>{{TimeFormat .stat.LastLog}}</b> 。</p>
+    </div>
+    <footer class="pt-4 pt-md-5 border-top">
         <div class="row">
             <div class="col-12 col-md">
                 <img class="mb-2" src="/static/image/logo.png" alt="" width="24"
