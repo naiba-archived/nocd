@@ -79,7 +79,7 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) 
 		if len(pLog.Log) > 5000 {
 			pLog.Log = pLog.Log[len(pLog.Log)-5000:]
 		}
-		pLog.Log = "[GoCD]" + pLog.StartedAt.String() + ": 开始执行" + pLog.Log
+		pLog.Log = "[GoCD]" + pLog.StartedAt.String() + ": 开始执行\r\n" + pLog.Log
 		pLog.StoppedAt = time.Now()
 		saveLog(&pLog)
 	}()
@@ -120,7 +120,6 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) 
 			pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 执行失败"
 			pLog.Status = gocd.PipeLogStatusErrorShellExec
 		} else {
-			pLog.Log += buf.String()
 			pLog.Log += buf.String() + "\r\n [GoCD]" + time.Now().String() + ": 执行完毕"
 			pLog.Status = gocd.PipeLogStatusSuccess
 		}
