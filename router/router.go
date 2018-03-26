@@ -116,7 +116,7 @@ func initService() {
 	}
 	db.AutoMigrate(gocd.User{}, gocd.Server{}, gocd.Repository{}, gocd.Pipeline{}, gocd.PipeLog{})
 
-	upgradeV001(db)
+	upgradeV002(db)
 	gocd.InitStats(db)
 
 	// user service
@@ -136,12 +136,19 @@ func initService() {
 	pipelogService = &pl
 }
 
-func upgradeV001(db *gorm.DB) {
+func upgradeV002(db *gorm.DB) {
 	// 赋予管理员权限
 	var admin gocd.User
 	db.Where("id = 1").First(&admin)
 	if !admin.IsAdmin {
 		admin.IsAdmin = true
 		db.Save(admin)
+	}
+	// 给空昵称用户添加昵称
+	var emptyName []gocd.User
+	db.Where("g_name = ''").Find(&emptyName)
+	for _, u := range emptyName {
+		u.GName = u.GLogin
+		db.Save(u)
 	}
 }

@@ -9,8 +9,8 @@ import (
 	"fmt"
 	"git.cm/naiba/gocd"
 	"html/template"
-	"time"
 	"strings"
+	"time"
 )
 
 //FuncMap 自定义模板函数

@@ -6,10 +6,10 @@
 package admin
 
 import (
+	"git.cm/naiba/gocd"
+	"git.cm/naiba/gocd/utils/mgin"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"git.cm/naiba/gocd/utils/mgin"
-	"git.cm/naiba/gocd"
 	"strconv"
 )
 
