@@ -21,18 +21,30 @@ func (us *UserService) UserByGID(gid int64) (*gocd.User, error) {
 	return &u, us.DB.Where("g_id = ?", gid).First(&u).Error
 }
 
-//CreateUser 创建用户
-func (us *UserService) CreateUser(u *gocd.User) error {
+//Users 获取所有用户
+func (us *UserService) Users() []*gocd.User {
+	var ul []*gocd.User
+	us.DB.Order("updated_at DESC").Find(&ul)
+	for _, u := range ul {
+		us.DB.Model(&u).Select("id").Related(&u.Servers)
+		us.DB.Model(&u).Select("id").Related(&u.Repositories)
+		us.DB.Model(&u).Select("id").Related(&u.Pipelines)
+	}
+	return ul
+}
+
+//Create 创建用户
+func (us *UserService) Create(u *gocd.User) error {
 	return us.DB.Create(u).Error
 }
 
-//UpdateUser 更新用户
-func (us *UserService) UpdateUser(u *gocd.User, cols ...string) error {
-	return us.DB.Model(u).Select(cols).Updates(u).Error
+//Update 更新用户
+func (us *UserService) Update(u *gocd.User) error {
+	return us.DB.Save(u).Error
 }
 
-//VerifyUser 校验用户
-func (us *UserService) VerifyUser(uid, token string) (*gocd.User, error) {
+//Verify 校验用户
+func (us *UserService) Verify(uid, token string) (*gocd.User, error) {
 	var u gocd.User
 	return &u, us.DB.Where("id = ? AND token = ?", uid, token).First(&u).Error
 }

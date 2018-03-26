@@ -8,6 +8,9 @@ package mgin
 import (
 	"git.cm/naiba/gocd"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"time"
+	"git.cm/naiba/com"
 )
 
 //CtxIsLogin 用户是否登录
@@ -24,9 +27,17 @@ func AuthMiddleware(userService gocd.UserService) gin.HandlerFunc {
 		if err == nil {
 			token, err := c.Cookie("token")
 			if err == nil && len(uid) > 0 && len(token) > 0 {
-				u, err := userService.VerifyUser(uid, token)
+				u, err := userService.Verify(uid, token)
 				login = err == nil
 				if login {
+					// 账户已被锁定
+					if u.IsBlocked {
+						u.Token = com.MD5("blocked" + time.Now().String())
+						userService.Update(u)
+						c.String(http.StatusForbidden, "您的账户已被锁定")
+						c.Abort()
+						return
+					}
 					c.Set(CtxUser, u)
 				}
 			}

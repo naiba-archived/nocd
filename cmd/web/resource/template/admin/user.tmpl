@@ -2,67 +2,49 @@
 {{template "common/header" .}}
 <div class="container">
     <div class="row">
-        <div class="col-3 text-center">
-        {{template "common/admin_sidebar"}}
+        <div class="col-md-3 pt-2 text-center">
+        {{template "common/admin_sidebar" .}}
         </div>
-        <div class="col-9">
+        <div class="col-md-9 pt-2">
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">昵称</th>
+                        <th scope="col">GItHub</th>
+                        <th scope="col">服务器</th>
+                        <th scope="col">项目</th>
+                        <th scope="col">部署</th>
+                        <th scope="col">最后活动</th>
+                        <th scope="col">管理</th>
                     </tr>
                     </thead>
                     <tbody>
+                    {{range $u := .users}}
                     <tr>
-                        <th scope="row">1</th>
-                        <td>Mark</td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
-                        <td>@mdo</td>
+                        <th scope="row">{{.ID}}</th>
+                        <td style="min-width: 60px">{{.GName}}</td>
+                        <td><a href="https://github.com/{{.GLogin}}" target="_blank"><i
+                                class="octicon octicon-mark-github"></i>{{.GLogin}}</a></td>
+                        <td style="min-width: 80px">{{len .Servers}}</td>
+                        <td style="min-width: 60px">{{len .Repositories}}</td>
+                        <td style="min-width: 60px">{{len .Pipelines}}</td>
+                        <td style="min-width: 200px">{{TimeFormat .UpdatedAt}}</td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button onclick="toggleUser({{.GID}},{{.IsAdmin}},'admin')" type="button"
+                                        class="btn btn-sm btn-light">
+                                {{if .IsAdmin}}取消{{else}}设置{{end}}管理
+                                </button>
+                                <button onclick="toggleUser({{.GID}},{{.IsBlocked}},'block')" type="button"
+                                        class="btn btn-sm btn-secondary">
+                                {{if .IsBlocked}}解禁{{else}}禁用{{end}}账户
+                                </button>
+                            </div>
+                        </td>
                     </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Jacob</td>
-                        <td>Jacob</td>
-                        <td>Jacob</td>
-                        <td>Jacob</td>
-                        <td>Jacob</td>
-                        <td>Jacob</td>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>Larry</td>
-                        <td>Larry</td>
-                        <td>Larry</td>
-                        <td>Larry</td>
-                        <td>Larry</td>
-                        <td>Larry</td>
-                        <td>Larry</td>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                    </tr>
+                    {{end}}
                     </tbody>
                 </table>
             </div>

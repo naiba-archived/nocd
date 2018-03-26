@@ -133,6 +133,15 @@ function editServerHandler(mth) {
     return ajaxUtil("/server/", "#formEditServer", mth)
 }
 
+function toggleUser(uid, toggle, col) {
+    $.get("/admin/user/" + uid + "/" + col + "/" + (toggle ? "off" : "on"), function () {
+        alert("操作成功");
+        window.location.reload()
+    }).fail(function (x) {
+        alert(x.responseText)
+    })
+}
+
 function ajaxUtil(url, form, mth) {
     if (mth === "DELETE") {
         $(form).find(':input:disabled').removeAttr('disabled')

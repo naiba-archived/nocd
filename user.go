@@ -10,8 +10,8 @@ import "github.com/jinzhu/gorm"
 //User 用户
 type User struct {
 	gorm.Model
-	// 用户GitHubID
-	GID          uint `gorm:"unique_index"`
+	//用户GitHubID
+	GID          uint         `gorm:"unique_index"`
 	GName        string
 	GLogin       string
 	GType        string
@@ -21,6 +21,7 @@ type User struct {
 	Servers      []Server     `form:"-"`
 	Repositories []Repository `form:"-"`
 	Pipelines    []Pipeline   `form:"-"`
+	IsBlocked    bool
 	IsAdmin      bool
 	// 用户Token
 	Token string
@@ -29,7 +30,8 @@ type User struct {
 //UserService 用户服务
 type UserService interface {
 	UserByGID(gid int64) (*User, error)
-	CreateUser(u *User) error
-	UpdateUser(u *User, cols ...string) error
-	VerifyUser(uid, token string) (*User, error)
+	Create(u *User) error
+	Update(u *User) error
+	Verify(uid, token string) (*User, error)
+	Users() []*User
 }

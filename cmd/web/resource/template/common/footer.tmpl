@@ -1,7 +1,7 @@
 {{define "common/footer"}}
 <div class="container">
     <div class="mt-md-5 pt-2 py-2 border-top text-center">
-        <p class="text-secondary" style="margin-bottom: 0">[站点统计] 用户 <b>{{.stat.UserCount}}</b> 位, 服务器 <b>{{.stat.ServerCount}}</b> 台, 部署流程 <b>{{.stat.PipelineCount}}</b> 个, 历史部署 <b>{{.stat.PipeLogCount}}</b> 次, 最后部署: <b>{{TimeFormat .stat.LastLog}}</b> 。</p>
+        <p class="text-secondary" style="margin-bottom: 0">[站点统计] 用户 <b>{{.stat.UserCount}}</b> 位, 服务器 <b>{{.stat.ServerCount}}</b> 台, 部署流程 <b>{{.stat.PipelineCount}}</b> 个, 历史部署 <b>{{.stat.PipeLogCount}}</b> 次, 最后部署: <b>{{TimeFormat .stat.LastLog}}</b></p>
     </div>
     <footer class="pt-4 pt-md-5 border-top">
         <div class="row">
@@ -55,7 +55,7 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.0/dist/clipboard.min.js"></script>
 <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="/static/js/gocd.js?_12"></script>
+<script src="/static/js/gocd.js?_17"></script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id={{.GA_id}}"></script>
 <script>

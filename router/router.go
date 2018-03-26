@@ -85,6 +85,7 @@ func initEngine() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(sentry.Recovery(raven.DefaultClient, false))
 	r.Use(gin.Recovery())
+	r.Use(mgin.AuthMiddleware(userService))
 	r.SetFuncMap(mgin.FuncMap(pipelineService, pipelogService))
 	// csrf protection
 	r.Use(sessions.Sessions("gocd_session", sessions.NewCookieStore([]byte(gocd.Conf.Section("gocd").Key("cookie_key_pair").String()))))
@@ -100,7 +101,6 @@ func initEngine() *gin.Engine {
 	}))
 	r.Static("/static", "resource/static")
 	r.LoadHTMLGlob("resource/template/**/*")
-	r.Use(mgin.AuthMiddleware(userService))
 	return r
 }
 

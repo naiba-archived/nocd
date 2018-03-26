@@ -16,5 +16,7 @@ func serveAdmin(r *gin.Engine) {
 	ra.Use(mgin.FilterMiddleware(mgin.FilterOption{Admin: true}))
 	{
 		ra.GET("/", admin.Index)
+		ra.GET("/user/", admin.User(userService))
+		ra.GET("/user/:id/:col/:act", admin.UserToggle(userService))
 	}
 }

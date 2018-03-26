@@ -83,7 +83,7 @@ func serveOauth2(r *gin.Engine) {
 					u.GType = user.GetType()
 					u.Pubkey = pub
 					u.PrivateKey = private
-					if userService.CreateUser(u) != nil {
+					if userService.Create(u) != nil {
 						gocd.Log.Errorln(err)
 						c.String(http.StatusInternalServerError, "数据库错误")
 						return
@@ -91,7 +91,7 @@ func serveOauth2(r *gin.Engine) {
 					// 首位用户赋管理员权限
 					if u.ID == 1 {
 						u.IsAdmin = true
-						userService.UpdateUser(u, "is_admin")
+						userService.Update(u)
 					}
 				} else {
 					gocd.Log.Errorln(err)
@@ -101,7 +101,7 @@ func serveOauth2(r *gin.Engine) {
 			}
 			// 更新token
 			u.Token = com.MD5(fmt.Sprintf("%d%d%s%d", u.ID, u.GID, u.GLogin, time.Now().UnixNano()))
-			if userService.UpdateUser(u, "token") != nil {
+			if userService.Update(u) != nil {
 				gocd.Log.Errorln(err)
 				c.String(http.StatusInternalServerError, "数据库错误")
 				return
