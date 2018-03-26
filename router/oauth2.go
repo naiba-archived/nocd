@@ -79,7 +79,11 @@ func serveOauth2(r *gin.Engine) {
 					u = new(gocd.User)
 					u.GID = uint(user.GetID())
 					u.GLogin = user.GetLogin()
-					u.GName = user.GetName()
+					if len(user.GetName()) > 0 {
+						u.GName = user.GetName()
+					} else {
+						u.GName = u.GLogin
+					}
 					u.GType = user.GetType()
 					u.Pubkey = pub
 					u.PrivateKey = private
