@@ -9,7 +9,7 @@
 
 | ![首页截图](https://git.cm/naiba/gocd/raw/master/README/首页截图.png) | ![服务器管理](https://git.cm/naiba/gocd/raw/master/README/服务器管理.png) | ![项目管理](https://git.cm/naiba/gocd/raw/master/README/项目管理.png) |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![交付记录](https://git.cm/naiba/gocd/raw/master/README/交付记录.png) | ![查看日志](https://git.cm/naiba/gocd/raw/master/README/查看日志.png) |                                                              |
+| ![交付记录](https://git.cm/naiba/gocd/raw/master/README/交付记录.png) | ![管理中心](https://git.cm/naiba/gocd/raw/master/README/查看日志.png) | ![查看日志](https://git.cm/naiba/gocd/raw/master/README/管理中心.png)  |
 
 ## 部署教程
 
