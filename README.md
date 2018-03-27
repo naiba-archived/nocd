@@ -52,7 +52,11 @@
 ## FAQ
 
 1. 为什么我的部署脚本总是执行失败 或者 根本没有执行？
-`请检查您的 PATH 路径是否引入，建议提前 export 一下路径，自动部署的时候不会 source .bash_profile 。`
+  `请检查您的 PATH 路径是否引入，建议提前 export 一下路径，自动部署的时候不会 source .bash_profile 。`
+
+2. 如何保持后台运行？
+
+  `可以使用 systemd 。`
 
 
 ## 版权声明
