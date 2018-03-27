@@ -116,6 +116,7 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) 
 		}
 		if err != nil && err != io.EOF {
 			gocd.Log.Debug("执行失败", err.Error())
+			pLog.Log += buf.String()
 			pLog.Log += err.Error()
 			pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 执行失败"
 			pLog.Status = gocd.PipeLogStatusErrorShellExec
