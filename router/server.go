@@ -41,7 +41,7 @@ func serverHandler(c *gin.Context) {
 			}
 			s.UserID = user.ID
 			if err := serverService.CreateServer(&s); err != nil {
-				gocd.Log.Error(err)
+				gocd.Logger().Errorln(err)
 				c.String(http.StatusInternalServerError, "数据库错误")
 			}
 		} else {
@@ -66,12 +66,12 @@ func serverHandler(c *gin.Context) {
 				server.Login = s.Login
 				server.Port = s.Port
 				if err := serverService.UpdateServer(&server); err != nil {
-					gocd.Log.Error(err)
+					gocd.Logger().Errorln(err)
 					c.String(http.StatusInternalServerError, "数据库错误")
 				}
 			} else if method == http.MethodDelete {
 				if serverService.DeleteServer(s.ID) != nil {
-					gocd.Log.Error(err)
+					gocd.Logger().Errorln(err)
 					c.String(http.StatusInternalServerError, "数据库错误")
 					return
 				}

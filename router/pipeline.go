@@ -70,7 +70,7 @@ func pipelineX(c *gin.Context) {
 		}
 		tmp, err := json.Marshal(pl.EventsSlice)
 		if err != nil {
-			gocd.Log.Error(err)
+			gocd.Logger().Errorln(err)
 			c.String(http.StatusInternalServerError, "序列化失败，请重试。"+err.Error())
 			return
 		}
@@ -78,7 +78,7 @@ func pipelineX(c *gin.Context) {
 		user := c.MustGet(mgin.CtxUser).(*gocd.User)
 		repo, err := repoService.GetRepoByUserAndID(user, pl.RepositoryID)
 		if err != nil {
-			gocd.Log.Debug(err)
+			gocd.Logger().Debug(err)
 			c.String(http.StatusForbidden, "这个项目不属于您，您无权操作。")
 			return
 		}
@@ -89,15 +89,15 @@ func pipelineX(c *gin.Context) {
 		// 校验对于 Server 的操作权限
 		_, err = serverService.GetServersByUserAndSid(user, pl.ServerID)
 		if err != nil {
-			gocd.Log.Debug(err)
+			gocd.Logger().Debug(err)
 			c.String(http.StatusForbidden, "这个服务器不属于您，您无权操作。")
 			return
 		}
 		if c.Request.Method == http.MethodPost {
 			pl.UserID = user.ID
-			gocd.Log.Error(pl.RepositoryID, pl.Repository)
+			gocd.Logger().Errorln(pl.RepositoryID, pl.Repository)
 			if err = pipelineService.Create(&pl); err != nil {
-				gocd.Log.Error(err)
+				gocd.Logger().Errorln(err)
 				c.String(http.StatusInternalServerError, "数据库错误。")
 			}
 		} else {

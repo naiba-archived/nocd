@@ -6,13 +6,15 @@
 package gocd
 
 import (
+	"github.com/evalphobia/logrus_sentry"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/ini.v1"
+	"runtime"
 	"time"
 )
 
-//Log of sentry logger
-var Log *log.Logger
+//mLog of sentry logger
+var mLog *log.Logger
 
 //Conf of GoCD config
 var Conf *ini.File
@@ -26,24 +28,47 @@ var Loc *time.Location
 //InitSysConfig system: load common config
 func InitSysConfig(file string) {
 	var err error
-	if Log == nil {
-		Log = log.New()
+	if mLog == nil {
+		mLog = log.New()
 	}
 	Conf, err = ini.Load(file)
 	if err != nil {
-		Log.Panicln(err)
+		mLog.Panicln(err)
 	}
+	// initial sentry dsn
+	hook, err := logrus_sentry.NewSentryHook(Conf.Section("third_party").Key("sentry_dsn").String(), []log.Level{
+		log.PanicLevel,
+		log.FatalLevel,
+		log.ErrorLevel,
+	})
+	if err == nil {
+		mLog.Hooks.Add(hook)
+	} else {
+		mLog.Panicln(err)
+	}
+	// set timezone
 	Loc, err = time.LoadLocation(Conf.Section("gocd").Key("loc").String())
 	if err != nil {
 		panic(err)
 	}
+	// set debuggable
 	Debug, err = Conf.Section("gocd").Key("debug").Bool()
 	if err != nil {
 		panic(err)
 	}
 	if Debug {
-		Log.SetLevel(log.DebugLevel)
+		mLog.SetLevel(log.DebugLevel)
 	} else {
-		Log.SetLevel(log.InfoLevel)
+		mLog.SetLevel(log.InfoLevel)
 	}
+}
+
+//Logger 带行号文件名方法名的Logger
+func Logger() *log.Entry {
+	logger := log.NewEntry(mLog)
+	if pc, file, line, ok := runtime.Caller(1); ok {
+		fName := runtime.FuncForPC(pc).Name()
+		return logger.WithField("file", file).WithField("line", line).WithField("func", fName)
+	}
+	return logger
 }

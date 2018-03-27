@@ -60,7 +60,7 @@ func serveOauth2(r *gin.Engine) {
 			client := github.NewClient(oauthConf.Client(context.Background(), token))
 			user, _, err := client.Users.Get(context.Background(), "")
 			if err != nil {
-				gocd.Log.Errorln(err)
+				gocd.Logger().Errorln(err)
 				c.String(http.StatusInternalServerError, "GitHub通信失败，请重试")
 				return
 			}
@@ -72,7 +72,7 @@ func serveOauth2(r *gin.Engine) {
 				if err == gorm.ErrRecordNotFound {
 					pub, private, err := ssh.GenKeyPair()
 					if err != nil {
-						gocd.Log.Errorln(err)
+						gocd.Logger().Errorln(err)
 						c.String(http.StatusInternalServerError, "生成私钥失败，请再次常试")
 						return
 					}
@@ -88,7 +88,7 @@ func serveOauth2(r *gin.Engine) {
 					u.Pubkey = pub
 					u.PrivateKey = private
 					if userService.Create(u) != nil {
-						gocd.Log.Errorln(err)
+						gocd.Logger().Errorln(err)
 						c.String(http.StatusInternalServerError, "数据库错误")
 						return
 					}
@@ -98,7 +98,7 @@ func serveOauth2(r *gin.Engine) {
 						userService.Update(u)
 					}
 				} else {
-					gocd.Log.Errorln(err)
+					gocd.Logger().Errorln(err)
 					c.String(http.StatusInternalServerError, "数据库错误")
 					return
 				}
@@ -106,7 +106,7 @@ func serveOauth2(r *gin.Engine) {
 			// 更新token
 			u.Token = com.MD5(fmt.Sprintf("%d%d%s%d", u.ID, u.GID, u.GLogin, time.Now().UnixNano()))
 			if userService.Update(u) != nil {
-				gocd.Log.Errorln(err)
+				gocd.Logger().Errorln(err)
 				c.String(http.StatusInternalServerError, "数据库错误")
 				return
 			}

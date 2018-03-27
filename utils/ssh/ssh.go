@@ -49,7 +49,7 @@ func GenKeyPair() (string, string, error) {
 func CheckLogin(address string, port int, privateKey string, login string) error {
 	conn, err := dial(address, login, privateKey, port)
 	if err != nil {
-		gocd.Log.Error(err)
+		gocd.Logger().Errorln("ssh.CheckLogin", err)
 		return errors.New("连接服务器失败")
 	}
 	defer conn.Close()
@@ -60,7 +60,7 @@ func CheckLogin(address string, port int, privateKey string, login string) error
 	defer session.Close()
 	opt, err := session.Output("whoami")
 	if strings.TrimSpace(string(opt)) != login {
-		gocd.Log.Info(string(opt) + "|" + err.Error())
+		gocd.Logger().Infoln(string(opt) + "|" + err.Error())
 		return errors.New("用户名验证失败")
 	}
 	return nil
@@ -86,7 +86,7 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) 
 
 	conn, err := dial(pipeline.Server.Address, pipeline.Server.Login, pipeline.User.PrivateKey, pipeline.Server.Port)
 	if err != nil {
-		gocd.Log.Debug(err)
+		gocd.Logger().Debug(err)
 		pLog.Status = gocd.PipeLogStatusErrorServerConn
 		pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 连接服务器失败"
 		return
@@ -108,14 +108,14 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) 
 	timer := time.NewTimer(time.Minute * 30)
 	buf := new(bytes.Buffer)
 	go func() {
-		gocd.Log.Debug("开始执行", pipeline.Shell)
+		gocd.Logger().Debug("开始执行", pipeline.Shell)
 		session.Stdout = buf
 		err := session.Run(pipeline.Shell)
 		if pLog.Status != gocd.PipeLogStatusRunning {
 			return
 		}
 		if err != nil && err != io.EOF {
-			gocd.Log.Debug("执行失败", err.Error())
+			gocd.Logger().Debug("执行失败", err.Error())
 			pLog.Log += buf.String()
 			pLog.Log += err.Error()
 			pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 执行失败"
@@ -129,12 +129,12 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) 
 
 	select {
 	case <-timer.C:
-		gocd.Log.Debug("执行超时", buf.String())
+		gocd.Logger().Debug("执行超时", buf.String())
 		pLog.Log += buf.String() + "\r\n [GoCD]" + time.Now().String() + ": 执行超时"
 		pLog.Status = gocd.PipeLogStatusErrorShellExec
 		return
 	case <-finish:
-		gocd.Log.Debug("执行完毕")
+		gocd.Logger().Debug("执行完毕")
 		return
 	}
 }
@@ -142,7 +142,7 @@ func Deploy(pipeline gocd.Pipeline, who string, saveLog func(log *gocd.PipeLog) 
 func dial(address, user, pk string, port int) (*ssh.Client, error) {
 	privateKey, err := ssh.ParsePrivateKey([]byte(pk))
 	if err != nil {
-		gocd.Log.Debug(err, pk)
+		gocd.Logger().Debug(err, pk)
 		return nil, errors.New("解析用户私钥失败")
 	}
 	return ssh.Dial("tcp", fmt.Sprintf("%s:%d", address, port), &ssh.ClientConfig{

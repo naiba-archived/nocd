@@ -103,7 +103,7 @@ func dispatchWebHook(id uint) webhooks.ProcessPayloadFunc {
 				pipelineService.User(&p)
 				go ssh.Deploy(p, who, pipelogService.Create)
 			} else {
-				gocd.Log.Error(err)
+				gocd.Logger().Errorln(err)
 			}
 		}
 	}
