@@ -117,6 +117,10 @@ function addServerHandler() {
     return ajaxUtil("/server/", "#formAddServer", 'POST')
 }
 
+function setNotification() {
+    return ajaxUtil("/settings/", "#formNotify", 'POST')
+}
+
 function addRepoHandler(mth) {
     return ajaxUtil("/repository/", "#formAddRepo", mth)
 }

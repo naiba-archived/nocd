@@ -11,13 +11,14 @@ import "github.com/jinzhu/gorm"
 type User struct {
 	gorm.Model
 	//用户GitHubID
-	GID          uint `gorm:"unique_index"`
-	GName        string
-	GLogin       string
-	GType        string
-	Pubkey       string
-	PrivateKey   string
-	Avatar       int
+	GID        uint `gorm:"unique_index"`
+	GName      string
+	GLogin     string
+	Pubkey     string
+	PrivateKey string
+	//Server酱推送Key
+	Sckey        string       `form:"sckey" binding:"alphanum,min=20"`
+	PushSuccess  bool         `form:"push_success" binding:"exists"`
 	Servers      []Server     `form:"-"`
 	Repositories []Repository `form:"-"`
 	Pipelines    []Pipeline   `form:"-"`

@@ -84,7 +84,6 @@ func serveOauth2(r *gin.Engine) {
 					} else {
 						u.GName = u.GLogin
 					}
-					u.GType = user.GetType()
 					u.Pubkey = pub
 					u.PrivateKey = private
 					if userService.Create(u) != nil {

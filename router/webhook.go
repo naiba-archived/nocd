@@ -19,6 +19,7 @@ import (
 	"github.com/naiba/webhooks/gogs"
 
 	"git.cm/naiba/gocd"
+	"git.cm/naiba/gocd/utils/ftqq"
 	"git.cm/naiba/gocd/utils/ssh"
 )
 
@@ -101,7 +102,7 @@ func dispatchWebHook(id uint) webhooks.ProcessPayloadFunc {
 		for _, p := range ps {
 			if err := pipelineService.Server(&p); err == nil {
 				pipelineService.User(&p)
-				go ssh.Deploy(p, who, pipelogService.Create)
+				go deploy(p, who)
 			} else {
 				gocd.Logger().Errorln(err)
 			}
@@ -138,4 +139,30 @@ func parsePayloadInfo(payload interface{}) (string, string) {
 		break
 	}
 	return who, branch
+}
+
+func deploy(pipeline gocd.Pipeline, who string) {
+	deployLog := ssh.Deploy(pipeline, who)
+	pipelogService.Create(&deployLog)
+
+	if (deployLog.Status == gocd.PipeLogStatusSuccess && !pipeline.User.PushSuccess) || len(pipeline.User.Sckey) < 1 {
+		return
+	}
+
+	status := ""
+	switch deployLog.Status {
+	case gocd.PipeLogStatusSuccess:
+		status = "交付成功"
+		break
+	case gocd.PipeLogStatusErrorShellExec:
+		status = "Shell错误"
+		break
+	case gocd.PipeLogStatusErrorServerConn:
+		status = "服务器连接错误"
+		break
+	default:
+		status = "未知错误"
+	}
+
+	ftqq.SendMessage(pipeline.User.Sckey, "[GoCD]"+pipeline.Name+"-"+status, deployLog.Log)
 }
