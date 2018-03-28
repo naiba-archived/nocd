@@ -32,11 +32,13 @@ func saveSetting(c *gin.Context) {
 		return
 	}
 	u := c.MustGet(mgin.CtxUser).(*gocd.User)
-	resp := ftqq.SendMessage(uf.Sckey, "[GoCD - "+gocd.Conf.Section("gocd").Key("domain").String()+"]", "Server酱推送绑定成功。")
-	if resp.Errno != 0 {
-		gocd.Logger().Errorln(resp.Error)
-		c.String(http.StatusForbidden, "SCKEY验证失败："+resp.Errmsg)
-		return
+	if u.Sckey != uf.Sckey {
+		resp := ftqq.SendMessage(uf.Sckey, "[GoCD - "+gocd.Conf.Section("gocd").Key("domain").String()+"]", "Server酱推送绑定成功。")
+		if resp.Errno != 0 {
+			gocd.Logger().Errorln(resp.Error)
+			c.String(http.StatusForbidden, "SCKEY验证失败："+resp.Errmsg)
+			return
+		}
 	}
 	u.Sckey = uf.Sckey
 	u.PushSuccess = uf.PushSuccess
