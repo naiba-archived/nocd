@@ -67,30 +67,27 @@ func CheckLogin(address string, port int, privateKey string, login string) error
 }
 
 //Deploy 进行部署
-func Deploy(pipeline gocd.Pipeline, who string) gocd.PipeLog {
-	var pLog gocd.PipeLog
+func Deploy(pipeline gocd.Pipeline, who string) (pLog gocd.PipeLog) {
 	pLog.PipelineID = pipeline.ID
 	pLog.StartedAt = time.Now()
 	pLog.Log = ""
 	pLog.Pusher = who
 	pLog.Status = gocd.PipeLogStatusRunning
-
-	stopped := func() gocd.PipeLog {
+	defer func() {
 		// 保留最后5000字
 		if len(pLog.Log) > 5000 {
 			pLog.Log = pLog.Log[len(pLog.Log)-5000:]
 		}
 		pLog.Log = "[GoCD]" + pLog.StartedAt.String() + ": 开始执行\r\n" + pLog.Log
 		pLog.StoppedAt = time.Now()
-		return pLog
-	}
+	}()
 
 	conn, err := dial(pipeline.Server.Address, pipeline.Server.Login, pipeline.User.PrivateKey, pipeline.Server.Port)
 	if err != nil {
 		gocd.Logger().Debug(err)
 		pLog.Status = gocd.PipeLogStatusErrorServerConn
 		pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 连接服务器失败"
-		return stopped()
+		return
 	}
 	defer conn.Close()
 
@@ -98,7 +95,7 @@ func Deploy(pipeline gocd.Pipeline, who string) gocd.PipeLog {
 	if err != nil {
 		pLog.Status = gocd.PipeLogStatusErrorServerConn
 		pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 建立会话失败"
-		return stopped()
+		return
 	}
 	defer session.Close()
 	session.Wait()
@@ -133,10 +130,10 @@ func Deploy(pipeline gocd.Pipeline, who string) gocd.PipeLog {
 		gocd.Logger().Debug("执行超时", buf.String())
 		pLog.Log += buf.String() + "\r\n [GoCD]" + time.Now().String() + ": 执行超时"
 		pLog.Status = gocd.PipeLogStatusErrorShellExec
-		return stopped()
+		return
 	case <-finish:
 		gocd.Logger().Debug("执行完毕")
-		return stopped()
+		return
 	}
 }
 
