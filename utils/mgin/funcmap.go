@@ -62,12 +62,15 @@ func FuncMap(pipelineService gocd.PipelineService, pipelogService gocd.PipeLogSe
 		"Pagination": func(all, current int64) []Pagination {
 			mMap := make([]Pagination, 0)
 			var i, num int64
-			num = current
-			if all-current < 11 {
-				num = all - 11
-			} else if current >= 6 {
-				num = current - 5
-			} else if current < 6 {
+			if all > 11 {
+				if all-current < 11 {
+					num = all - 11
+				} else if current >= 6 {
+					num = current - 5
+				} else {
+					num = current
+				}
+			} else {
 				num = 1
 			}
 			for i = num; i <= all; i++ {
