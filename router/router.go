@@ -93,7 +93,7 @@ func initEngine() *gin.Engine {
 		Secret: gocd.Conf.Section("gocd").Key("cookie_key_pair").String(),
 		ErrorFunc: func(c *gin.Context) {
 			if !strings.HasPrefix(c.Request.URL.Path, "/webhook/") {
-				gocd.Logger().Debug(c.Request.URL.Path)
+				gocd.Logger().Infoln(c.Request.URL.Path)
 				c.String(http.StatusForbidden, "CSRF Token 验证失败")
 				c.Abort()
 			}

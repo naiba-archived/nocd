@@ -78,7 +78,6 @@ func pipelineX(c *gin.Context) {
 		user := c.MustGet(mgin.CtxUser).(*gocd.User)
 		repo, err := repoService.GetRepoByUserAndID(user, pl.RepositoryID)
 		if err != nil {
-			gocd.Logger().Debug(err)
 			c.String(http.StatusForbidden, "这个项目不属于您，您无权操作。")
 			return
 		}
@@ -95,7 +94,6 @@ func pipelineX(c *gin.Context) {
 		}
 		if c.Request.Method == http.MethodPost {
 			pl.UserID = user.ID
-			gocd.Logger().Errorln(pl.RepositoryID, pl.Repository)
 			if err = pipelineService.Create(&pl); err != nil {
 				gocd.Logger().Errorln(err)
 				c.String(http.StatusInternalServerError, "数据库错误。")

@@ -27,7 +27,6 @@ func serveSettings(r *gin.Engine) {
 func saveSetting(c *gin.Context) {
 	var uf gocd.User
 	if err := c.Bind(&uf); err != nil {
-		gocd.Logger().Errorln(err)
 		c.String(http.StatusForbidden, "输入不符合规范："+err.Error())
 		return
 	}

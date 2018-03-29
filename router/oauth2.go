@@ -60,7 +60,6 @@ func serveOauth2(r *gin.Engine) {
 			client := github.NewClient(oauthConf.Client(context.Background(), token))
 			user, _, err := client.Users.Get(context.Background(), "")
 			if err != nil {
-				gocd.Logger().Errorln(err)
 				c.String(http.StatusInternalServerError, "GitHub通信失败，请重试")
 				return
 			}

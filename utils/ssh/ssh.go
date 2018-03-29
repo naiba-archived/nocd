@@ -49,7 +49,7 @@ func GenKeyPair() (string, string, error) {
 func CheckLogin(address string, port int, privateKey string, login string) error {
 	conn, err := dial(address, login, privateKey, port)
 	if err != nil {
-		gocd.Logger().Errorln("ssh.CheckLogin", err)
+		gocd.Logger().Infoln("ssh.CheckLogin", err)
 		return errors.New("连接服务器失败")
 	}
 	defer conn.Close()
