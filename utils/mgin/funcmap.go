@@ -53,7 +53,7 @@ func FuncMap(pipelineService gocd.PipelineService, pipelogService gocd.PipeLogSe
 			return fmt.Sprintf(" %.0f 年", sec/60/60/24/30/12)
 		},
 		"Now": func() time.Time {
-			return time.Now()
+			return time.Now().In(gocd.Loc)
 		},
 		"TimeFormat": func(t time.Time) string {
 			return t.In(gocd.Loc).Format("2006-01-02 15:04:05")
