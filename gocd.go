@@ -22,6 +22,9 @@ var Conf *ini.File
 //Debug debuggable
 var Debug bool
 
+//Pagination 分页条数
+const Pagination = 20
+
 //Loc system time location
 var Loc *time.Location
 

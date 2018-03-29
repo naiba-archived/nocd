@@ -16,8 +16,23 @@ import (
 //User 用户管理
 func User(us gocd.UserService) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		page := c.Query("page")
+		var pageInt int64
+		if page != "" {
+			pageInt, _ = strconv.ParseInt(page, 10, 64)
+			if pageInt < 0 {
+				c.String(http.StatusForbidden, "GG")
+				return
+			}
+		}
+		users, num := us.Users(pageInt, 20)
+		if pageInt == 0 {
+			pageInt = 1
+		}
 		c.HTML(http.StatusOK, "admin/user", mgin.CommonData(c, false, gin.H{
-			"users": us.Users(),
+			"users":       users,
+			"allPage":     num,
+			"currentPage": pageInt,
 		}))
 	}
 }

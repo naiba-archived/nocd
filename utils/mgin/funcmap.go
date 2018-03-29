@@ -11,7 +11,15 @@ import (
 	"html/template"
 	"strings"
 	"time"
+	"strconv"
 )
+
+//Pagination 分页
+type Pagination struct {
+	No      int64
+	Current bool
+	Text    string
+}
 
 //FuncMap 自定义模板函数
 func FuncMap(pipelineService gocd.PipelineService, pipelogService gocd.PipeLogService) template.FuncMap {
@@ -51,5 +59,31 @@ func FuncMap(pipelineService gocd.PipelineService, pipelogService gocd.PipeLogSe
 			return t.In(gocd.Loc).Format("2006-01-02 15:04:05")
 		},
 		"HasPrefix": strings.HasPrefix,
+		"Pagination": func(all, current int64) []Pagination {
+			mMap := make([]Pagination, 0)
+			var i, num int64
+			num = current
+			if all-current < 11 {
+				num = all - 11
+			} else if current >= 6 {
+				num = current - 5
+			} else if current < 6 {
+				num = 1
+			}
+			for i = num; i <= all; i++ {
+				if i-num > 10 && i != all {
+					mMap = append(mMap, Pagination{No: i, Current: i == current, Text: "..."})
+					break
+				}
+				mMap = append(mMap, Pagination{No: i, Current: i == current, Text: strconv.FormatInt(i, 10)})
+			}
+			return mMap
+		},
+		"MathSub": func(o, n int64) int64 {
+			return o - n
+		},
+		"MathAdd": func(o, n int64) int64 {
+			return o + n
+		},
 	}
 }

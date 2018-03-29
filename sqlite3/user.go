@@ -22,15 +22,22 @@ func (us *UserService) UserByGID(gid int64) (*gocd.User, error) {
 }
 
 //Users 获取所有用户
-func (us *UserService) Users() []*gocd.User {
+func (us *UserService) Users(page, limit int64) ([]*gocd.User, int64) {
 	var ul []*gocd.User
-	us.DB.Order("updated_at DESC").Find(&ul)
+	var num int64
+	us.DB.Offset(page * 20).Limit(limit).Order("updated_at DESC").Find(&ul)
 	for _, u := range ul {
 		us.DB.Model(&u).Select("id").Related(&u.Servers)
 		us.DB.Model(&u).Select("id").Related(&u.Repositories)
 		us.DB.Model(&u).Select("id").Related(&u.Pipelines)
 	}
-	return ul
+	us.DB.Model(&gocd.User{}).Count(&num)
+	if num%gocd.Pagination == 0 {
+		num = num/20 - 1
+	} else {
+		num = num / 20
+	}
+	return ul, num
 }
 
 //Create 创建用户

@@ -34,5 +34,5 @@ type UserService interface {
 	Create(u *User) error
 	Update(u *User) error
 	Verify(uid, token string) (*User, error)
-	Users() []*User
+	Users(page,limit int64) ([]*User, int64)
 }
