@@ -50,7 +50,7 @@
             </div>
             <nav aria-label="用户分页">
                 <ul class="pagination">
-                    <li class="page-item{{if eq .currentPage 1}} disabled{{else if eq .currentPage 0}} disabled{{end}}">
+                    <li class="page-item{{if eq .currentPage 1}} disabled{{end}}">
                         <a class="page-link" href="?page={{MathSub .currentPage 1}}" tabindex="-1">&laquo;</a>
                     </li>
                 {{range $page := Pagination .allPage .currentPage}}

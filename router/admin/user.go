@@ -18,17 +18,16 @@ func User(us gocd.UserService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		page := c.Query("page")
 		var pageInt int64
-		if page != "" {
-			pageInt, _ = strconv.ParseInt(page, 10, 64)
-			if pageInt < 0 {
-				c.String(http.StatusForbidden, "GG")
-				return
-			}
+		pageInt, _ = strconv.ParseInt(page, 10, 64)
+		if pageInt < 0 {
+			c.String(http.StatusForbidden, "GG")
+			return
 		}
-		users, num := us.Users(pageInt, 20)
 		if pageInt == 0 {
 			pageInt = 1
 		}
+		gocd.Logger().Infoln("当前页", pageInt)
+		users, num := us.Users(pageInt-1, 20)
 		c.HTML(http.StatusOK, "admin/user", mgin.CommonData(c, false, gin.H{
 			"users":       users,
 			"allPage":     num,
