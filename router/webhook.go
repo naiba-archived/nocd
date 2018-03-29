@@ -21,8 +21,6 @@ import (
 	"git.cm/naiba/gocd"
 	"git.cm/naiba/gocd/utils/ftqq"
 	"git.cm/naiba/gocd/utils/ssh"
-	"strings"
-	"html/template"
 )
 
 var webHookSQLIndex map[string]string
@@ -166,5 +164,5 @@ func deploy(pipeline gocd.Pipeline, who string) {
 		status = "未知错误"
 	}
 
-	ftqq.SendMessage(pipeline.User.Sckey, "[GoCD]"+pipeline.Name+"-"+status, strings.Replace(template.HTMLEscapeString(deployLog.Log), "\n", "<br>", -1))
+	ftqq.SendMessage(pipeline.User.Sckey, "[GoCD]"+pipeline.Name+"-"+status, "部署日志：\n\n```\n"+deployLog.Log+"\n```")
 }
