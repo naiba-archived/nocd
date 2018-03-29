@@ -33,9 +33,9 @@ func (us *UserService) Users(page, limit int64) ([]*gocd.User, int64) {
 	}
 	us.DB.Model(&gocd.User{}).Count(&num)
 	if num%gocd.Pagination == 0 {
-		num = num/20 - 1
+		num = num/20
 	} else {
-		num = num / 20
+		num = num/20 + 1
 	}
 	return ul, num
 }
