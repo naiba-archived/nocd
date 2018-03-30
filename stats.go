@@ -46,7 +46,7 @@ func update() {
 	db.Model(&Repository{}).Count(&ss.RepoCount)
 	db.Model(&PipeLog{}).Count(&ss.PipeLogCount)
 	var l PipeLog
-	db.Select("stopped_at").Order("id DESC").Limit(1).First(&l)
+	db.Select("stopped_at").Order("id DESC").Take(&l)
 	ss.LastLog = l.StoppedAt
 	ss.Update = time.Now()
 }

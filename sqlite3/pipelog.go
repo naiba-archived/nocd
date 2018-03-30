@@ -34,7 +34,9 @@ func (ps *PipeLogService) LastServerLog(sid uint) gocd.PipeLog {
 	for _, p := range pipelines {
 		id = append(id, p.ID)
 	}
-	ps.DB.Where("pipeline_id IN (?)", id).Order("id desc").First(&pl)
+	if len(id) > 0 {
+		ps.DB.Where("pipeline_id IN (?)", id).Order("stopped_at desc").Take(&pl)
+	}
 	return pl
 }
 
@@ -72,7 +74,7 @@ func (ps *PipeLogService) GetByUID(uid, lid uint) (gocd.PipeLog, error) {
 //LastPipelineLog 部署流程最后一次部署
 func (ps *PipeLogService) LastPipelineLog(pid uint) gocd.PipeLog {
 	var pl gocd.PipeLog
-	ps.DB.Where("pipeline_id = ?", pid).Order("id desc").First(&pl)
+	ps.DB.Where("pipeline_id = ?", pid).Order("id desc").Take(&pl)
 	return pl
 }
 
