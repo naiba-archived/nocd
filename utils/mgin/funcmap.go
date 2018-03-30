@@ -42,7 +42,7 @@ func FuncMap(pipelineService gocd.PipelineService, pipelogService gocd.PipeLogSe
 				return fmt.Sprintf(" %.0f 分钟", sec/60)
 			}
 			if sec < 60*60*24 {
-				return fmt.Sprintf(" %.0f 分钟", sec/60/60)
+				return fmt.Sprintf(" %.0f 小时", sec/60/60)
 			}
 			if sec < 60*60*24*30 {
 				return fmt.Sprintf(" %.0f 天", sec/60/60/24)
