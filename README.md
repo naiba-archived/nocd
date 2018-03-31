@@ -1,6 +1,6 @@
 # GoCD 持续交付系统
 
-[![Go Report Card](https://goreportcard.com/badge/git.cm/naiba/gocd)](https://goreportcard.com/report/git.cm/naiba/gocd)  [![Build status](https://ci.appveyor.com/api/projects/status/d7bo0ng4n0bm8l11?svg=true)](https://ci.appveyor.com/project/naiba/gocd)  [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)
+[![Go Report Card](https://goreportcard.com/badge/git.cm/naiba/gocd)](https://goreportcard.com/report/git.cm/naiba/gocd)  [![Build status](https://ci.appveyor.com/api/projects/status/d7bo0ng4n0bm8l11?svg=true)](https://ci.appveyor.com/project/naiba/gocd)  [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)  [![Version](https://img.shields.io/badge/version-0.0.3-red.svg)](https://git.cm/naiba/gocd/releases)
 
 
 **GoCD** 是一个 Golang 实现的持续交付系统。
