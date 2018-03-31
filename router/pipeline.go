@@ -30,13 +30,28 @@ func servePipeline(r *gin.Engine) {
 
 func pipeLogs(c *gin.Context) {
 	user := c.MustGet(mgin.CtxUser).(*gocd.User)
-	logs := pipelogService.UserLogs(user.ID)
+
+	page := c.Query("page")
+	var pageInt int64
+	pageInt, _ = strconv.ParseInt(page, 10, 64)
+	if pageInt < 0 {
+		c.String(http.StatusForbidden, "GG")
+		return
+	}
+	if pageInt == 0 {
+		pageInt = 1
+	}
+
+	logs, num := pipelogService.UserLogs(user.ID, pageInt-1, 20)
 	for i, l := range logs {
 		pipelogService.Pipeline(&l)
 		logs[i] = l
 	}
+
 	c.HTML(http.StatusOK, "pipelog/index", mgin.CommonData(c, false, gin.H{
-		"logs": logs,
+		"logs":        logs,
+		"allPage":     num,
+		"currentPage": pageInt,
 	}))
 }
 

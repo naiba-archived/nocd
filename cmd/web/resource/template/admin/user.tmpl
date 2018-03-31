@@ -48,6 +48,7 @@
                     </tbody>
                 </table>
             </div>
+        {{if gt .allPage 0}}
             <nav aria-label="用户分页">
                 <ul class="pagination">
                     <li class="page-item{{if eq .currentPage 1}} disabled{{end}}">
@@ -64,6 +65,7 @@
                     </li>
                 </ul>
             </nav>
+        {{end}}
         </div>
     </div>
 </div>

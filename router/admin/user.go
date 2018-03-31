@@ -26,7 +26,6 @@ func User(us gocd.UserService) gin.HandlerFunc {
 		if pageInt == 0 {
 			pageInt = 1
 		}
-		gocd.Logger().Infoln("当前页", pageInt)
 		users, num := us.Users(pageInt-1, 20)
 		c.HTML(http.StatusOK, "admin/user", mgin.CommonData(c, false, gin.H{
 			"users":       users,

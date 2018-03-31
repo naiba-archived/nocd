@@ -41,10 +41,11 @@ func (ps *PipeLogService) LastServerLog(sid uint) gocd.PipeLog {
 }
 
 //UserLogs 用户的所有日志
-func (ps *PipeLogService) UserLogs(uid uint) []gocd.PipeLog {
+func (ps *PipeLogService) UserLogs(uid uint, page, size int64) ([]gocd.PipeLog, int64) {
 	var pipelines []gocd.Pipeline
 	var pl []gocd.PipeLog
 	var user gocd.User
+	var num int64
 	user.ID = uid
 	ps.DB.Model(&user).Select("id").Association("Pipelines").Find(&pipelines)
 	id := make([]uint, 0)
@@ -52,8 +53,14 @@ func (ps *PipeLogService) UserLogs(uid uint) []gocd.PipeLog {
 		id = append(id, p.ID)
 	}
 	// 控制显示的历史 log 数
-	ps.DB.Limit(20).Select("id,started_at,stopped_at,pipeline_id,pusher,status").Order("id desc").Where("pipeline_id IN (?)", id).Find(&pl)
-	return pl
+	ps.DB.Offset(page * size).Limit(size).Select("id,started_at,stopped_at,pipeline_id,pusher,status").Order("id desc").Where("pipeline_id IN (?)", id).Find(&pl)
+	ps.DB.Model(&gocd.PipeLog{}).Where("pipeline_id IN (?)", id).Count(&num)
+	if num%size == 0 {
+		num = num / size
+	} else {
+		num = num/size + 1
+	}
+	return pl, num
 }
 
 //GetByUID 通过用户ID和部署流程ID查找日志

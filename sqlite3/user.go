@@ -22,20 +22,20 @@ func (us *UserService) UserByGID(gid int64) (*gocd.User, error) {
 }
 
 //Users 获取所有用户
-func (us *UserService) Users(page, limit int64) ([]*gocd.User, int64) {
+func (us *UserService) Users(page, size int64) ([]*gocd.User, int64) {
 	var ul []*gocd.User
 	var num int64
-	us.DB.Offset(page * 20).Limit(limit).Order("updated_at DESC").Find(&ul)
+	us.DB.Offset(page * size).Limit(size).Order("updated_at DESC").Find(&ul)
 	for _, u := range ul {
 		us.DB.Model(&u).Select("id").Related(&u.Servers)
 		us.DB.Model(&u).Select("id").Related(&u.Repositories)
 		us.DB.Model(&u).Select("id").Related(&u.Pipelines)
 	}
 	us.DB.Model(&gocd.User{}).Count(&num)
-	if num%gocd.Pagination == 0 {
-		num = num/20
+	if num%size == 0 {
+		num = num / size
 	} else {
-		num = num/20 + 1
+		num = num/size + 1
 	}
 	return ul, num
 }
