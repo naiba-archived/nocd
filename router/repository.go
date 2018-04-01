@@ -57,11 +57,11 @@ func repoHandler(c *gin.Context) {
 			if c.Request.Method == http.MethodPatch {
 				mRepo.Name = repo.Name
 				mRepo.Platform = repo.Platform
-				if repoService.Update(&repo) != nil {
+				if repoService.Update(&mRepo) != nil {
 					c.String(http.StatusInternalServerError, "数据库错误")
 				}
 			} else if c.Request.Method == http.MethodDelete {
-				if repoService.Delete(repo.ID) != nil {
+				if repoService.Delete(mRepo.ID) != nil {
 					c.String(http.StatusInternalServerError, "数据库错误")
 				}
 			}

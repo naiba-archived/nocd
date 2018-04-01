@@ -130,7 +130,7 @@ func pipelineX(c *gin.Context) {
 					c.String(http.StatusInternalServerError, "数据库错误。")
 				}
 			} else if c.Request.Method == http.MethodDelete {
-				if pipelineService.Delete(pl.ID) != nil {
+				if pipelineService.Delete(pip.ID) != nil {
 					c.String(http.StatusInternalServerError, "数据库错误。")
 				}
 			} else {
