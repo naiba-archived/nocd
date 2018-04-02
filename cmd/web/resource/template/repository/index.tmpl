@@ -146,7 +146,8 @@
                             <i class="octicon octicon-gist-secret"></i>
                         </button>
                         <button class="btn btn-sm btn-secondary pr-1 pl-2" data-toggle="modal"
-                                data-target="#modalRepo" data-id="{{.ID}}" data-name="{{.Name}}" data-platform="{{.Platform}}">
+                                data-target="#modalRepo" data-id="{{.ID}}" data-name="{{.Name}}"
+                                data-platform="{{.Platform}}">
                             <i class="octicon octicon-pencil"></i>
                         </button>
                         <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="POST" data-toggle="modal"
@@ -181,7 +182,7 @@
                                 class="btn btn-danger btn-sm">Server</a>
                             {{else if eq $log.Status 3}}
                                 class="btn btn-warning btn-sm">Exec</a>
-                            {{else if eq $l.Status 4}}
+                            {{else if eq $log.Status 4}}
                                 class="btn btn-primary btn-sm">Running</button>
                             {{else}}
                                 class="btn btn-secondary btn-sm">None</a>
