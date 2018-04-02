@@ -67,12 +67,8 @@ func CheckLogin(address string, port int, privateKey string, login string) error
 }
 
 //Deploy 进行部署
-func Deploy(pipeline gocd.Pipeline, who string) (pLog gocd.PipeLog) {
-	pLog.PipelineID = pipeline.ID
-	pLog.StartedAt = time.Now()
-	pLog.Log = ""
-	pLog.Pusher = who
-	pLog.Status = gocd.PipeLogStatusRunning
+func Deploy(pipeline gocd.Pipeline, pLog *gocd.PipeLog) {
+
 	defer func() {
 		// 保留最后5000字
 		if len(pLog.Log) > 5000 {

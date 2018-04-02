@@ -20,6 +20,11 @@ func (ps *PipeLogService) Create(log *gocd.PipeLog) error {
 	return ps.DB.Create(log).Error
 }
 
+//Update 创建日志
+func (ps *PipeLogService) Update(log *gocd.PipeLog) error {
+	return ps.DB.Save(log).Error
+}
+
 //Pipeline 获取部署流程信息
 func (ps *PipeLogService) Pipeline(log *gocd.PipeLog) error {
 	return ps.DB.Model(log).Related(&log.Pipeline).Error

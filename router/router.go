@@ -38,19 +38,17 @@ var pipelogService gocd.PipeLogService
 
 var oauthConf *oauth2.Config
 
-func init() {
-	// 地址验证
-	binding.Validator.RegisterValidation("address", func(v *validator.Validate, topStruct reflect.Value, currentStruct reflect.Value, field reflect.Value, fieldtype reflect.Type, fieldKind reflect.Kind, param string) bool {
-		return com.IsDomain(field.String()) || com.IsIPv4(field.String())
-	})
-}
-
 //Start 运行Web
 func Start() {
 	initService()
 	initOauthConf()
 
 	r := initEngine()
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("address", func(v *validator.Validate, topStruct reflect.Value, currentStruct reflect.Value, field reflect.Value, fieldtype reflect.Type, fieldKind reflect.Kind, param string) bool {
+			return com.IsDomain(field.String()) || com.IsIPv4(field.String())
+		})
+	}
 
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "page/index", mgin.CommonData(c, true, gin.H{}))

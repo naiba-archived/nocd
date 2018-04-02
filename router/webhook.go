@@ -21,6 +21,7 @@ import (
 	"git.cm/naiba/gocd"
 	"git.cm/naiba/gocd/utils/ftqq"
 	"git.cm/naiba/gocd/utils/ssh"
+	"time"
 )
 
 var webHookSQLIndex map[string]string
@@ -142,8 +143,18 @@ func parsePayloadInfo(payload interface{}) (string, string) {
 }
 
 func deploy(pipeline gocd.Pipeline, who string) {
-	deployLog := ssh.Deploy(pipeline, who)
+	var deployLog gocd.PipeLog
+	deployLog.PipelineID = pipeline.ID
+	deployLog.StartedAt = time.Now()
+	deployLog.Log = ""
+	deployLog.Pusher = who
+	deployLog.Status = gocd.PipeLogStatusRunning
+	// 更新运行中
 	pipelogService.Create(&deployLog)
+	// 进行部署
+	ssh.Deploy(pipeline, &deployLog)
+	// 部署完成
+	pipelogService.Update(&deployLog)
 
 	if (deployLog.Status == gocd.PipeLogStatusSuccess && !pipeline.User.PushSuccess) || len(pipeline.User.Sckey) < 1 {
 		return

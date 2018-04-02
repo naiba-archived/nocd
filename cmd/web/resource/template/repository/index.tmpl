@@ -181,6 +181,8 @@
                                 class="btn btn-danger btn-sm">Server</a>
                             {{else if eq $log.Status 3}}
                                 class="btn btn-warning btn-sm">Exec</a>
+                            {{else if eq $l.Status 4}}
+                                class="btn btn-primary btn-sm">Running</button>
                             {{else}}
                                 class="btn btn-secondary btn-sm">None</a>
                             {{end}}

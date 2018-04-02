@@ -85,7 +85,7 @@
     "json",
     "render"
   ]
-  revision = "65a65c2edd4e86f96634a553f07a25c38f2b1c75"
+  revision = "6d913fc343cfac80d656db5be67a0ffb1323ba0d"
 
 [[projects]]
   branch = "master"
@@ -252,7 +252,7 @@
     "ssh",
     "ssh/terminal"
   ]
-  revision = "88942b9c40a4c9d203b82b3731787b672d6e809b"
+  revision = "12892e8c234f4fe6f6803f052061de9057903bb2"
 
 [[projects]]
   branch = "master"
@@ -263,7 +263,7 @@
     "idna",
     "publicsuffix"
   ]
-  revision = "6078986fec03a1dcc236c34816c71b0e05018fda"
+  revision = "b68f30494add4df6bd8ef5e82803f308e7f7c59c"
 
 [[projects]]
   branch = "master"
@@ -282,7 +282,7 @@
     "unix",
     "windows"
   ]
-  revision = "91ee8cde435411ca3f1cd365e8f20131aed4d0a1"
+  revision = "378d26f46672a356c46195c28f61bdb4c0a781dd"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -346,12 +346,12 @@
 [[projects]]
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "7f97868eec74b32b0982dd158a51a446d1da7eb5"
-  version = "v2.1.1"
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8463e1bbee710247530f650485581b02218794dda02215b121e7d9edd2894f3c"
+  inputs-digest = "9b1f00f88b73ef8cefbf140767056e320cdfa5684328bbc73e4faadb0f59a1e0"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -34,6 +34,7 @@ type PipeLog struct {
 //PipeLogService 部署日志服务
 type PipeLogService interface {
 	Create(plog *PipeLog) error
+	Update(plog *PipeLog) error
 	LastServerLog(sid uint) PipeLog
 	LastPipelineLog(pid uint) PipeLog
 	UserLogs(uid uint, page, size int64) ([]PipeLog,int64)
