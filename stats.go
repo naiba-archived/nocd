@@ -16,7 +16,7 @@ type Stats struct {
 	ServerCount   int64
 	PipelineCount int64
 	RepoCount     int64
-	PipeLogCount  int64
+	RunningCount  int64
 	LastLog       time.Time
 	Update        time.Time
 }
@@ -44,7 +44,7 @@ func update() {
 	db.Model(&Server{}).Count(&ss.ServerCount)
 	db.Model(&Pipeline{}).Count(&ss.PipelineCount)
 	db.Model(&Repository{}).Count(&ss.RepoCount)
-	db.Model(&PipeLog{}).Count(&ss.PipeLogCount)
+	db.Model(&PipeLog{}).Where("status = ", PipeLogStatusRunning).Count(&ss.RunningCount)
 	var l PipeLog
 	db.Select("stopped_at").Order("id DESC").Take(&l)
 	ss.LastLog = l.StoppedAt

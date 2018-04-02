@@ -2,8 +2,8 @@
 <div class="container">
     <div class="mt-md-5 pt-2 py-2 border-top text-center">
         <p class="text-secondary" style="margin-bottom: 0">[统计] 用户 <b>{{.stat.UserCount}}</b> 位, 服务器
-            <b>{{.stat.ServerCount}}</b> 台, 项目 <b>{{.stat.RepoCount}}</b> 个, 部署流程 <b>{{.stat.PipelineCount}}</b> 个, 历史部署
-            <b>{{.stat.PipeLogCount}}</b> 次, 最后部署: <b>{{TimeFormat .stat.LastLog}}</b></p>
+            <b>{{.stat.ServerCount}}</b> 台, 项目 <b>{{.stat.RepoCount}}</b> 个, 部署流程 <b>{{.stat.PipelineCount}}</b> 个, 正在部署
+            <b>{{.stat.RunningCount}}</b> 次, 最后部署: <b>{{TimeFormat .stat.LastLog}}</b></p>
     </div>
     <footer class="pt-4 pt-md-5 border-top">
         <div class="row">
@@ -28,15 +28,17 @@
             <div class="col-6 col-md">
                 <h5>赞助商</h5>
                 <ul class="list-unstyled text-small">
-                    <li><a href="http://m.im/?utm_source=naiba" rel="nofollow" target="_blank" class="text-muted"><img class="p-1"
-                                                                                                     width="100px"
-                                                                                                     src="/static/image/sponsor-m_im.png"
-                                                                                                     title="马克书签"></a>
+                    <li><a href="http://m.im/?utm_source=naiba" rel="nofollow" target="_blank" class="text-muted"><img
+                            class="p-1"
+                            width="100px"
+                            src="/static/image/sponsor-m_im.png"
+                            title="马克书签"></a>
                     </li>
-                    <li><a href="http://www.sp9.com/?utm_source=naiba" rel="nofollow" target="_blank" class="text-muted"><img class="p-1"
-                                                                                                            width="100px"
-                                                                                                            src="/static/image/sponsor-sp9_com.png"
-                                                                                                            title="食佰秀"></a>
+                    <li><a href="http://www.sp9.com/?utm_source=naiba" rel="nofollow" target="_blank"
+                           class="text-muted"><img class="p-1"
+                                                   width="100px"
+                                                   src="/static/image/sponsor-sp9_com.png"
+                                                   title="食佰秀"></a>
                     </li>
                 </ul>
             </div>
