@@ -2,8 +2,8 @@
 <div class="container">
     <div class="mt-md-5 pt-2 py-2 border-top text-center">
         <p class="text-secondary" style="margin-bottom: 0">[统计] 用户 <b>{{.stat.UserCount}}</b> 位, 服务器
-            <b>{{.stat.ServerCount}}</b> 台, 项目 <b>{{.stat.RepoCount}}</b> 个, 部署流程 <b>{{.stat.PipelineCount}}</b> 个, 正在部署
-            <b>{{.stat.RunningCount}}</b> 次, 最后部署: <b>{{TimeFormat .stat.LastLog}}</b></p>
+            <b>{{.stat.ServerCount}}</b> 台, 项目 <b>{{.stat.RepoCount}}</b> 个, 部署流程 <b>{{.stat.PipelineCount}}</b> 个,
+            <b>{{.stat.RunningCount}}</b> 个正在部署, 最后部署: <b>{{TimeFormat .stat.LastLog}}</b></p>
     </div>
     <footer class="pt-4 pt-md-5 border-top">
         <div class="row">

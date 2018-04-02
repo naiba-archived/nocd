@@ -36,7 +36,7 @@ func FuncMap(pipelineService gocd.PipelineService, pipelogService gocd.PipeLogSe
 		"TimeDiff": func(t1, t2 time.Time) string {
 			sec := t2.Sub(t1).Seconds()
 			if sec < 0 {
-				return "上古时期"
+				return "老长了"
 			}
 			if sec < 60 {
 				return fmt.Sprintf(" %.0f 秒", sec)
