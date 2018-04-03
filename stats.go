@@ -26,10 +26,7 @@ var ss *Stats
 
 //GetStats 获取系统统计
 func GetStats() Stats {
-	if ss.Update.Add(time.Minute * 10).Before(time.Now()) {
-		update()
-		return *ss
-	}
+	update()
 	return *ss
 }
 
