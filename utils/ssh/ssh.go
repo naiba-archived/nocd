@@ -104,7 +104,6 @@ func Deploy(pipeline gocd.Pipeline, pLog *gocd.PipeLog) {
 	go func() {
 		gocd.Logger().Debug("开始执行", pipeline.Shell)
 		session.Stdout = buf
-		session.Stderr = buf
 		err := session.Run(pipeline.Shell)
 		if pLog.Status != gocd.PipeLogStatusRunning {
 			return
