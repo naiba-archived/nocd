@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-document.ready = function () {
+window.onload = function () {
     // tooltip
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
