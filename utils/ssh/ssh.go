@@ -74,7 +74,7 @@ func Deploy(pipeline gocd.Pipeline, pLog *gocd.PipeLog) {
 		if len(pLog.Log) > 5000 {
 			pLog.Log = pLog.Log[len(pLog.Log)-5000:]
 		}
-		pLog.Log = "[GoCD]" + pLog.StartedAt.String() + ": 开始执行\r\n" + pLog.Log
+		pLog.Log = " [GoCD]" + pLog.StartedAt.String() + ": 开始执行\r\n" + pLog.Log
 		pLog.StoppedAt = time.Now()
 	}()
 
@@ -82,7 +82,7 @@ func Deploy(pipeline gocd.Pipeline, pLog *gocd.PipeLog) {
 	if err != nil {
 		gocd.Logger().Debug(err)
 		pLog.Status = gocd.PipeLogStatusErrorServerConn
-		pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 连接服务器失败"
+		pLog.Log += "\r\n [GoCD]" + pLog.StartedAt.String() + ": 连接服务器失败"
 		return
 	}
 	defer conn.Close()
@@ -90,7 +90,7 @@ func Deploy(pipeline gocd.Pipeline, pLog *gocd.PipeLog) {
 	session, err := conn.NewSession()
 	if err != nil {
 		pLog.Status = gocd.PipeLogStatusErrorServerConn
-		pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 建立会话失败"
+		pLog.Log += "\r\n [GoCD]" + pLog.StartedAt.String() + ": 建立会话失败"
 		return
 	}
 	defer session.Close()
@@ -104,6 +104,7 @@ func Deploy(pipeline gocd.Pipeline, pLog *gocd.PipeLog) {
 	go func() {
 		gocd.Logger().Debug("开始执行", pipeline.Shell)
 		session.Stdout = buf
+		session.Stderr = buf
 		err := session.Run(pipeline.Shell)
 		if pLog.Status != gocd.PipeLogStatusRunning {
 			return
@@ -112,7 +113,7 @@ func Deploy(pipeline gocd.Pipeline, pLog *gocd.PipeLog) {
 			gocd.Logger().Debug("执行失败", err.Error())
 			pLog.Log += buf.String()
 			pLog.Log += err.Error()
-			pLog.Log += "\r\n[GoCD]" + pLog.StartedAt.String() + ": 执行失败"
+			pLog.Log += "\r\n [GoCD]" + pLog.StartedAt.String() + ": 执行失败"
 			pLog.Status = gocd.PipeLogStatusErrorShellExec
 		} else {
 			pLog.Log += buf.String() + "\r\n [GoCD]" + time.Now().String() + ": 执行完毕"
