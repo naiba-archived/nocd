@@ -5,12 +5,10 @@
 
 package gocd
 
-import "io"
-
 //Running 运行中的任务
 type Running struct {
 	Finish     chan bool
-	Reader     *io.PipeReader
+	Closed     bool
 	Log        *PipeLog
 	RunningLog []string
 }

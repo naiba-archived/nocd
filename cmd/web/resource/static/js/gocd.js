@@ -2,7 +2,6 @@
  * Copyright (c) 2018, 奶爸<1@5.nu>
  * All rights reserved.
  */
-
 window.onload = function () {
     // tooltip
     $(function () {
@@ -104,11 +103,23 @@ window.onload = function () {
     // 部署日志展示
     var running = $('#console').attr("running");
     var consoleText = $('#console').attr("text");
+    var logLineNumber = 0;
     if (consoleText && consoleText.length > 0) {
         parseLog(consoleText, 0);
     }
     if (running === "true") {
-        getLog(0)
+        var timerHandler = setInterval(function () {
+            $.get('?ajax=1&act=view&line=' + logLineNumber, function (res) {
+                if (res.log && res.log.length > 0) {
+                    parseLog(res.log, logLineNumber);
+                }
+                if (res.end === "false") {
+                    logLineNumber = res.line;
+                } else {
+                    clearInterval(timerHandler)
+                }
+            })
+        }, 3000)
     }
 };
 
@@ -129,17 +140,6 @@ function stopDeploy() {
     }
 }
 
-function getLog(line) {
-    $.get('?ajax=1&act=view&line=' + line, function (res) {
-        if (res.log && res.log.length > 0) {
-            parseLog(res.log, line);
-        }
-        if (res.end === "false") {
-            setTimeout(getLog(res.line), 3000);
-        }
-    })
-}
-
 function logout() {
     $.removeCookie("uid", {path: '/'});
     $.removeCookie("token", {path: '/'});
@@ -149,7 +149,7 @@ function logout() {
 function parseLog(str, number) {
     var text = "";
     str.split("\n").forEach(function (value, index) {
-        text += '<div class="row"><span class="line-number col-1  text-center">' + (index + number + 1) + '.</span><span class="code col-11"\n' +
+        text += '<div class="row"><span class="line-number col-1  text-center">' + (index + parseInt(number) + 1) + '.</span><span class="code col-11"\n' +
             '                                                                                 data-toggle="tooltip"\n' +
             '                                                                                 data-placement="top"\n' +
             '                                                                                 title="' + value.substr(0, 8) + '">' + value.substr(9) + '</span>\n' +

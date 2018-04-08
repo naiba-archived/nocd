@@ -73,10 +73,13 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 
 	start := time.Now()
 	pr, pw := io.Pipe()
+	defer func() {
+		pr.Close()
+		pw.Close()
+	}()
 	run := &gocd.Running{
 		Finish:     make(chan bool, 1),
 		Log:        log,
-		Reader:     pr,
 		RunningLog: make([]string, 0),
 	}
 	gocd.RunningLogs[log.ID] = run
@@ -95,7 +98,7 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 
 	conn, err := dial(pipeline.Server.Address, pipeline.Server.Login, pipeline.User.PrivateKey, pipeline.Server.Port)
 	if err != nil {
-		gocd.Logger().Debug(err)
+		gocd.Logger().Debugln(err)
 		run.Log.Status = gocd.PipeLogStatusErrorServerConn
 		return
 	}
@@ -116,6 +119,7 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 	go func() {
 		err = session.Start(pipeline.Shell)
 		if err != nil {
+			gocd.Logger().Debugln(err)
 			run.Log.Status = gocd.PipeLogStatusErrorShellExec
 			run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
 			run.RunningLog = append(run.RunningLog, appendLog(start)+err.Error())
@@ -125,23 +129,25 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 		go func() {
 			old := ""
 			for {
-				// 已经出错关闭
-				if cap(run.Finish) == 0 {
-					break
+				// 已经关闭
+				if run.Closed {
+					return
 				}
 				b := make([]byte, 10)
 				num, err := pr.Read(b)
 				if err != nil {
+					if run.Closed {
+						return
+					}
 					if err == io.ErrClosedPipe {
 						run.Log.Status = gocd.PipeLogStatusSuccess
-						run.Finish <- true
-						break
 					} else {
+						gocd.Logger().Debugln(err)
 						run.Log.Status = gocd.PipeLogStatusErrorShellExec
 						run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
-						run.Finish <- true
-						break
 					}
+					run.Finish <- true
+					break
 				}
 				newLine := b[num-1] == '\n'
 				s := strings.Split(old+string(b[:num-1]), "\n")
@@ -156,20 +162,26 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 			}
 		}()
 		err = session.Wait()
+		if run.Closed {
+			return
+		}
 		if err != nil {
+			gocd.Logger().Debugln(err)
 			run.Log.Status = gocd.PipeLogStatusErrorShellExec
 			run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
 			run.RunningLog = append(run.RunningLog, appendLog(start)+err.Error())
 		}
-		run.Reader.CloseWithError(err)
-		pw.CloseWithError(err)
+		pw.Close()
+		pr.Close()
 	}()
 
 	select {
 	case <-timer.C:
+		run.Closed = true
 		run.Log.Status = gocd.PipeLogStatusErrorTimeout
 		return
 	case <-run.Finish:
+		run.Closed = true
 		return
 	}
 }

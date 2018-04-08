@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 	"strconv"
+	"runtime"
 )
 
 //Pagination 分页
@@ -91,5 +92,6 @@ func FuncMap(pipelineService gocd.PipelineService, pipelogService gocd.PipeLogSe
 		"MathAdd": func(o, n int64) int64 {
 			return o + n
 		},
+		"NumGoroutine": runtime.NumGoroutine,
 	}
 }

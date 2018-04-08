@@ -171,6 +171,12 @@ func deploy(pipeline gocd.Pipeline, who string) {
 	case gocd.PipeLogStatusErrorServerConn:
 		status = "服务器连接错误"
 		break
+	case gocd.PipeLogStatusHumanStopped:
+		status = "人工停止"
+		break
+	case gocd.PipeLogStatusErrorTimeout:
+		status = "执行超时"
+		break
 	default:
 		status = "未知错误"
 	}
