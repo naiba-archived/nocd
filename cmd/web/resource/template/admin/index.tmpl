@@ -11,7 +11,12 @@
                     欢迎您，{{.user.GName}}
                 </div>
                 <div class="card-body">
-                    运行中的Goroutine：{{NumGoroutine}}
+                    运行中的 Goroutine：{{NumGoroutine}}<br>
+                    当前内存使用量：{{.memory.Alloc}}<br>
+                    当前内存占用总量：{{.memory.TotalAlloc}}<br>
+                    当前内存占用总量：{{.memory.TotalAlloc}}<br>
+                    下次 GC 回收量：{{.memory.NextGC}}<br>
+                    已执行 GC 次数：{{.memory.NumGC}}<br>
                 </div>
             </div>
         </div>

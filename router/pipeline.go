@@ -65,10 +65,19 @@ func viewLog(c *gin.Context) {
 		c.String(http.StatusInternalServerError, "非法ID")
 		return
 	}
-	log, err := pipelogService.GetByUID(user.ID, uint(u64lid))
-	if err != nil {
-		c.String(http.StatusForbidden, "您无权查看此Log")
-		return
+	var log gocd.PipeLog
+	if !user.IsAdmin {
+		log, err = pipelogService.GetByUID(user.ID, uint(u64lid))
+		if err != nil {
+			c.String(http.StatusForbidden, "您无权查看此Log")
+			return
+		}
+	} else {
+		log, err = pipelogService.GetByID(uint(u64lid))
+		if err != nil {
+			c.String(http.StatusForbidden, "Log不存在")
+			return
+		}
 	}
 	isAjax := c.Query("ajax") != ""
 	lineNumberStr := c.Query("line")

@@ -17,6 +17,7 @@ func serveAdmin(r *gin.Engine) {
 	{
 		ra.GET("/", admin.Index)
 		ra.GET("/user/", admin.User(userService))
+		ra.GET("/running/", admin.Running(pipelogService))
 		ra.GET("/user/:id/:col/:act", admin.UserToggle(userService))
 	}
 }

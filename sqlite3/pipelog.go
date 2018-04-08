@@ -58,8 +58,22 @@ func (ps *PipeLogService) UserLogs(uid uint, page, size int64) ([]gocd.PipeLog, 
 		id = append(id, p.ID)
 	}
 	// 控制显示的历史 log 数
-	ps.DB.Offset(page * size).Limit(size).Select("id,started_at,stopped_at,pipeline_id,pusher,status").Order("id desc").Where("pipeline_id IN (?)", id).Find(&pl)
-	ps.DB.Model(&gocd.PipeLog{}).Where("pipeline_id IN (?)", id).Count(&num)
+	ps.DB.Offset(page * size).Limit(size).Select("id,started_at,stopped_at,pipeline_id,pusher,status").Order("id desc").Where("pipeline_id IN (?)", id).Find(&pl).Count(&num)
+	if num%size == 0 {
+		num = num / size
+	} else {
+		num = num/size + 1
+	}
+	return pl, num
+}
+
+//Logs 获取所有日志
+func (ps *PipeLogService) Logs(status int, page, size int64) ([]gocd.PipeLog, int64) {
+	var pl []gocd.PipeLog
+	var num int64
+
+	// 控制显示的 log 数
+	ps.DB.Offset(page * size).Limit(size).Select("id,started_at,stopped_at,pipeline_id,pusher,status").Order("id desc").Where("status = ?", status).Find(&pl).Count(&num)
 	if num%size == 0 {
 		num = num / size
 	} else {
@@ -80,6 +94,13 @@ func (ps *PipeLogService) GetByUID(uid, lid uint) (gocd.PipeLog, error) {
 	}
 	var log gocd.PipeLog
 	err := ps.DB.Where("pipeline_id IN (?) AND id = ?", id, lid).First(&log).Error
+	return log, err
+}
+
+//GetByID 通过日志ID获取日志
+func (ps *PipeLogService) GetByID(lid uint) (gocd.PipeLog, error) {
+	var log gocd.PipeLog
+	err := ps.DB.First(&log, lid).Error
 	return log, err
 }
 
