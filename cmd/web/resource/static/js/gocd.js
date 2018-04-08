@@ -122,7 +122,7 @@ function getLog(line) {
             parseLog(res.log, line);
         }
         if (res.end === "false") {
-            setTimeout(getLog(res.line), 300);
+            setTimeout(getLog(res.line), 3000);
         }
     })
 }
