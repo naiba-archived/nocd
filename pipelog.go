@@ -13,10 +13,14 @@ const (
 	PipeLogStatusSuccess
 	//PipeLogStatusErrorServerConn 服务器链接失败
 	PipeLogStatusErrorServerConn
-	//PipeLogStatusErrorShellExec 部署过程失败
+	//PipeLogStatusErrorShellExec 脚本错误
 	PipeLogStatusErrorShellExec
 	//PipeLogStatusRunning 正在执行部署
 	PipeLogStatusRunning
+	//PipeLogStatusHumanStopped 人工停止
+	PipeLogStatusHumanStopped
+	//PipeLogStatusErrorTimeout 执行超时
+	PipeLogStatusErrorTimeout
 )
 
 //PipeLog 部署日志
@@ -37,7 +41,7 @@ type PipeLogService interface {
 	Update(plog *PipeLog) error
 	LastServerLog(sid uint) PipeLog
 	LastPipelineLog(pid uint) PipeLog
-	UserLogs(uid uint, page, size int64) ([]PipeLog,int64)
+	UserLogs(uid uint, page, size int64) ([]PipeLog, int64)
 	Pipeline(log *PipeLog) error
 	GetByUID(uid, lid uint) (PipeLog, error)
 	LastLogs(num uint) []PipeLog

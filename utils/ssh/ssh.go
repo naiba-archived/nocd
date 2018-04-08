@@ -67,70 +67,116 @@ func CheckLogin(address string, port int, privateKey string, login string) error
 }
 
 //Deploy 进行部署
-func Deploy(pipeline gocd.Pipeline, pLog *gocd.PipeLog) {
+func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
+
+	gocd.Logger().Debugln(log.ID, " deploy start")
+
+	start := time.Now()
+	pr, pw := io.Pipe()
+	run := &gocd.Running{
+		Finish:     make(chan bool, 1),
+		Log:        log,
+		Reader:     pr,
+		RunningLog: make([]string, 0),
+	}
+	gocd.RunningLogs[log.ID] = run
 
 	defer func() {
-		// 保留最后5000字
-		if len(pLog.Log) > 5000 {
-			pLog.Log = pLog.Log[len(pLog.Log)-5000:]
+		close(run.Finish)
+		delete(gocd.RunningLogs, log.ID)
+		run.Log.Log = strings.Join(run.RunningLog, "\n")
+		// 保留最后8000字
+		if len(run.Log.Log) > 8000 {
+			run.Log.Log = run.Log.Log[:4000] + run.Log.Log[8000-4000:]
 		}
-		pLog.Log = " [GoCD]" + pLog.StartedAt.String() + ": 开始执行\r\n" + pLog.Log
-		pLog.StoppedAt = time.Now()
+		run.Log.StoppedAt = time.Now()
+		gocd.Logger().Debugln(log.ID, " deploy stop")
 	}()
 
 	conn, err := dial(pipeline.Server.Address, pipeline.Server.Login, pipeline.User.PrivateKey, pipeline.Server.Port)
 	if err != nil {
 		gocd.Logger().Debug(err)
-		pLog.Status = gocd.PipeLogStatusErrorServerConn
-		pLog.Log += "\r\n [GoCD]" + pLog.StartedAt.String() + ": 连接服务器失败"
+		run.Log.Status = gocd.PipeLogStatusErrorServerConn
 		return
 	}
 	defer conn.Close()
 
 	session, err := conn.NewSession()
 	if err != nil {
-		pLog.Status = gocd.PipeLogStatusErrorServerConn
-		pLog.Log += "\r\n [GoCD]" + pLog.StartedAt.String() + ": 建立会话失败"
+		run.Log.Status = gocd.PipeLogStatusErrorServerConn
 		return
 	}
 	defer session.Close()
-	session.Wait()
-
-	finish := make(chan bool, 1)
-	defer close(finish)
 
 	timer := time.NewTimer(time.Minute * 30)
-	buf := new(bytes.Buffer)
+	stderr := new(bytes.Buffer)
+	session.Stdout = pw
+	session.Stderr = stderr
+
 	go func() {
-		gocd.Logger().Debug("开始执行", pipeline.Shell)
-		session.Stdout = buf
-		err := session.Run(pipeline.Shell)
-		if pLog.Status != gocd.PipeLogStatusRunning {
+		err = session.Start(pipeline.Shell)
+		if err != nil {
+			run.Log.Status = gocd.PipeLogStatusErrorShellExec
+			run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
+			run.RunningLog = append(run.RunningLog, appendLog(start)+err.Error())
+			run.Finish <- true
 			return
 		}
-		if err != nil && err != io.EOF {
-			gocd.Logger().Debug("执行失败", err.Error())
-			pLog.Log += buf.String()
-			pLog.Log += err.Error()
-			pLog.Log += "\r\n [GoCD]" + pLog.StartedAt.String() + ": 执行失败"
-			pLog.Status = gocd.PipeLogStatusErrorShellExec
-		} else {
-			pLog.Log += buf.String() + "\r\n [GoCD]" + time.Now().String() + ": 执行完毕"
-			pLog.Status = gocd.PipeLogStatusSuccess
+		go func() {
+			old := ""
+			for {
+				// 已经出错关闭
+				if cap(run.Finish) == 0 {
+					break
+				}
+				b := make([]byte, 10)
+				num, err := pr.Read(b)
+				if err != nil {
+					if err == io.ErrClosedPipe {
+						run.Log.Status = gocd.PipeLogStatusSuccess
+						run.Finish <- true
+						break
+					} else {
+						run.Log.Status = gocd.PipeLogStatusErrorShellExec
+						run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
+						run.Finish <- true
+						break
+					}
+				}
+				newLine := b[num-1] == '\n'
+				s := strings.Split(old+string(b[:num-1]), "\n")
+				old = ""
+				for i := 0; i < len(s); i++ {
+					if i == len(s)-1 && !newLine {
+						old = s[i]
+						break
+					}
+					run.RunningLog = append(run.RunningLog, appendLog(start)+s[i])
+				}
+			}
+		}()
+		err = session.Wait()
+		if err != nil {
+			run.Log.Status = gocd.PipeLogStatusErrorShellExec
+			run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
+			run.RunningLog = append(run.RunningLog, appendLog(start)+err.Error())
 		}
-		finish <- true
+		run.Reader.CloseWithError(err)
+		pw.CloseWithError(err)
 	}()
 
 	select {
 	case <-timer.C:
-		gocd.Logger().Debug("执行超时", buf.String())
-		pLog.Log += buf.String() + "\r\n [GoCD]" + time.Now().String() + ": 执行超时"
-		pLog.Status = gocd.PipeLogStatusErrorShellExec
+		run.Log.Status = gocd.PipeLogStatusErrorTimeout
 		return
-	case <-finish:
-		gocd.Logger().Debug("执行完毕")
+	case <-run.Finish:
 		return
 	}
+}
+
+func appendLog(start time.Time) string {
+	num := time.Now().Sub(start).Seconds()
+	return fmt.Sprintf("%02.f", num/60/60) + ":" + fmt.Sprintf("%02d", int(num)%360/60) + ":" + fmt.Sprintf("%02d", int(num)%60) + "#"
 }
 
 func dial(address, user, pk string, port int) (*ssh.Client, error) {

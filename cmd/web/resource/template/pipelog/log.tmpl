@@ -1,9 +1,17 @@
 {{define "pipelog/log"}}
 {{template "common/header" .}}
-<div class="container">
-        <textarea title="编号 #{{.log.ID}} 的详细日志"
-                  disabled
-                  style="background: black;color: lawngreen;width: 100%;min-height: 400px">{{.log.Log}}</textarea>
+<div class="container console">
+    <div class="row"><span class="line-number col-1  text-center">1.</span><span class="code col-11"
+                                                                                    data-toggle="tooltip"
+                                                                                    data-placement="top"
+                                                                                    title="Tooltip on top">echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"</span>
+    </div>
+    <div class="row"><span class="line-number col-1  text-center">1.</span><span class="code col-11"
+                                                                                    data-toggle="tooltip"
+                                                                                    data-placement="top"
+                                                                                    title="Tooltip on top">echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"</span>
+    </div>
+
 </div>
 {{template "common/footer" .}}
 {{end}}
