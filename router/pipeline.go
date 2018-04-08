@@ -13,6 +13,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func servePipeline(r *gin.Engine) {
@@ -71,37 +72,60 @@ func viewLog(c *gin.Context) {
 	}
 	isAjax := c.Query("ajax") != ""
 	lineNumberStr := c.Query("line")
+	actStr := c.Query("act")
 	lineNumber, _ := strconv.Atoi(lineNumberStr)
 	if isAjax {
 		run, has := gocd.RunningLogs[log.ID]
-		if has {
-			if lineNumber == 0 {
-				c.JSON(http.StatusOK, map[string]string{
-					"end":  "false",
-					"log":  strings.Join(run.RunningLog, "\n"),
-					"line": strconv.Itoa(len(run.RunningLog)),
-				})
-			} else {
-				if lineNumber > len(run.RunningLog)-1 {
+		switch actStr {
+		case "view":
+			if has {
+				if lineNumber == 0 {
 					c.JSON(http.StatusOK, map[string]string{
 						"end":  "false",
-						"log":  "",
-						"line": lineNumberStr,
-					})
-				} else {
-					c.JSON(http.StatusOK, map[string]string{
-						"end":  "false",
-						"log":  strings.Join(run.RunningLog[lineNumber:], "\n"),
+						"log":  strings.Join(run.RunningLog, "\n"),
 						"line": strconv.Itoa(len(run.RunningLog)),
 					})
+				} else {
+					if lineNumber > len(run.RunningLog)-1 {
+						c.JSON(http.StatusOK, map[string]string{
+							"end":  "false",
+							"log":  "",
+							"line": lineNumberStr,
+						})
+					} else {
+						c.JSON(http.StatusOK, map[string]string{
+							"end":  "false",
+							"log":  strings.Join(run.RunningLog[lineNumber:], "\n"),
+							"line": strconv.Itoa(len(run.RunningLog)),
+						})
+					}
+				}
+			} else {
+				c.JSON(http.StatusOK, map[string]string{
+					"end":  "true",
+					"log":  "00:00:00#部署进程未在运行。\n",
+					"line": "0",
+				})
+			}
+			break
+		case "stop":
+			if has {
+				run.Log.Status = gocd.PipeLogStatusHumanStopped
+				run.Finish <- true
+			} else {
+				if log.Status != gocd.PipeLogStatusRunning {
+					c.String(http.StatusOK, "部署已经停止，无需再次停止。")
+				} else {
+					log.Status = gocd.PipeLogStatusHumanStopped
+					log.StoppedAt = time.Now()
+					err := pipelogService.Update(&log)
+					if err != nil {
+						gocd.Logger().Error(err)
+					}
 				}
 			}
-		} else {
-			c.JSON(http.StatusOK, map[string]string{
-				"end":  "true",
-				"log":  "00:00:00#部署进程未在运行。\n",
-				"line": "0",
-			})
+			c.String(http.StatusOK, "success")
+			break
 		}
 		return
 	}

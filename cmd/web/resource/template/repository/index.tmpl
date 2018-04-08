@@ -177,15 +177,20 @@
                             <td>
                             <a href="/pipelog/{{if lt 0 $log.ID }}{{$log.ID}}{{end}}" target="_blank"
                             {{if eq $log.Status 1}}
-                               class="btn btn-success btn-sm">Success</a>
+                               class="btn btn-success btn-sm">部署成功
+                               </a>
                             {{else if eq $log.Status 2}}
-                                class="btn btn-danger btn-sm">Server</a>
+                                class="btn btn-dark btn-sm">服务器错误</a>
                             {{else if eq $log.Status 3}}
-                                class="btn btn-warning btn-sm">Exec</a>
+                                class="btn btn-danger btn-sm">脚本错误</a>
                             {{else if eq $log.Status 4}}
-                                class="btn btn-primary btn-sm">Running</button>
+                                class="btn btn-primary btn-sm">正在运行</a>
+                            {{else if eq $log.Status 5}}
+                                class="btn btn-info btn-sm">人工停止</a>
+                            {{else if eq $log.Status 6}}
+                                class="btn btn-warning btn-sm">执行超时</a>
                             {{else}}
-                                class="btn btn-secondary btn-sm">None</a>
+                                class="btn btn-secondary btn-sm">未知状态</a>
                             {{end}}
                             </td>
                             <td style="min-width: 90px">

@@ -116,8 +116,21 @@ function saveForm(form) {
     $(form).submit()
 }
 
+function stopDeploy() {
+    if (confirm("确定停止部署吗？")) {
+        $.get('?ajax=1&act=stop', function (res) {
+            if (res === "success") {
+                alert("成功停止部署");
+                window.location.href = "/pipelog/";
+            } else {
+                alert(res)
+            }
+        })
+    }
+}
+
 function getLog(line) {
-    $.get('?ajax=1&line=' + line, function (res) {
+    $.get('?ajax=1&act=view&line=' + line, function (res) {
         if (res.log && res.log.length > 0) {
             parseLog(res.log, line);
         }

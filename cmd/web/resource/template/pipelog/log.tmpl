@@ -1,7 +1,11 @@
 {{define "pipelog/log"}}
 {{template "common/header" .}}
-<div id="console" class="container" running="{{eq .log.Status 4}}" text="{{.log.Log}}">
-
+<div class="container">
+{{if eq .log.Status 4}}
+    <button class="btn btn-danger mb-3" onclick="stopDeploy()">停止部署</button>
+{{end}}
+    <div id="console" running="{{eq .log.Status 4}}" text="{{.log.Log}}">
+    </div>
 </div>
 {{template "common/footer" .}}
 {{end}}
