@@ -1,16 +1,6 @@
 {{define "pipelog/log"}}
 {{template "common/header" .}}
-<div class="container console">
-    <div class="row"><span class="line-number col-1  text-center">1.</span><span class="code col-11"
-                                                                                    data-toggle="tooltip"
-                                                                                    data-placement="top"
-                                                                                    title="Tooltip on top">echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"</span>
-    </div>
-    <div class="row"><span class="line-number col-1  text-center">1.</span><span class="code col-11"
-                                                                                    data-toggle="tooltip"
-                                                                                    data-placement="top"
-                                                                                    title="Tooltip on top">echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"echo "hello"</span>
-    </div>
+<div id="console" class="container" running="{{eq .log.Status 4}}" text="{{.log.Log}}">
 
 </div>
 {{template "common/footer" .}}

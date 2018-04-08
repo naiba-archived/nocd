@@ -101,16 +101,48 @@ window.onload = function () {
         $(this).find("#inputName").val(button.data('name'));
         $(this).find("#selectPlatform>option[value=" + button.data('platform') + "]").attr('selected', true);
     });
+    // 部署日志展示
+    var running = $('#console').attr("running");
+    var consoleText = $('#console').attr("text");
+    if (consoleText && consoleText.length > 0) {
+        parseLog(consoleText, 0);
+    }
+    if (running === "true") {
+        getLog(0)
+    }
 };
 
 function saveForm(form) {
     $(form).submit()
 }
 
+function getLog(line) {
+    $.get('?ajax=1&line=' + line, function (res) {
+        if (res.log && res.log.length > 0) {
+            parseLog(res.log, line);
+        }
+        if (res.end === "false") {
+            setTimeout(getLog(res.line), 300);
+        }
+    })
+}
+
 function logout() {
     $.removeCookie("uid", {path: '/'});
     $.removeCookie("token", {path: '/'});
     window.location.href = "/"
+}
+
+function parseLog(str, number) {
+    var text = "";
+    str.split("\n").forEach(function (value, index) {
+        text += '<div class="row"><span class="line-number col-1  text-center">' + (index + number + 1) + '.</span><span class="code col-11"\n' +
+            '                                                                                 data-toggle="tooltip"\n' +
+            '                                                                                 data-placement="top"\n' +
+            '                                                                                 title="' + value.substr(0, 8) + '">' + value.substr(9) + '</span>\n' +
+            '    </div>';
+    });
+    $('#console').append(text)
 }
 
 function addServerHandler() {

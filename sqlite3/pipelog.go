@@ -79,7 +79,7 @@ func (ps *PipeLogService) GetByUID(uid, lid uint) (gocd.PipeLog, error) {
 		id = append(id, p.ID)
 	}
 	var log gocd.PipeLog
-	err := ps.DB.Select("id,log").Where("pipeline_id IN (?) AND id = ?", id, lid).First(&log).Error
+	err := ps.DB.Where("pipeline_id IN (?) AND id = ?", id, lid).First(&log).Error
 	return log, err
 }
 

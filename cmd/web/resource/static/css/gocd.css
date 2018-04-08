@@ -52,16 +52,16 @@ a:hover {
     border-color: rgba(0, 0, 0, .125);
 }
 
-.console {
+#console {
     background: black;
     color: lightgreen;
     padding: 10px;
 }
 
-.console .line-number {
+#console .line-number {
     color: white;
 }
 
-.console .code {
+#console .code {
     padding-left: 3px;
 }

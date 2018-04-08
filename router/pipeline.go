@@ -12,6 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 func servePipeline(r *gin.Engine) {
@@ -66,6 +67,42 @@ func viewLog(c *gin.Context) {
 	log, err := pipelogService.GetByUID(user.ID, uint(u64lid))
 	if err != nil {
 		c.String(http.StatusForbidden, "您无权查看此Log")
+		return
+	}
+	isAjax := c.Query("ajax") != ""
+	lineNumberStr := c.Query("line")
+	lineNumber, _ := strconv.Atoi(lineNumberStr)
+	if isAjax {
+		run, has := gocd.RunningLogs[log.ID]
+		if has {
+			if lineNumber == 0 {
+				c.JSON(http.StatusOK, map[string]string{
+					"end":  "false",
+					"log":  strings.Join(run.RunningLog, "\n"),
+					"line": strconv.Itoa(len(run.RunningLog)),
+				})
+			} else {
+				if lineNumber > len(run.RunningLog)-1 {
+					c.JSON(http.StatusOK, map[string]string{
+						"end":  "false",
+						"log":  "",
+						"line": lineNumberStr,
+					})
+				} else {
+					c.JSON(http.StatusOK, map[string]string{
+						"end":  "false",
+						"log":  strings.Join(run.RunningLog[lineNumber:], "\n"),
+						"line": strconv.Itoa(len(run.RunningLog)),
+					})
+				}
+			}
+		} else {
+			c.JSON(http.StatusOK, map[string]string{
+				"end":  "true",
+				"log":  "00:00:00#部署进程未在运行。\n",
+				"line": "0",
+			})
+		}
 		return
 	}
 	c.HTML(http.StatusOK, "pipelog/log", mgin.CommonData(c, false, gin.H{
