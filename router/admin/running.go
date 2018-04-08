@@ -7,10 +7,10 @@ package admin
 
 import (
 	"git.cm/naiba/gocd"
-	"github.com/gin-gonic/gin"
-	"strconv"
-	"net/http"
 	"git.cm/naiba/gocd/utils/mgin"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
 )
 
 //Running 管理部署中的任务
