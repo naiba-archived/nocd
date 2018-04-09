@@ -112,7 +112,7 @@ func viewLog(c *gin.Context) {
 			} else {
 				c.JSON(http.StatusOK, map[string]string{
 					"end":  "true",
-					"log":  "00:00:00#部署进程未在运行。\n",
+					"log":  "00:00:00#部署已结束。\n",
 					"line": "0",
 				})
 			}
@@ -139,7 +139,8 @@ func viewLog(c *gin.Context) {
 		return
 	}
 	c.HTML(http.StatusOK, "pipelog/log", mgin.CommonData(c, false, gin.H{
-		"log": log,
+		"log":       log,
+		"fromAdmin": c.Query("admin") == "true",
 	}))
 }
 

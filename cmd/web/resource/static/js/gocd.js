@@ -127,12 +127,12 @@ function saveForm(form) {
     $(form).submit()
 }
 
-function stopDeploy() {
+function stopDeploy(fromAdmin) {
     if (confirm("确定停止部署吗？")) {
         $.get('?ajax=1&act=stop', function (res) {
             if (res === "success") {
                 alert("成功停止部署");
-                window.location.href = "/pipelog/";
+                window.location.href = fromAdmin?"/admin/running/":"/pipelog/";
             } else {
                 alert(res)
             }

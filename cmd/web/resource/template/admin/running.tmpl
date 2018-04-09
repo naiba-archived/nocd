@@ -1,0 +1,76 @@
+{{define "admin/running"}}
+{{template "common/header" .}}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 pt-2 text-center">
+        {{template "common/admin_sidebar" .}}
+        </div>
+        <div class="col-md-9 pt-2">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">所属流程</th>
+                        <th scope="col">状态</th>
+                        <th scope="col">触发者</th>
+                        <th scope="col">触发时间</th>
+                        <th scope="col">部署时长</th>
+                        <th scope="col">日志</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{range $l := .logs}}
+                    <tr>
+                        <th scope="row">{{$l.ID}}</th>
+                        <td style="min-width: 200px">{{$l.Pipeline.Name}}</td>
+                        <td>
+                        <button{{if eq $l.Status 1}}
+                        class="btn btn-success btn-sm">部署成功
+                        </button>
+                        {{else if eq $l.Status 2}}
+                            class="btn btn-dark btn-sm">服务器错误</button>
+                        {{else if eq $l.Status 3}}
+                            class="btn btn-danger btn-sm">脚本错误</button>
+                        {{else if eq $l.Status 4}}
+                            class="btn btn-primary btn-sm">正在运行</button>
+                        {{else if eq $l.Status 5}}
+                            class="btn btn-info btn-sm">人工停止</button>
+                        {{else if eq $l.Status 6}}
+                            class="btn btn-warning btn-sm">执行超时</button>
+                        {{else}}
+                            class="btn btn-secondary btn-sm">未知状态</button>
+                        {{end}}
+                        </td>
+                        <td>{{$l.Pusher}}</td>
+                        <td>{{TimeFormat $l.StartedAt}}</td>
+                        <td>{{TimeDiff $l.StartedAt $l.StoppedAt}}</td>
+                        <td><a class="btn btn-sm btn-secondary" href="/pipelog/{{$l.ID}}?admin=true">Log</a></td>
+                    </tr>
+                    {{end}}
+                    </tbody>
+                </table>
+            </div>
+        {{if gt .allPage 0}}
+            <nav aria-label="部署日志分页">
+                <ul class="pagination">
+                    <li class="page-item{{if eq .currentPage 1}} disabled{{end}}">
+                        <a class="page-link" href="?page={{MathSub .currentPage 1}}" tabindex="-1">&laquo;</a>
+                    </li>
+                {{range $page := Pagination .allPage .currentPage}}
+                    <li class="page-item{{if .Current}} active{{end}}{{if eq .Text "..."}} disabled{{end}}"><a
+                            class="page-link"
+                            href="?page={{.No}}">{{.Text}}</a>
+                    </li>
+                {{end}}
+                    <li class="page-item{{if eq .currentPage .allPage}} disabled{{end}}">
+                        <a class="page-link" href="?page={{MathAdd .currentPage 1}}">&raquo;</a>
+                    </li>
+                </ul>
+            </nav>
+        {{end}}
+        </div>
+    </div>
+</div>
+{{template "common/footer" .}}
+{{end}}

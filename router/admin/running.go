@@ -33,7 +33,7 @@ func Running(ps gocd.PipeLogService) func(c *gin.Context) {
 			logs[i] = l
 		}
 
-		c.HTML(http.StatusOK, "pipelog/index", mgin.CommonData(c, false, gin.H{
+		c.HTML(http.StatusOK, "admin/running", mgin.CommonData(c, false, gin.H{
 			"logs":        logs,
 			"allPage":     num,
 			"currentPage": pageInt,
