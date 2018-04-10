@@ -1,15 +1,24 @@
 # GoCD 持续交付系统
 
-[![Go Report Card](https://goreportcard.com/badge/git.cm/naiba/gocd)](https://goreportcard.com/report/git.cm/naiba/gocd)  [![Build status](https://ci.appveyor.com/api/projects/status/d7bo0ng4n0bm8l11?svg=true)](https://ci.appveyor.com/project/naiba/gocd)  [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)  [![Version](https://img.shields.io/badge/version-0.0.3-red.svg)](https://git.cm/naiba/gocd/releases)
+[![Go Report Card](https://goreportcard.com/badge/git.cm/naiba/gocd)](https://goreportcard.com/report/git.cm/naiba/gocd)  [![Build status](https://ci.appveyor.com/api/projects/status/d7bo0ng4n0bm8l11?svg=true)](https://ci.appveyor.com/project/naiba/gocd)  [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)  [![Version](https://img.shields.io/badge/version-0.0.9-brightgreen.svg)](https://git.cm/naiba/gocd/releases)
 
 
-**GoCD** 是一个 Golang 实现的持续交付系统。
+**GoCD** 是一个 Golang 实现的轻便可控的持续交付系统。
 
 ## 界面预览
 
 | ![首页截图](https://git.cm/naiba/gocd/raw/master/README/首页截图.png) | ![服务器管理](https://git.cm/naiba/gocd/raw/master/README/服务器管理.png) | ![项目管理](https://git.cm/naiba/gocd/raw/master/README/项目管理.png) |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | ![交付记录](https://git.cm/naiba/gocd/raw/master/README/交付记录.png) | ![管理中心](https://git.cm/naiba/gocd/raw/master/README/查看日志.png) | ![查看日志](https://git.cm/naiba/gocd/raw/master/README/管理中心.png)  |
+
+## 系统特色
+
+- 服务器：可以添加多个部署服务器。
+- 项目：支持解析 Gogs、GitHub、Gitlab、BitBucket 的 WebHook
+- 通知：部署成功或失败经 `Server酱` 推送到您的微信
+- 交付记录：可以查看部署记录，用户可以停止部署中的流程
+- 管理面板：查看系统状态，管理用户，管理部署中的流程
+
 
 ## 部署教程
 
