@@ -90,7 +90,7 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 		run.Log.Log = strings.Join(run.RunningLog, "\n")
 		// 保留最后8000字
 		if len(run.Log.Log) > 8000 {
-			run.Log.Log = run.Log.Log[:4000] + run.Log.Log[8000-4000:]
+			run.Log.Log = run.Log.Log[:3998] + "...." + run.Log.Log[len(run.Log.Log)-3998:]
 		}
 		run.Log.StoppedAt = time.Now()
 		gocd.Logger().Debugln(log.ID, " deploy stop")
