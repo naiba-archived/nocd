@@ -16,7 +16,7 @@ import (
 func init() {
 	// initial global settings
 	gocd.InitSysConfig("conf/app.ini")
-	unzipAssets("resource/", "20", []string{"resource"}, RestoreAssets)
+	unzipAssets("resource/", "21", []string{"resource"}, RestoreAssets)
 }
 
 func main() {
