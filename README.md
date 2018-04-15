@@ -58,7 +58,7 @@
 
 6. 在 `GitHub` 设置回调：`http://mjj.cx/oauth2/callback`
 
-## FAQ
+## 常见问题
 
 1. 为什么我的部署脚本总是执行失败 或者 根本没有执行？<br>
   `请检查您的 PATH 路径是否引入，建议提前 export 一下路径，自动部署的时候不会 source .bash_profile 。`
