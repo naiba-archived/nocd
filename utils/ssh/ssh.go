@@ -150,7 +150,7 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 					break
 				}
 				newLine := b[num-1] == '\n'
-				s := strings.Split(old+string(b[:num-1]), "\n")
+				s := strings.Split(old+string(b[:num]), "\n")
 				old = ""
 				for i := 0; i < len(s); i++ {
 					if i == len(s)-1 && !newLine {
