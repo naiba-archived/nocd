@@ -132,7 +132,7 @@ function stopDeploy(fromAdmin) {
         $.get('?ajax=1&act=stop', function (res) {
             if (res === "success") {
                 alert("成功停止部署");
-                window.location.href = fromAdmin?"/admin/running/":"/pipelog/";
+                window.location.href = fromAdmin ? "/admin/running/" : "/pipelog/";
             } else {
                 alert(res)
             }
@@ -150,10 +150,10 @@ function parseLog(str, number) {
     var text = "";
     str.split("\n").forEach(function (value, index) {
         text += '<div class="row"><span class="line-number col-1  text-center">' + (index + parseInt(number) + 1) + '.</span><span class="code col-11"\n' +
-            '                                                                                 data-toggle="tooltip"\n' +
-            '                                                                                 data-placement="top"\n' +
-            '                                                                                 title="' + value.substr(0, 8) + '">' + value.substr(9) + '</span>\n' +
-            '    </div>';
+            ' data-toggle="tooltip"\n' +
+            ' data-placement="top"\n' +
+            ' title="' + value.substr(0, 8) + '">' + $(document.createElement('code')).text(value.substr(9)).prop("outerHTML") + '</span>\n' +
+            '</div>';
     });
     $('#console').append(text)
 }

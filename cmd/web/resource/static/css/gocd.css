@@ -54,14 +54,9 @@ a:hover {
 
 #console {
     background: black;
-    color: lightgreen;
     padding: 10px;
 }
 
 #console .line-number {
-    color: white;
-}
-
-#console .code {
-    padding-left: 3px;
+    color: green;
 }
