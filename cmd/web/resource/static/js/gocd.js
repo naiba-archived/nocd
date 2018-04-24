@@ -48,8 +48,25 @@ window.onload = function () {
             $(md).find('textarea').attr('disabled', togg);
             $('#btnEditRepo').text(btn);
         };
+        var setForm = function (button, isAdd) {
+            $('#iMEditPlName').val(isAdd ? '' : button.data('name'));
+            $('#inputID').val(isAdd ? '' : button.data('id'));
+            $('#inputHDRepoID').val(button.data('repo'));
+            $('#inputBranch').val(isAdd ? 'master' : button.data('branch'));
+            $('#inputShell').text(isAdd ? './nb-deploy' : button.data('shell'));
+            if (!isAdd) {
+                button.data('events').forEach(function (value) {
+                    $('#ic' + value).attr('checked', true)
+                });
+                $('#slMPlatform').find('>option[value=' + button.data('server') + ']').attr('selected', true);
+            } else {
+                $('#slMPlatform').find('>option:selected').attr('selected', false);
+            }
+        };
         if (mth === 'POST') {
-            toggle(this, false, 'btn-danger', 'btn-primary', "添加")
+            toggle(this, false, 'btn-danger', 'btn-primary', "添加");
+            // 重置表单
+            setForm(button, true);
         } else {
             if (mth === 'PATCH') {
                 toggle(this, false, 'btn-danger', 'btn-primary', "修改")
@@ -57,15 +74,7 @@ window.onload = function () {
                 toggle(this, true, 'btn-primary', 'btn-danger', "删除")
             }
             // 填充表单
-            $('#iMEditPlName').val(button.data('name'));
-            $('#inputID').val(button.data('id'));
-            $('#inputHDRepoID').val(button.data('repo'));
-            $('#inputBranch').val(button.data('branch'));
-            $('#inputShell').text(button.data('shell'));
-            button.data('events').forEach(function (value) {
-                $('#ic' + value).attr('checked', true)
-            });
-            $('#slMPlatform').find('>option[value=' + button.data('server') + ']').attr('selected', true);
+            setForm(button, false);
         }
     });
     $('#modalEditServer').on('show.bs.modal', function (event) {
