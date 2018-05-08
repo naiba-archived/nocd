@@ -1,15 +1,19 @@
-# GoCD 持续交付系统
+# NoCD 持续交付系统
 
+<<<<<<< HEAD
 [![Go Report Card](https://goreportcard.com/badge/git.cm/naiba/gocd)](https://goreportcard.com/report/git.cm/naiba/gocd)  [![Build status](https://ci.appveyor.com/api/projects/status/d7bo0ng4n0bm8l11?svg=true)](https://ci.appveyor.com/project/naiba/gocd) [![Version](https://img.shields.io/badge/version-0.0.9-brightgreen.svg)](https://git.cm/naiba/gocd/releases)
+=======
+[![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd)  [![Build status](https://ci.appveyor.com/api/projects/status/d7bo0ng4n0bm8l11?svg=true)](https://ci.appveyor.com/project/naiba/nocd)  [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)  [![Version](https://img.shields.io/badge/version-0.0.9-brightgreen.svg)](https://github.com/naiba/nocd/releases)
+>>>>>>> develop
 
 
-**GoCD** 是一个 Golang 实现的轻便可控的持续交付系统。
+**NoCD** 是一个 golang 实现的轻便可控的持续交付系统。
 
 ## 界面预览
 
-| ![首页截图](https://git.cm/naiba/gocd/raw/master/README/首页截图.png) | ![服务器管理](https://git.cm/naiba/gocd/raw/master/README/服务器管理.png) | ![项目管理](https://git.cm/naiba/gocd/raw/master/README/项目管理.png) |
+| ![首页截图](https://github.com/naiba/nocd/raw/master/README/首页截图.png) | ![服务器管理](https://github.com/naiba/nocd/raw/master/README/服务器管理.png) | ![项目管理](https://github.com/naiba/nocd/raw/master/README/项目管理.png) |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![交付记录](https://git.cm/naiba/gocd/raw/master/README/交付记录.png) | ![管理中心](https://git.cm/naiba/gocd/raw/master/README/查看日志.png) | ![查看日志](https://git.cm/naiba/gocd/raw/master/README/管理中心.png)  |
+| ![交付记录](https://github.com/naiba/nocd/raw/master/README/交付记录.png) | ![管理中心](https://github.com/naiba/nocd/raw/master/README/查看日志.png) | ![查看日志](https://github.com/naiba/nocd/raw/master/README/管理中心.png)  |
 
 ## 系统特色
 
@@ -24,7 +28,7 @@
 
 1. Clone 源代码
 
-2. 进入应用目录 `gocd/cmd/web`
+2. 进入应用目录 `nocd/cmd/web`
 
 3. 打包资源文件并编译
 
@@ -37,7 +41,7 @@
 4. 在 `conf/app.ini` 创建配置文件
 
        ```ini
-   [gocd]
+   [nocd]
    cookie_key_pair = example
    debug = true
    domain = mjj.cx

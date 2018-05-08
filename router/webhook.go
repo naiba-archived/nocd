@@ -18,9 +18,9 @@ import (
 	"github.com/naiba/webhooks/gitlab"
 	"github.com/naiba/webhooks/gogs"
 
-	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/utils/ftqq"
-	"git.cm/naiba/gocd/utils/ssh"
+	"github.com/naiba/nocd"
+	"github.com/naiba/nocd/utils/ftqq"
+	"github.com/naiba/nocd/utils/ssh"
 	"time"
 )
 
@@ -59,24 +59,24 @@ func webHook(c *gin.Context) {
 	}
 	// 设置监听事件
 	var hook webhooks.Webhook
-	webhooks.DefaultLog = webhooks.NewLogger(gocd.Debug)
+	webhooks.DefaultLog = webhooks.NewLogger(nocd.Debug)
 	switch repo.Platform {
-	case gocd.RepoPlatGitHub:
+	case nocd.RepoPlatGitHub:
 		gh := github.New(&github.Config{Secret: repo.Secret})
 		gh.RegisterEvents(dispatchWebHook(repo.ID), github.PushEvent)
 		hook = gh
 		break
-	case gocd.RepoPlatBitBucket:
+	case nocd.RepoPlatBitBucket:
 		bb := bitbucket.New(&bitbucket.Config{UUID: repo.Secret})
 		bb.RegisterEvents(dispatchWebHook(repo.ID), bitbucket.PullRequestMergedEvent)
 		hook = bb
 		break
-	case gocd.RepoPlatGitlab:
+	case nocd.RepoPlatGitlab:
 		gl := gitlab.New(&gitlab.Config{Secret: repo.Secret})
 		gl.RegisterEvents(dispatchWebHook(repo.ID), gitlab.PushEvents)
 		hook = gl
 		break
-	case gocd.RepoPlatGogs:
+	case nocd.RepoPlatGogs:
 		gs := gogs.New(&gogs.Config{Secret: repo.Secret})
 		gs.RegisterEvents(dispatchWebHook(repo.ID), gogs.PushEvent)
 		hook = gs
@@ -105,7 +105,7 @@ func dispatchWebHook(id uint) webhooks.ProcessPayloadFunc {
 				pipelineService.User(&p)
 				go deploy(p, who)
 			} else {
-				gocd.Logger().Errorln(err)
+				nocd.Logger().Errorln(err)
 			}
 		}
 	}
@@ -142,13 +142,13 @@ func parsePayloadInfo(payload interface{}) (string, string) {
 	return who, branch
 }
 
-func deploy(pipeline gocd.Pipeline, who string) {
-	var deployLog gocd.PipeLog
+func deploy(pipeline nocd.Pipeline, who string) {
+	var deployLog nocd.PipeLog
 	deployLog.PipelineID = pipeline.ID
 	deployLog.StartedAt = time.Now()
 	deployLog.Log = ""
 	deployLog.Pusher = who
-	deployLog.Status = gocd.PipeLogStatusRunning
+	deployLog.Status = nocd.PipeLogStatusRunning
 	// 更新运行中
 	pipelogService.Create(&deployLog)
 	// 进行部署
@@ -156,30 +156,30 @@ func deploy(pipeline gocd.Pipeline, who string) {
 	// 部署完成
 	pipelogService.Update(&deployLog)
 
-	if (deployLog.Status == gocd.PipeLogStatusSuccess && !pipeline.User.PushSuccess) || len(pipeline.User.Sckey) < 1 {
+	if (deployLog.Status == nocd.PipeLogStatusSuccess && !pipeline.User.PushSuccess) || len(pipeline.User.Sckey) < 1 {
 		return
 	}
 
 	status := ""
 	switch deployLog.Status {
-	case gocd.PipeLogStatusSuccess:
+	case nocd.PipeLogStatusSuccess:
 		status = "交付成功"
 		break
-	case gocd.PipeLogStatusErrorShellExec:
+	case nocd.PipeLogStatusErrorShellExec:
 		status = "Shell错误"
 		break
-	case gocd.PipeLogStatusErrorServerConn:
+	case nocd.PipeLogStatusErrorServerConn:
 		status = "服务器连接错误"
 		break
-	case gocd.PipeLogStatusHumanStopped:
+	case nocd.PipeLogStatusHumanStopped:
 		status = "人工停止"
 		break
-	case gocd.PipeLogStatusErrorTimeout:
+	case nocd.PipeLogStatusErrorTimeout:
 		status = "执行超时"
 		break
 	default:
 		status = "未知错误"
 	}
 
-	ftqq.SendMessage(pipeline.User.Sckey, "[GoCD]"+pipeline.Name+"-"+status, "# 部署日志\r\n```\r\n"+deployLog.Log+"\r\n```")
+	ftqq.SendMessage(pipeline.User.Sckey, "[NoCD]"+pipeline.Name+"-"+status, "# 部署日志\r\n```\r\n"+deployLog.Log+"\r\n```")
 }

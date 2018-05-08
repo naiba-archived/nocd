@@ -6,10 +6,10 @@
 package router
 
 import (
-	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/utils/mgin"
-	"git.cm/naiba/gocd/utils/ssh"
 	"github.com/gin-gonic/gin"
+	"github.com/naiba/nocd"
+	"github.com/naiba/nocd/utils/mgin"
+	"github.com/naiba/nocd/utils/ssh"
 	"net/http"
 )
 
@@ -25,11 +25,11 @@ func serverHandler(c *gin.Context) {
 	method := c.Request.Method
 	if method == http.MethodGet {
 		c.HTML(http.StatusOK, "server/index", mgin.CommonData(c, c.GetBool(mgin.CtxIsLogin), gin.H{
-			"servers": serverService.GetServersByUser(c.MustGet(mgin.CtxUser).(*gocd.User)),
+			"servers": serverService.GetServersByUser(c.MustGet(mgin.CtxUser).(*nocd.User)),
 		}))
 	} else {
-		var s gocd.Server
-		user := c.MustGet(mgin.CtxUser).(*gocd.User)
+		var s nocd.Server
+		user := c.MustGet(mgin.CtxUser).(*nocd.User)
 		if err := c.Bind(&s); err != nil {
 			c.String(http.StatusForbidden, "数据不规范，请检查后重新填写"+err.Error())
 			return
@@ -41,7 +41,7 @@ func serverHandler(c *gin.Context) {
 			}
 			s.UserID = user.ID
 			if err := serverService.CreateServer(&s); err != nil {
-				gocd.Logger().Errorln(err)
+				nocd.Logger().Errorln(err)
 				c.String(http.StatusInternalServerError, "数据库错误")
 			}
 		} else {
@@ -66,12 +66,12 @@ func serverHandler(c *gin.Context) {
 				server.Login = s.Login
 				server.Port = s.Port
 				if err := serverService.UpdateServer(&server); err != nil {
-					gocd.Logger().Errorln(err)
+					nocd.Logger().Errorln(err)
 					c.String(http.StatusInternalServerError, "数据库错误")
 				}
 			} else if method == http.MethodDelete {
 				if serverService.DeleteServer(s.ID) != nil {
-					gocd.Logger().Errorln(err)
+					nocd.Logger().Errorln(err)
 					c.String(http.StatusInternalServerError, "数据库错误")
 					return
 				}

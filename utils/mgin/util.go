@@ -10,7 +10,7 @@ import (
 	"github.com/utrack/gin-csrf"
 	"html/template"
 
-	"git.cm/naiba/gocd"
+	"github.com/naiba/nocd"
 )
 
 //SetCookie 设置Cookie
@@ -20,10 +20,10 @@ func SetCookie(c *gin.Context, key string, val string) {
 
 //CommonData 公共参数
 func CommonData(c *gin.Context, csrfToken bool, data gin.H) gin.H {
-	data["stat"] = gocd.GetStats()
-	data["domain"] = gocd.Conf.Section("gocd").Key("domain").String()
+	data["stat"] = nocd.GetStats()
+	data["domain"] = nocd.Conf.Section("nocd").Key("domain").String()
 	data["router"] = c.Request.RequestURI
-	data["GA_id"] = gocd.Conf.Section("gocd").Key("google_analysis").String()
+	data["GA_id"] = nocd.Conf.Section("nocd").Key("google_analysis").String()
 	isLogin := c.GetBool(CtxIsLogin)
 	data["isLogin"] = isLogin
 	if isLogin {

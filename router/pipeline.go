@@ -7,9 +7,9 @@ package router
 
 import (
 	"encoding/json"
-	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/utils/mgin"
 	"github.com/gin-gonic/gin"
+	"github.com/naiba/nocd"
+	"github.com/naiba/nocd/utils/mgin"
 	"net/http"
 	"strconv"
 	"strings"
@@ -31,7 +31,7 @@ func servePipeline(r *gin.Engine) {
 }
 
 func pipeLogs(c *gin.Context) {
-	user := c.MustGet(mgin.CtxUser).(*gocd.User)
+	user := c.MustGet(mgin.CtxUser).(*nocd.User)
 
 	page := c.Query("page")
 	var pageInt int64
@@ -59,13 +59,13 @@ func pipeLogs(c *gin.Context) {
 
 func viewLog(c *gin.Context) {
 	lid := c.Param("id")
-	user := c.MustGet(mgin.CtxUser).(*gocd.User)
+	user := c.MustGet(mgin.CtxUser).(*nocd.User)
 	u64lid, err := strconv.ParseUint(lid, 10, 64)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "非法ID")
 		return
 	}
-	var log gocd.PipeLog
+	var log nocd.PipeLog
 	if !user.IsAdmin {
 		log, err = pipelogService.GetByUID(user.ID, uint(u64lid))
 		if err != nil {
@@ -84,7 +84,7 @@ func viewLog(c *gin.Context) {
 	actStr := c.Query("act")
 	lineNumber, _ := strconv.Atoi(lineNumberStr)
 	if isAjax {
-		run, has := gocd.RunningLogs[log.ID]
+		run, has := nocd.RunningLogs[log.ID]
 		switch actStr {
 		case "view":
 			if has {
@@ -119,17 +119,17 @@ func viewLog(c *gin.Context) {
 			break
 		case "stop":
 			if has {
-				run.Log.Status = gocd.PipeLogStatusHumanStopped
+				run.Log.Status = nocd.PipeLogStatusHumanStopped
 				run.Finish <- true
 			} else {
-				if log.Status != gocd.PipeLogStatusRunning {
+				if log.Status != nocd.PipeLogStatusRunning {
 					c.String(http.StatusOK, "部署已经停止，无需再次停止。")
 				} else {
-					log.Status = gocd.PipeLogStatusHumanStopped
+					log.Status = nocd.PipeLogStatusHumanStopped
 					log.StoppedAt = time.Now()
 					err := pipelogService.Update(&log)
 					if err != nil {
-						gocd.Logger().Error(err)
+						nocd.Logger().Error(err)
 					}
 				}
 			}
@@ -149,19 +149,19 @@ func pipelineX(c *gin.Context) {
 		c.HTML(http.StatusOK, "pipeline/index", mgin.CommonData(c, true, gin.H{}))
 	} else {
 		// 通用数据校验
-		var pl gocd.Pipeline
+		var pl nocd.Pipeline
 		if err := c.Bind(&pl); err != nil {
 			c.String(http.StatusForbidden, "填写数据不规范，请重新输入。"+err.Error())
 			return
 		}
 		tmp, err := json.Marshal(pl.EventsSlice)
 		if err != nil {
-			gocd.Logger().Errorln(err)
+			nocd.Logger().Errorln(err)
 			c.String(http.StatusInternalServerError, "序列化失败，请重试。"+err.Error())
 			return
 		}
 		pl.Events = string(tmp)
-		user := c.MustGet(mgin.CtxUser).(*gocd.User)
+		user := c.MustGet(mgin.CtxUser).(*nocd.User)
 		repo, err := repoService.GetRepoByUserAndID(user, pl.RepositoryID)
 		if err != nil {
 			c.String(http.StatusForbidden, "这个项目不属于您，您无权操作。")
@@ -174,14 +174,14 @@ func pipelineX(c *gin.Context) {
 		// 校验对于 Server 的操作权限
 		_, err = serverService.GetServersByUserAndSid(user, pl.ServerID)
 		if err != nil {
-			gocd.Logger().Debug(err)
+			nocd.Logger().Debug(err)
 			c.String(http.StatusForbidden, "这个服务器不属于您，您无权操作。")
 			return
 		}
 		if c.Request.Method == http.MethodPost {
 			pl.UserID = user.ID
 			if err = pipelineService.Create(&pl); err != nil {
-				gocd.Logger().Errorln(err)
+				nocd.Logger().Errorln(err)
 				c.String(http.StatusInternalServerError, "数据库错误。")
 			}
 		} else {
@@ -214,7 +214,7 @@ func pipelineX(c *gin.Context) {
 
 func validEvents(events []string, platform int) bool {
 	for _, event := range events {
-		if _, has := gocd.RepoEvents[platform][event]; !has {
+		if _, has := nocd.RepoEvents[platform][event]; !has {
 			return false
 		}
 	}

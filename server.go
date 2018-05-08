@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package gocd
+package nocd
 
 //Server 服务器
 type Server struct {

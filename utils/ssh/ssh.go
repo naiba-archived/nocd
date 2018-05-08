@@ -17,7 +17,7 @@ import (
 	"strings"
 	"time"
 
-	"git.cm/naiba/gocd"
+	"github.com/naiba/nocd"
 	"github.com/pkg/errors"
 	"io"
 )
@@ -49,7 +49,7 @@ func GenKeyPair() (string, string, error) {
 func CheckLogin(address string, port int, privateKey string, login string) error {
 	conn, err := dial(address, login, privateKey, port)
 	if err != nil {
-		gocd.Logger().Infoln("ssh.CheckLogin", err)
+		nocd.Logger().Infoln("ssh.CheckLogin", err)
 		return errors.New("连接服务器失败")
 	}
 	defer conn.Close()
@@ -60,16 +60,16 @@ func CheckLogin(address string, port int, privateKey string, login string) error
 	defer session.Close()
 	opt, err := session.Output("whoami")
 	if strings.TrimSpace(string(opt)) != login {
-		gocd.Logger().Infoln(string(opt) + "|" + err.Error())
+		nocd.Logger().Infoln(string(opt) + "|" + err.Error())
 		return errors.New("用户名验证失败")
 	}
 	return nil
 }
 
 //Deploy 进行部署
-func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
+func Deploy(pipeline nocd.Pipeline, log *nocd.PipeLog) {
 
-	gocd.Logger().Debugln(log.ID, " deploy start")
+	nocd.Logger().Debugln(log.ID, " deploy start")
 
 	start := time.Now()
 	pr, pw := io.Pipe()
@@ -77,36 +77,36 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 		pr.Close()
 		pw.Close()
 	}()
-	run := &gocd.Running{
+	run := &nocd.Running{
 		Finish:     make(chan bool, 1),
 		Log:        log,
 		RunningLog: make([]string, 0),
 	}
-	gocd.RunningLogs[log.ID] = run
+	nocd.RunningLogs[log.ID] = run
 
 	defer func() {
 		close(run.Finish)
-		delete(gocd.RunningLogs, log.ID)
+		delete(nocd.RunningLogs, log.ID)
 		run.Log.Log = strings.Join(run.RunningLog, "\n")
 		// 保留最后8000字
 		if len(run.Log.Log) > 8000 {
 			run.Log.Log = run.Log.Log[:3998] + "...." + run.Log.Log[len(run.Log.Log)-3998:]
 		}
 		run.Log.StoppedAt = time.Now()
-		gocd.Logger().Debugln(log.ID, " deploy stop")
+		nocd.Logger().Debugln(log.ID, " deploy stop")
 	}()
 
 	conn, err := dial(pipeline.Server.Address, pipeline.Server.Login, pipeline.User.PrivateKey, pipeline.Server.Port)
 	if err != nil {
-		gocd.Logger().Debugln(err)
-		run.Log.Status = gocd.PipeLogStatusErrorServerConn
+		nocd.Logger().Debugln(err)
+		run.Log.Status = nocd.PipeLogStatusErrorServerConn
 		return
 	}
 	defer conn.Close()
 
 	session, err := conn.NewSession()
 	if err != nil {
-		run.Log.Status = gocd.PipeLogStatusErrorServerConn
+		run.Log.Status = nocd.PipeLogStatusErrorServerConn
 		return
 	}
 	defer session.Close()
@@ -119,8 +119,8 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 	go func() {
 		err = session.Start(pipeline.Shell)
 		if err != nil {
-			gocd.Logger().Debugln(err)
-			run.Log.Status = gocd.PipeLogStatusErrorShellExec
+			nocd.Logger().Debugln(err)
+			run.Log.Status = nocd.PipeLogStatusErrorShellExec
 			run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
 			run.RunningLog = append(run.RunningLog, appendLog(start)+err.Error())
 			run.Finish <- true
@@ -140,10 +140,10 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 						return
 					}
 					if err == io.ErrClosedPipe {
-						run.Log.Status = gocd.PipeLogStatusSuccess
+						run.Log.Status = nocd.PipeLogStatusSuccess
 					} else {
-						gocd.Logger().Debugln(err)
-						run.Log.Status = gocd.PipeLogStatusErrorShellExec
+						nocd.Logger().Debugln(err)
+						run.Log.Status = nocd.PipeLogStatusErrorShellExec
 						run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
 					}
 					run.Finish <- true
@@ -166,8 +166,8 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 			return
 		}
 		if err != nil {
-			gocd.Logger().Debugln(err)
-			run.Log.Status = gocd.PipeLogStatusErrorShellExec
+			nocd.Logger().Debugln(err)
+			run.Log.Status = nocd.PipeLogStatusErrorShellExec
 			run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
 			run.RunningLog = append(run.RunningLog, appendLog(start)+err.Error())
 		}
@@ -178,7 +178,7 @@ func Deploy(pipeline gocd.Pipeline, log *gocd.PipeLog) {
 	select {
 	case <-timer.C:
 		run.Closed = true
-		run.Log.Status = gocd.PipeLogStatusErrorTimeout
+		run.Log.Status = nocd.PipeLogStatusErrorTimeout
 		return
 	case <-run.Finish:
 		run.Closed = true
@@ -194,7 +194,7 @@ func appendLog(start time.Time) string {
 func dial(address, user, pk string, port int) (*ssh.Client, error) {
 	privateKey, err := ssh.ParsePrivateKey([]byte(pk))
 	if err != nil {
-		gocd.Logger().Debug(err, pk)
+		nocd.Logger().Debug(err, pk)
 		return nil, errors.New("解析用户私钥失败")
 	}
 	return ssh.Dial("tcp", fmt.Sprintf("%s:%d", address, port), &ssh.ClientConfig{

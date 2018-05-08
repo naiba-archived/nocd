@@ -7,7 +7,7 @@ package mgin
 
 import (
 	"fmt"
-	"git.cm/naiba/gocd"
+	"github.com/naiba/nocd"
 	"html/template"
 	"runtime"
 	"strconv"
@@ -23,15 +23,15 @@ type Pagination struct {
 }
 
 //FuncMap 自定义模板函数
-func FuncMap(pipelineService gocd.PipelineService, pipelogService gocd.PipeLogService) template.FuncMap {
+func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogService) template.FuncMap {
 	return template.FuncMap{
-		"RepoPipelines": func(rid uint) []gocd.Pipeline {
-			return pipelineService.RepoPipelines(&gocd.Repository{ID: rid})
+		"RepoPipelines": func(rid uint) []nocd.Pipeline {
+			return pipelineService.RepoPipelines(&nocd.Repository{ID: rid})
 		},
-		"LastServerLog": func(rid uint) gocd.PipeLog {
+		"LastServerLog": func(rid uint) nocd.PipeLog {
 			return pipelogService.LastServerLog(rid)
 		},
-		"LastPipelineLog": func(pid uint) gocd.PipeLog {
+		"LastPipelineLog": func(pid uint) nocd.PipeLog {
 			return pipelogService.LastPipelineLog(pid)
 		},
 		"TimeDiff": func(t1, t2 time.Time) string {
@@ -57,10 +57,10 @@ func FuncMap(pipelineService gocd.PipelineService, pipelogService gocd.PipeLogSe
 			return fmt.Sprintf(" %.0f 年", sec/60/60/24/30/12)
 		},
 		"Now": func() time.Time {
-			return time.Now().In(gocd.Loc)
+			return time.Now().In(nocd.Loc)
 		},
 		"TimeFormat": func(t time.Time) string {
-			return t.In(gocd.Loc).Format("2006-01-02 15:04:05")
+			return t.In(nocd.Loc).Format("2006-01-02 15:04:05")
 		},
 		"HasPrefix": strings.HasPrefix,
 		"Pagination": func(all, current int64) []Pagination {

@@ -24,17 +24,17 @@ import (
 	// sqlite支持
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 
-	"git.cm/naiba/com"
-	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/sqlite3"
-	"git.cm/naiba/gocd/utils/mgin"
+	"github.com/naiba/com"
+	"github.com/naiba/nocd"
+	"github.com/naiba/nocd/sqlite3"
+	"github.com/naiba/nocd/utils/mgin"
 )
 
-var userService gocd.UserService
-var serverService gocd.ServerService
-var repoService gocd.RepositoryService
-var pipelineService gocd.PipelineService
-var pipelogService gocd.PipeLogService
+var userService nocd.UserService
+var serverService nocd.ServerService
+var repoService nocd.RepositoryService
+var pipelineService nocd.PipelineService
+var pipelogService nocd.PipeLogService
 
 var oauthConf *oauth2.Config
 
@@ -62,14 +62,14 @@ func Start() {
 	serveWebHook(r)
 	serveAdmin(r)
 
-	r.Run(gocd.Conf.Section("gocd").Key("web_listen").String())
+	r.Run(nocd.Conf.Section("nocd").Key("web_listen").String())
 }
 
 func initOauthConf() {
 	// init github oauth2
 	oauthConf = &oauth2.Config{
-		ClientID:     gocd.Conf.Section("third_party").Key("github_oauth2_client_id").String(),
-		ClientSecret: gocd.Conf.Section("third_party").Key("github_oauth2_client_secret").String(),
+		ClientID:     nocd.Conf.Section("third_party").Key("github_oauth2_client_id").String(),
+		ClientSecret: nocd.Conf.Section("third_party").Key("github_oauth2_client_secret").String(),
 		Scopes:       []string{},
 		Endpoint:     githuboauth.Endpoint,
 	}
@@ -77,7 +77,7 @@ func initOauthConf() {
 
 func initEngine() *gin.Engine {
 	// 初始化Sentry
-	raven.SetDSN(gocd.Conf.Section("third_party").Key("sentry_dsn").String())
+	raven.SetDSN(nocd.Conf.Section("third_party").Key("sentry_dsn").String())
 	// init router
 	r := gin.New()
 	r.Use(gin.Logger())
@@ -86,12 +86,12 @@ func initEngine() *gin.Engine {
 	r.Use(mgin.AuthMiddleware(userService))
 	r.SetFuncMap(mgin.FuncMap(pipelineService, pipelogService))
 	// csrf protection
-	r.Use(sessions.Sessions("gocd_session", sessions.NewCookieStore([]byte(gocd.Conf.Section("gocd").Key("cookie_key_pair").String()))))
+	r.Use(sessions.Sessions("nocd_session", sessions.NewCookieStore([]byte(nocd.Conf.Section("nocd").Key("cookie_key_pair").String()))))
 	r.Use(csrf.Middleware(csrf.Options{
-		Secret: gocd.Conf.Section("gocd").Key("cookie_key_pair").String(),
+		Secret: nocd.Conf.Section("nocd").Key("cookie_key_pair").String(),
 		ErrorFunc: func(c *gin.Context) {
 			if !strings.HasPrefix(c.Request.URL.Path, "/webhook/") {
-				gocd.Logger().Infoln(c.Request.URL.Path)
+				nocd.Logger().Infoln(c.Request.URL.Path)
 				c.String(http.StatusForbidden, "CSRF Token 验证失败")
 				c.Abort()
 			}
@@ -104,18 +104,18 @@ func initEngine() *gin.Engine {
 
 func initService() {
 	// init service
-	db, err := gorm.Open("sqlite3", "conf/app.db?_loc="+gocd.Conf.Section("gocd").Key("loc").String())
+	db, err := gorm.Open("sqlite3", "conf/app.db?_loc="+nocd.Conf.Section("nocd").Key("loc").String())
 	if err != nil {
-		gocd.Logger().Panicln(err)
+		nocd.Logger().Panicln(err)
 	}
-	if gocd.Debug {
+	if nocd.Debug {
 		db.Debug()
-		db.LogMode(gocd.Debug)
+		db.LogMode(nocd.Debug)
 	}
-	db.AutoMigrate(gocd.User{}, gocd.Server{}, gocd.Repository{}, gocd.Pipeline{}, gocd.PipeLog{})
+	db.AutoMigrate(nocd.User{}, nocd.Server{}, nocd.Repository{}, nocd.Pipeline{}, nocd.PipeLog{})
 
 	upgradeV002(db)
-	gocd.InitStats(db)
+	nocd.InitStats(db)
 
 	// user service
 	sus := sqlite3.UserService{DB: db}
@@ -136,14 +136,14 @@ func initService() {
 
 func upgradeV002(db *gorm.DB) {
 	// 赋予管理员权限
-	var admin gocd.User
+	var admin nocd.User
 	db.Where("id = 1").First(&admin)
 	if !admin.IsAdmin {
 		admin.IsAdmin = true
 		db.Save(admin)
 	}
 	// 给空昵称用户添加昵称
-	var emptyName []gocd.User
+	var emptyName []nocd.User
 	db.Where("g_name = ''").Find(&emptyName)
 	for _, u := range emptyName {
 		u.GName = u.GLogin

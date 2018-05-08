@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package gocd
+package nocd
 
 import (
 	"github.com/naiba/webhooks/bitbucket"

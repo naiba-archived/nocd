@@ -6,10 +6,10 @@
 package router
 
 import (
-	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/utils/ftqq"
-	"git.cm/naiba/gocd/utils/mgin"
 	"github.com/gin-gonic/gin"
+	"github.com/naiba/nocd"
+	"github.com/naiba/nocd/utils/ftqq"
+	"github.com/naiba/nocd/utils/mgin"
 	"net/http"
 )
 
@@ -25,16 +25,16 @@ func serveSettings(r *gin.Engine) {
 }
 
 func saveSetting(c *gin.Context) {
-	var uf gocd.User
+	var uf nocd.User
 	if err := c.Bind(&uf); err != nil {
 		c.String(http.StatusForbidden, "输入不符合规范："+err.Error())
 		return
 	}
-	u := c.MustGet(mgin.CtxUser).(*gocd.User)
+	u := c.MustGet(mgin.CtxUser).(*nocd.User)
 	if u.Sckey != uf.Sckey {
-		resp := ftqq.SendMessage(uf.Sckey, "[GoCD - "+gocd.Conf.Section("gocd").Key("domain").String()+"]", "Server酱推送绑定成功。")
+		resp := ftqq.SendMessage(uf.Sckey, "[NoCD - "+nocd.Conf.Section("nocd").Key("domain").String()+"]", "Server酱推送绑定成功。")
 		if resp.Errno != 0 {
-			gocd.Logger().Errorln(resp.Error)
+			nocd.Logger().Errorln(resp.Error)
 			c.String(http.StatusForbidden, "SCKEY验证失败："+resp.Errmsg)
 			return
 		}
@@ -42,7 +42,7 @@ func saveSetting(c *gin.Context) {
 	u.Sckey = uf.Sckey
 	u.PushSuccess = uf.PushSuccess
 	if err := userService.Update(u); err != nil {
-		gocd.Logger().Errorln(err)
+		nocd.Logger().Errorln(err)
 		c.String(http.StatusInternalServerError, "数据库错误")
 		return
 	}

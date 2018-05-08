@@ -6,8 +6,8 @@
 package admin
 
 import (
-	"git.cm/naiba/gocd/utils/mgin"
 	"github.com/gin-gonic/gin"
+	"github.com/naiba/nocd/utils/mgin"
 	"net/http"
 	"runtime"
 )

@@ -27,7 +27,7 @@
 
 [[constraint]]
   branch = "master"
-  name = "git.cm/naiba/com"
+  name = "github.com/naiba/com"
 
 [[constraint]]
   name = "github.com/evalphobia/logrus_sentry"

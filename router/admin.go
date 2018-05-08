@@ -6,9 +6,9 @@
 package router
 
 import (
-	"git.cm/naiba/gocd/router/admin"
-	"git.cm/naiba/gocd/utils/mgin"
 	"github.com/gin-gonic/gin"
+	"github.com/naiba/nocd/router/admin"
+	"github.com/naiba/nocd/utils/mgin"
 )
 
 func serveAdmin(r *gin.Engine) {
