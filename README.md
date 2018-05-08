@@ -2,7 +2,6 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd)  [![Build status](https://ci.appveyor.com/api/projects/status/d7bo0ng4n0bm8l11?svg=true)](https://ci.appveyor.com/project/naiba/nocd)  [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)  [![Version](https://img.shields.io/badge/version-0.0.9-brightgreen.svg)](https://github.com/naiba/nocd/releases)
 
-
 **NoCD** 是一个 golang 实现的轻便可控的持续交付系统。
 
 ## 界面预览
@@ -28,15 +27,15 @@
 
 3. 打包资源文件并编译
 
-       ```shell
+   ```shell
    go get -u github.com/tmthrgd/go-bindata/...
    go-bindata resource/...
    go build
-       ```
+   ```
 
 4. 在 `conf/app.ini` 创建配置文件
 
-       ```ini
+   ```ini
    [nocd]
    cookie_key_pair = example
    debug = true
@@ -48,13 +47,13 @@
    github_oauth2_client_id = example
    github_oauth2_client_secret = example
    sentry_dsn = "https://example:xx@example.io/"
-       ```
+   ```
 
 5. 运行
 
-       ```shell
+   ```shell
    ./web
-       ```
+   ```
 
 6. 在 `GitHub` 设置回调：`http://mjj.cx/oauth2/callback`
 
