@@ -2,12 +2,6 @@
 
 
 [[projects]]
-  branch = "master"
-  name = "github.com/naiba/com"
-  packages = ["."]
-  revision = "b144dc714159027f765eba5fe4dad93b64e0708f"
-
-[[projects]]
   name = "github.com/boj/redistore"
   packages = ["."]
   revision = "fc113767cd6b051980f260d6dbe84b2740c46ab0"
@@ -187,6 +181,12 @@
   revision = "9ac6cf4d929b2fa8fd2d2e6dec5bb0feb4f4911d"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/naiba/com"
+  packages = ["."]
+  revision = "b144dc714159027f765eba5fe4dad93b64e0708f"
+
+[[projects]]
   branch = "v3"
   name = "github.com/naiba/webhooks"
   packages = [
@@ -352,6 +352,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9b1f00f88b73ef8cefbf140767056e320cdfa5684328bbc73e4faadb0f59a1e0"
+  inputs-digest = "075eb418c73f13bcfcb4cea3d14714a4e6f64ec4e22310e032891ddddb331791"
   solver-name = "gps-cdcl"
   solver-version = 1
