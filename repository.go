@@ -6,10 +6,10 @@
 package nocd
 
 import (
-	"github.com/naiba/webhooks/bitbucket"
-	"github.com/naiba/webhooks/github"
-	"github.com/naiba/webhooks/gitlab"
-	"github.com/naiba/webhooks/gogs"
+	"gopkg.in/go-playground/webhooks.v3/bitbucket"
+	"gopkg.in/go-playground/webhooks.v3/github"
+	"gopkg.in/go-playground/webhooks.v3/gitlab"
+	"gopkg.in/go-playground/webhooks.v3/gogs"
 )
 
 const (

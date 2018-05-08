@@ -154,18 +154,6 @@
   revision = "b144dc714159027f765eba5fe4dad93b64e0708f"
 
 [[projects]]
-  branch = "v3"
-  name = "github.com/naiba/webhooks"
-  packages = [
-    ".",
-    "bitbucket",
-    "github",
-    "gitlab",
-    "gogs"
-  ]
-  revision = "3e1bb69b7dd211d0a77a3ec75f162fd6bb0ee1fd"
-
-[[projects]]
   name = "github.com/parnurzeal/gorequest"
   packages = ["."]
   revision = "a578a48e8d6ca8b01a3b18314c43c6716bb5f5a3"
@@ -294,7 +282,13 @@
 
 [[projects]]
   name = "gopkg.in/go-playground/webhooks.v3"
-  packages = ["."]
+  packages = [
+    ".",
+    "bitbucket",
+    "github",
+    "gitlab",
+    "gogs"
+  ]
   revision = "be944ed461fc75c52f0f149acfa011f8da721f6c"
   version = "v3.12.0"
 
@@ -313,6 +307,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "075eb418c73f13bcfcb4cea3d14714a4e6f64ec4e22310e032891ddddb331791"
+  inputs-digest = "83ab4c704b6205ebdea78839785b3bd9d840c7d0dcc816297e0cdad6a456c983"
   solver-name = "gps-cdcl"
   solver-version = 1

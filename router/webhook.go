@@ -12,11 +12,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	client "github.com/gogits/go-gogs-client"
-	"github.com/naiba/webhooks"
-	"github.com/naiba/webhooks/bitbucket"
-	"github.com/naiba/webhooks/github"
-	"github.com/naiba/webhooks/gitlab"
-	"github.com/naiba/webhooks/gogs"
+	"gopkg.in/go-playground/webhooks.v3"
+	"gopkg.in/go-playground/webhooks.v3/bitbucket"
+	"gopkg.in/go-playground/webhooks.v3/github"
+	"gopkg.in/go-playground/webhooks.v3/gitlab"
+	"gopkg.in/go-playground/webhooks.v3/gogs"
 
 	"github.com/naiba/nocd"
 	"github.com/naiba/nocd/utils/ftqq"

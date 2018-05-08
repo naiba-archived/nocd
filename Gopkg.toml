@@ -63,7 +63,7 @@
 
 [[constraint]]
   branch = "v3"
-  name = "github.com/naiba/webhooks"
+  name = "gopkg.in/go-playground/webhooks.v3"
 
 [[constraint]]
   name = "github.com/pkg/errors"
