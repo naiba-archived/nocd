@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package gocd
+package nocd
 
 import (
 	"github.com/evalphobia/logrus_sentry"
@@ -16,7 +16,7 @@ import (
 //mLog of sentry logger
 var mLog *log.Logger
 
-//Conf of GoCD config
+//Conf of NoCD config
 var Conf *ini.File
 
 //Debug debuggable
@@ -47,12 +47,12 @@ func InitSysConfig(file string) {
 		mLog.Panicln(err)
 	}
 	// set timezone
-	Loc, err = time.LoadLocation(Conf.Section("gocd").Key("loc").String())
+	Loc, err = time.LoadLocation(Conf.Section("nocd").Key("loc").String())
 	if err != nil {
 		panic(err)
 	}
 	// set debuggable
-	Debug, err = Conf.Section("gocd").Key("debug").Bool()
+	Debug, err = Conf.Section("nocd").Key("debug").Bool()
 	if err != nil {
 		panic(err)
 	}

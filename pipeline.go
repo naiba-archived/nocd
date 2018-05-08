@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package gocd
+package nocd
 
 //Pipeline 部署流程
 type Pipeline struct {

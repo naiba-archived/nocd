@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package gocd
+package nocd
 
 //Running 运行中的任务
 type Running struct {

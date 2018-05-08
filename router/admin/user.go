@@ -6,15 +6,15 @@
 package admin
 
 import (
-	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/utils/mgin"
 	"github.com/gin-gonic/gin"
+	"github.com/naiba/nocd"
+	"github.com/naiba/nocd/utils/mgin"
 	"net/http"
 	"strconv"
 )
 
 //User 用户管理
-func User(us gocd.UserService) gin.HandlerFunc {
+func User(us nocd.UserService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		page := c.Query("page")
 		var pageInt int64
@@ -36,7 +36,7 @@ func User(us gocd.UserService) gin.HandlerFunc {
 }
 
 //UserToggle 用户状态管理
-func UserToggle(us gocd.UserService) gin.HandlerFunc {
+func UserToggle(us nocd.UserService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		id := c.Param("id")
 		col := c.Param("col")

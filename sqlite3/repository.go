@@ -6,8 +6,8 @@
 package sqlite3
 
 import (
-	"git.cm/naiba/gocd"
 	"github.com/jinzhu/gorm"
+	"github.com/naiba/nocd"
 )
 
 //RepositoryService 项目服务
@@ -16,14 +16,14 @@ type RepositoryService struct {
 }
 
 //Create 创建项目
-func (rs *RepositoryService) Create(r *gocd.Repository) error {
+func (rs *RepositoryService) Create(r *nocd.Repository) error {
 	return rs.DB.Create(r).Error
 }
 
 //Delete 删除项目
 func (rs *RepositoryService) Delete(rid uint) error {
 	ids := make([]uint, 0)
-	var pipelines []gocd.Pipeline
+	var pipelines []nocd.Pipeline
 	if err := rs.DB.Select("id").Where("repository_id = ?", rid).Find(&pipelines).Error; err != nil {
 		return err
 	}
@@ -32,19 +32,19 @@ func (rs *RepositoryService) Delete(rid uint) error {
 	}
 	db := rs.DB.Begin()
 	// 删除关联 PipeLog
-	err := db.Where("pipeline_id IN (?)", ids).Delete(gocd.PipeLog{}).Error
+	err := db.Where("pipeline_id IN (?)", ids).Delete(nocd.PipeLog{}).Error
 	if err != nil {
 		db.Rollback()
 		return err
 	}
 	// 删除关联 Pipeline
-	err = db.Where("id IN (?)", ids).Delete(gocd.Pipeline{}).Error
+	err = db.Where("id IN (?)", ids).Delete(nocd.Pipeline{}).Error
 	if err != nil {
 		db.Rollback()
 		return err
 	}
 	// 删除项目
-	err = db.Where("id = ?", rid).Delete(gocd.Repository{}).Error
+	err = db.Where("id = ?", rid).Delete(nocd.Repository{}).Error
 	if err != nil {
 		db.Rollback()
 		return err
@@ -54,24 +54,24 @@ func (rs *RepositoryService) Delete(rid uint) error {
 }
 
 //Update 更新项目
-func (rs *RepositoryService) Update(r *gocd.Repository) error {
+func (rs *RepositoryService) Update(r *nocd.Repository) error {
 	return rs.DB.Save(r).Error
 }
 
 //GetRepoByUser 获取用户的所有项目
-func (rs *RepositoryService) GetRepoByUser(user *gocd.User) (r []gocd.Repository) {
+func (rs *RepositoryService) GetRepoByUser(user *nocd.User) (r []nocd.Repository) {
 	rs.DB.Model(user).Related(&r)
 	return
 }
 
 //GetRepoByUserAndID 通过用户ID和项目ID寻找
-func (rs *RepositoryService) GetRepoByUserAndID(user *gocd.User, rid uint) (r gocd.Repository, err error) {
+func (rs *RepositoryService) GetRepoByUserAndID(user *nocd.User, rid uint) (r nocd.Repository, err error) {
 	err = rs.DB.Where("id = ? AND user_id = ?", rid, user.ID).First(&r).Error
 	return
 }
 
 //GetRepoByID 通过ID获取项目
-func (rs *RepositoryService) GetRepoByID(id uint) (r gocd.Repository, err error) {
+func (rs *RepositoryService) GetRepoByID(id uint) (r nocd.Repository, err error) {
 	err = rs.DB.First(&r, id).Error
 	return
 }

@@ -9,13 +9,13 @@ import (
 	"os"
 	"path/filepath"
 
-	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/router"
+	"github.com/naiba/nocd"
+	"github.com/naiba/nocd/router"
 )
 
 func init() {
 	// initial global settings
-	gocd.InitSysConfig("conf/app.ini")
+	nocd.InitSysConfig("conf/app.ini")
 	unzipAssets("resource/", "23", []string{"resource"}, RestoreAssets)
 }
 
@@ -27,14 +27,14 @@ func main() {
 func unzipAssets(path, ver string, dirs []string, call func(s1, s2 string) error) {
 	if _, err := os.Stat(path); err == nil {
 		if _, err := os.Stat(path + ver + ".ver"); os.IsNotExist(err) {
-			gocd.Logger().Infoln("[" + ver + "]: Delete Old Assets.")
+			nocd.Logger().Infoln("[" + ver + "]: Delete Old Assets.")
 			os.RemoveAll(path)
 		} else {
-			gocd.Logger().Infoln("[" + ver + "]: Assets File Exists.")
+			nocd.Logger().Infoln("[" + ver + "]: Assets File Exists.")
 			return
 		}
 	}
-	gocd.Logger().Infoln("[" + ver + "]: Unpkg Assets.")
+	nocd.Logger().Infoln("[" + ver + "]: Unpkg Assets.")
 	isSuccess := true
 	for _, dir := range dirs {
 		// 解压dir目录到当前目录

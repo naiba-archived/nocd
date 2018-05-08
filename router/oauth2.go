@@ -11,14 +11,14 @@ import (
 	"net/http"
 	"time"
 
-	"git.cm/naiba/com"
-	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/utils/mgin"
-	"git.cm/naiba/gocd/utils/ssh"
+	"github.com/naiba/com"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
+	"github.com/naiba/nocd"
+	"github.com/naiba/nocd/utils/mgin"
+	"github.com/naiba/nocd/utils/ssh"
 	"golang.org/x/oauth2"
 )
 
@@ -71,11 +71,11 @@ func serveOauth2(r *gin.Engine) {
 				if err == gorm.ErrRecordNotFound {
 					pub, private, err := ssh.GenKeyPair()
 					if err != nil {
-						gocd.Logger().Errorln(err)
+						nocd.Logger().Errorln(err)
 						c.String(http.StatusInternalServerError, "生成私钥失败，请再次常试")
 						return
 					}
-					u = new(gocd.User)
+					u = new(nocd.User)
 					u.GID = uint(user.GetID())
 					u.GLogin = user.GetLogin()
 					if len(user.GetName()) > 0 {
@@ -86,7 +86,7 @@ func serveOauth2(r *gin.Engine) {
 					u.Pubkey = pub
 					u.PrivateKey = private
 					if userService.Create(u) != nil {
-						gocd.Logger().Errorln(err)
+						nocd.Logger().Errorln(err)
 						c.String(http.StatusInternalServerError, "数据库错误")
 						return
 					}
@@ -96,7 +96,7 @@ func serveOauth2(r *gin.Engine) {
 						userService.Update(u)
 					}
 				} else {
-					gocd.Logger().Errorln(err)
+					nocd.Logger().Errorln(err)
 					c.String(http.StatusInternalServerError, "数据库错误")
 					return
 				}
@@ -104,7 +104,7 @@ func serveOauth2(r *gin.Engine) {
 			// 更新token
 			u.Token = com.MD5(fmt.Sprintf("%d%d%s%d", u.ID, u.GID, u.GLogin, time.Now().UnixNano()))
 			if userService.Update(u) != nil {
-				gocd.Logger().Errorln(err)
+				nocd.Logger().Errorln(err)
 				c.String(http.StatusInternalServerError, "数据库错误")
 				return
 			}

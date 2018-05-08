@@ -1,5 +1,5 @@
 version: '{build}'
-clone_folder: c:\nb\src\git.cm\naiba\gocd
+clone_folder: c:\nb\src\github.com\naiba\nocd
 init:
 - cmd: git config --global core.autocrlf input
 environment:
@@ -27,7 +27,7 @@ test_script:
 
     dir
 
-    for /f "" %%G in ('go list git.cm/naiba/gocd/...') do ( go test -v %%G & IF ERRORLEVEL == 1 EXIT 1)
+    for /f "" %%G in ('go list github.com/naiba/nocd/...') do ( go test -v %%G & IF ERRORLEVEL == 1 EXIT 1)
 
-    go build git.cm/naiba/gocd/cmd/web
+    go build github.com/naiba/nocd/cmd/web
 deploy: off

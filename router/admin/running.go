@@ -6,15 +6,15 @@
 package admin
 
 import (
-	"git.cm/naiba/gocd"
-	"git.cm/naiba/gocd/utils/mgin"
 	"github.com/gin-gonic/gin"
+	"github.com/naiba/nocd"
+	"github.com/naiba/nocd/utils/mgin"
 	"net/http"
 	"strconv"
 )
 
 //Running 管理部署中的任务
-func Running(ps gocd.PipeLogService) func(c *gin.Context) {
+func Running(ps nocd.PipeLogService) func(c *gin.Context) {
 	return func(c *gin.Context) {
 		page := c.Query("page")
 		var pageInt int64
@@ -27,7 +27,7 @@ func Running(ps gocd.PipeLogService) func(c *gin.Context) {
 			pageInt = 1
 		}
 
-		logs, num := ps.Logs(gocd.PipeLogStatusRunning, pageInt-1, 20)
+		logs, num := ps.Logs(nocd.PipeLogStatusRunning, pageInt-1, 20)
 		for i, l := range logs {
 			ps.Pipeline(&l)
 			logs[i] = l

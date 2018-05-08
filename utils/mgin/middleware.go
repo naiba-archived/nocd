@@ -6,9 +6,9 @@
 package mgin
 
 import (
-	"git.cm/naiba/com"
-	"git.cm/naiba/gocd"
+	"github.com/naiba/com"
 	"github.com/gin-gonic/gin"
+	"github.com/naiba/nocd"
 	"net/http"
 	"time"
 )
@@ -20,7 +20,7 @@ const CtxIsLogin = "login"
 const CtxUser = "user"
 
 //AuthMiddleware 身份验证中间件
-func AuthMiddleware(userService gocd.UserService) gin.HandlerFunc {
+func AuthMiddleware(userService nocd.UserService) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		uid, err := c.Cookie("uid")
 		login := false
@@ -63,7 +63,7 @@ func FilterMiddleware(o FilterOption) gin.HandlerFunc {
 		if (o.User || o.Admin) && !c.MustGet(CtxIsLogin).(bool) {
 			AlertAndRedirect("需要登录", "/", c)
 		}
-		if o.Admin && !c.MustGet(CtxUser).(*gocd.User).IsAdmin {
+		if o.Admin && !c.MustGet(CtxUser).(*nocd.User).IsAdmin {
 			AlertAndRedirect("需要管理员权限", "/", c)
 		}
 	}
