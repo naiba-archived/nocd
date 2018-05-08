@@ -11,11 +11,12 @@ import (
 	"strings"
 
 	"golang.org/x/oauth2"
-	githuboauth "golang.org/x/oauth2/github"
+	"golang.org/x/oauth2/github"
 
 	"github.com/getsentry/raven-go"
 	"github.com/gin-contrib/sentry"
 	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/jinzhu/gorm"
@@ -23,7 +24,6 @@ import (
 	"gopkg.in/go-playground/validator.v8"
 	// sqlite支持
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-
 	"github.com/naiba/com"
 	"github.com/naiba/nocd"
 	"github.com/naiba/nocd/sqlite3"
@@ -71,7 +71,7 @@ func initOauthConf() {
 		ClientID:     nocd.Conf.Section("third_party").Key("github_oauth2_client_id").String(),
 		ClientSecret: nocd.Conf.Section("third_party").Key("github_oauth2_client_secret").String(),
 		Scopes:       []string{},
-		Endpoint:     githuboauth.Endpoint,
+		Endpoint:     github.Endpoint,
 	}
 }
 
@@ -86,7 +86,7 @@ func initEngine() *gin.Engine {
 	r.Use(mgin.AuthMiddleware(userService))
 	r.SetFuncMap(mgin.FuncMap(pipelineService, pipelogService))
 	// csrf protection
-	r.Use(sessions.Sessions("nocd_session", sessions.NewCookieStore([]byte(nocd.Conf.Section("nocd").Key("cookie_key_pair").String()))))
+	r.Use(sessions.Sessions("nocd_session", cookie.NewStore([]byte(nocd.Conf.Section("nocd").Key("cookie_key_pair").String()))))
 	r.Use(csrf.Middleware(csrf.Options{
 		Secret: nocd.Conf.Section("nocd").Key("cookie_key_pair").String(),
 		ErrorFunc: func(c *gin.Context) {

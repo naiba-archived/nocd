@@ -34,7 +34,10 @@
 [[projects]]
   branch = "master"
   name = "github.com/gin-contrib/sessions"
-  packages = ["."]
+  packages = [
+    ".",
+    "cookie"
+  ]
   revision = "8d0a81f4b00615db3ab4d0f550fa90d33a948ca6"
 
 [[projects]]
@@ -307,6 +310,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "83ab4c704b6205ebdea78839785b3bd9d840c7d0dcc816297e0cdad6a456c983"
+  inputs-digest = "52a63e8f51b0189451af688cc52b9d801020a8690ecdacd455286dde1dad493a"
   solver-name = "gps-cdcl"
   solver-version = 1
