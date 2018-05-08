@@ -2,24 +2,6 @@
 
 
 [[projects]]
-  name = "github.com/boj/redistore"
-  packages = ["."]
-  revision = "fc113767cd6b051980f260d6dbe84b2740c46ab0"
-  version = "v1.2"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/bradfitz/gomemcache"
-  packages = ["memcache"]
-  revision = "1952afaa557dc08e8e0d89eafab110fb501c1a2b"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/bradleypeabody/gorilla-sessions-memcache"
-  packages = ["."]
-  revision = "75ee37df8664a47cd5d9eb84d41e1f2b08086893"
-
-[[projects]]
   name = "github.com/certifi/gocertifi"
   packages = ["."]
   revision = "deb3ae2ef2610fde3330947281941c562861188b"
@@ -38,19 +20,10 @@
   version = "v0.4.5"
 
 [[projects]]
-  name = "github.com/garyburd/redigo"
-  packages = [
-    "internal",
-    "redis"
-  ]
-  revision = "a69d19351219b6dd56f274f96d85a7014a2ec34e"
-  version = "v1.6.0"
-
-[[projects]]
   branch = "master"
   name = "github.com/getsentry/raven-go"
   packages = ["."]
-  revision = "7562301a6763c9ac631b0a2011b4aa0e064e45d4"
+  revision = "263040ce1a362270b5897a5982572ddc1fe807be"
 
 [[projects]]
   branch = "master"
@@ -62,7 +35,7 @@
   branch = "master"
   name = "github.com/gin-contrib/sessions"
   packages = ["."]
-  revision = "fda3be6efa2da56e31a1a72bffd65279191e8009"
+  revision = "8d0a81f4b00615db3ab4d0f550fa90d33a948ca6"
 
 [[projects]]
   branch = "master"
@@ -79,7 +52,7 @@
     "json",
     "render"
   ]
-  revision = "6d913fc343cfac80d656db5be67a0ffb1323ba0d"
+  revision = "bd4f73af679e7d645f6d0277258fa360eda96f2d"
 
 [[projects]]
   branch = "master"
@@ -90,8 +63,8 @@
 [[projects]]
   name = "github.com/golang/protobuf"
   packages = ["proto"]
-  revision = "925541529c1fa6821df4e44ce2723319eb2be768"
-  version = "v1.0.0"
+  revision = "b4deda0973fb4c70b50d226b1af49f3da59f5265"
+  version = "v1.1.0"
 
 [[projects]]
   name = "github.com/google/go-github"
@@ -145,12 +118,6 @@
   version = "1.1.3"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/kidstuff/mongostore"
-  packages = ["."]
-  revision = "256d65ac5b0e35e7c5ebb3f175c0bed1e5c2b253"
-
-[[projects]]
   name = "github.com/mattn/go-isatty"
   packages = ["."]
   revision = "0360b2af4f38e8d38c7fce2a9f4e702702d73a39"
@@ -196,7 +163,7 @@
     "gitlab",
     "gogs"
   ]
-  revision = "a831111e2676c296c8493004e31fbdd94fc1b6ce"
+  revision = "3e1bb69b7dd211d0a77a3ec75f162fd6bb0ee1fd"
 
 [[projects]]
   name = "github.com/parnurzeal/gorequest"
@@ -225,8 +192,8 @@
 [[projects]]
   name = "github.com/ugorji/go"
   packages = ["codec"]
-  revision = "9831f2c3ac1068a78f50999a30db84270f647af6"
-  version = "v1.1"
+  revision = "b4c50a2b199d93b13dc15e78929cfb23bfdf21ab"
+  version = "v1.1.1"
 
 [[projects]]
   branch = "master"
@@ -252,7 +219,7 @@
     "ssh",
     "ssh/terminal"
   ]
-  revision = "12892e8c234f4fe6f6803f052061de9057903bb2"
+  revision = "4ec37c66abab2c7e02ae775328b2ff001c3f025a"
 
 [[projects]]
   branch = "master"
@@ -263,7 +230,7 @@
     "idna",
     "publicsuffix"
   ]
-  revision = "b68f30494add4df6bd8ef5e82803f308e7f7c59c"
+  revision = "d11bb6cd8e3c4e60239c9cb20ef68586d74500d0"
 
 [[projects]]
   branch = "master"
@@ -273,7 +240,7 @@
     "github",
     "internal"
   ]
-  revision = "fdc9e635145ae97e6c2cb777c48305600cf515cb"
+  revision = "cdc340f7c179dbbfa4afd43b7614e8fcadde4269"
 
 [[projects]]
   branch = "master"
@@ -282,7 +249,7 @@
     "unix",
     "windows"
   ]
-  revision = "378d26f46672a356c46195c28f61bdb4c0a781dd"
+  revision = "7db1c3b1a98089d0071c84f646ff5c96aad43682"
 
 [[projects]]
   name = "golang.org/x/text"
@@ -326,22 +293,16 @@
   version = "v8.18.2"
 
 [[projects]]
-  name = "gopkg.in/ini.v1"
+  name = "gopkg.in/go-playground/webhooks.v3"
   packages = ["."]
-  revision = "6333e38ac20b8949a8dd68baa3650f4dee8f39f0"
-  version = "v1.33.0"
+  revision = "be944ed461fc75c52f0f149acfa011f8da721f6c"
+  version = "v3.12.0"
 
 [[projects]]
-  branch = "v2"
-  name = "gopkg.in/mgo.v2"
-  packages = [
-    ".",
-    "bson",
-    "internal/json",
-    "internal/sasl",
-    "internal/scram"
-  ]
-  revision = "3f83fa5005286a7fe593b055f0d7771a7dce4655"
+  name = "gopkg.in/ini.v1"
+  packages = ["."]
+  revision = "6529cf7c58879c08d927016dde4477f18a0634cb"
+  version = "v1.36.0"
 
 [[projects]]
   name = "gopkg.in/yaml.v2"

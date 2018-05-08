@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2018, 奶爸<1@5.nu>
- * All rights reserved.
- */
-
 package gogs
 
 import (
@@ -11,11 +6,11 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/naiba/webhooks"
-	client "github.com/gogits/go-gogs-client"
 	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
+	client "github.com/gogits/go-gogs-client"
+	"gopkg.in/go-playground/webhooks.v3"
 )
 
 // Webhook instance contains all methods needed to process events
@@ -113,10 +108,6 @@ func (hook Webhook) ParsePayload(w http.ResponseWriter, r *http.Request) {
 		expectedMAC := hex.EncodeToString(mac.Sum(nil))
 
 		if !hmac.Equal([]byte(signature), []byte(expectedMAC)) {
-			webhooks.DefaultLog.Error("HMAC verification failed")
-			webhooks.DefaultLog.Debug("LocalHMAC:" + expectedMAC)
-			webhooks.DefaultLog.Debug("RemoteHMAC:" + signature)
-			webhooks.DefaultLog.Debug("Secret:" + hook.secret)
 			webhooks.DefaultLog.Debug(string(payload))
 			http.Error(w, "403 Forbidden - HMAC verification failed", http.StatusForbidden)
 			return

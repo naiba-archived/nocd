@@ -11,11 +11,11 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/naiba/com"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/google/go-github/github"
 	"github.com/jinzhu/gorm"
+	"github.com/naiba/com"
 	"github.com/naiba/nocd"
 	"github.com/naiba/nocd/utils/mgin"
 	"github.com/naiba/nocd/utils/ssh"
