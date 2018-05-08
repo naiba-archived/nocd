@@ -1,10 +1,6 @@
 # NoCD 持续交付系统
 
-<<<<<<< HEAD
-[![Go Report Card](https://goreportcard.com/badge/git.cm/naiba/gocd)](https://goreportcard.com/report/git.cm/naiba/gocd)  [![Build status](https://ci.appveyor.com/api/projects/status/d7bo0ng4n0bm8l11?svg=true)](https://ci.appveyor.com/project/naiba/gocd) [![Version](https://img.shields.io/badge/version-0.0.9-brightgreen.svg)](https://git.cm/naiba/gocd/releases)
-=======
 [![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd)  [![Build status](https://ci.appveyor.com/api/projects/status/d7bo0ng4n0bm8l11?svg=true)](https://ci.appveyor.com/project/naiba/nocd)  [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)  [![Version](https://img.shields.io/badge/version-0.0.9-brightgreen.svg)](https://github.com/naiba/nocd/releases)
->>>>>>> develop
 
 **NoCD** 是一个 golang 实现的轻便可控的持续交付系统。
 
