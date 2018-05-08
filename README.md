@@ -69,6 +69,6 @@
 
 ## 版权声明
 
-本仓库代码遵循 Apache License 2.0 协议
+本仓库代码遵循 MIT 协议
 
 Copy &copy; 2018 Naiba
