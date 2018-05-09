@@ -27,7 +27,7 @@ test_script:
 
     dir
 
-    for /f "" %%G in ('go list github.com/naiba/nocd/...') do ( go test -v %%G & IF ERRORLEVEL == 1 EXIT 1)
+    for /f "" %%G in ('go list github.com/naiba/nocd/...') do ( go test -v -cover -race %%G & IF ERRORLEVEL == 1 EXIT 1)
 
     go build github.com/naiba/nocd/cmd/web
 deploy: off
