@@ -7,5 +7,5 @@ env:
 
 script:
   - ls -al
-  - go build -v cmd/web
+  - go build -v github.com/naiba/nocd/cmd/web
   - go test -v -cover -race ./...
