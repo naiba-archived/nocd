@@ -6,5 +6,6 @@ env:
   - GO15VENDOREXPERIMENT=1
 
 script:
-  - go build -v
+  - ls -al
+  - go build -v cmd/web
   - go test -v -cover -race ./...
