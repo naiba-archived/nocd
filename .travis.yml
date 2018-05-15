@@ -13,12 +13,13 @@ before_install:
   - go get github.com/mattn/goveralls
   - go get golang.org/x/lint/golint
   - go get github.com/tmthrgd/go-bindata/...
+  - cd cmd/web
+  - go-bindata resource/...
 script:
   - go list ./... | xargs -L1 golint
   - go test -v -race -covermode=count -coverprofile=coverage.out ./...
   - goveralls -coverprofile=coverage.out -service travis-ci -repotoken $COVERALLS_TOKEN
 after_success:
-  - cd cmd/web
-  - go-bindata resource/...
+
   - gox -output "dist/{{.OS}}_{{.Arch}}_{{.Dir}}"
   - ghr --username tcnksm-sample --token $GITHUB_TOKEN --replace --prerelease --debug pre-release dist/
