@@ -1,11 +1,13 @@
 language: go
 go:
-  - 1.9.2
+  - master
 env:
   - "PATH=/home/travis/gopath/bin:$PATH"
+addons:
+    apt:
+      update: true
 before_install:
   - go get github.com/mitchellh/gox
-  - gox -build-toolchain
   - go get github.com/tcnksm/ghr
   - go get github.com/axw/gocov/gocov
   - go get github.com/mattn/goveralls
