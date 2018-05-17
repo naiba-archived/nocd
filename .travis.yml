@@ -1,16 +1,7 @@
 language: go
 go:
   - master
-env:
-  - "PATH=/home/travis/gopath/bin:$PATH"
-addons:
-    apt:
-      update: true
 before_install:
-  - go get github.com/mitchellh/gox
-  - go get github.com/tcnksm/ghr
-  - go get github.com/axw/gocov/gocov
-  - go get github.com/mattn/goveralls
   - go get golang.org/x/lint/golint
   - go get github.com/tmthrgd/go-bindata/...
   - cd cmd/web
@@ -18,4 +9,4 @@ before_install:
   - cd ../../
 script:
   - go list ./... | xargs -L1 golint
-  - go test -v -race -cover -coverprofile=coverage.out ./...
+  - go test -v -race ./...
