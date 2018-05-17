@@ -48,7 +48,7 @@ func serveOauth2(r *gin.Engine) {
 			// delete oauth_token
 			session := sessions.Default(c)
 			if session.Get("oauth_token").(string) != call.State {
-				c.String(http.StatusForbidden, "登陆未授权，请从首页重新登录")
+				c.String(http.StatusForbidden, "登录未授权，请从首页重新登录")
 				return
 			}
 			session.Delete("oauth_token")
@@ -67,7 +67,7 @@ func serveOauth2(r *gin.Engine) {
 			// 检测入库
 			u, err := userService.UserByGID(user.GetID())
 			if err != nil {
-				// 首次登陆
+				// 首次登录
 				if err == gorm.ErrRecordNotFound {
 					pub, private, err := ssh.GenKeyPair()
 					if err != nil {
