@@ -16,7 +16,7 @@ import (
 func init() {
 	// initial global settings
 	nocd.InitSysConfig("conf/app.ini")
-	unzipAssets("resource/", "25", []string{"resource"}, RestoreAssets)
+	unzipAssets("resource/", "26", []string{"resource"}, RestoreAssets)
 }
 
 func main() {
