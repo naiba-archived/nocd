@@ -7,12 +7,13 @@ package mgin
 
 import (
 	"fmt"
-	"github.com/naiba/nocd"
 	"html/template"
 	"runtime"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/naiba/nocd"
 )
 
 //Pagination 分页
@@ -63,6 +64,7 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 			return t.In(nocd.Loc).Format("2006-01-02 15:04:05")
 		},
 		"HasPrefix": strings.HasPrefix,
+		//TODO: 分页设计
 		"Pagination": func(all, current int64) []Pagination {
 			mMap := make([]Pagination, 0)
 			var i, num int64
