@@ -69,7 +69,7 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 			var num int64
 			if current > 5 {
 				num = current - 4
-				if all-current <= 5 {
+				if all-current < 5 {
 					num = all - 11
 				}
 			} else {
