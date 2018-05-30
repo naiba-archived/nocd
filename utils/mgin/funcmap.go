@@ -67,8 +67,8 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 		"Pagination": func(all, current int64) []Pagination {
 			mMap := make([]Pagination, 0)
 			var num int64
-			if current > 5 {
-				num = current - 4
+			if current > 6 {
+				num = current - 5
 				if all-current <= 5 {
 					num = all - 10
 				}
