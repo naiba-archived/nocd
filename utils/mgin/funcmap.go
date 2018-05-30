@@ -66,22 +66,20 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 		"HasPrefix": strings.HasPrefix,
 		"Pagination": func(all, current int64) []Pagination {
 			mMap := make([]Pagination, 0)
-			var i, num int64
+			var num int64
 			if current > 6 {
 				num = current - 5
 			} else {
 				num = 1
 			}
-			for i = num; i <= all; i++ {
+			for i := num; i <= all; i++ {
 				if i-num == 11 {
 					break
 				}
-				if i-num == 9 {
-					if all > i+2 {
-						mMap = append(mMap, Pagination{No: i, Current: i == current, Text: "..."})
-						mMap = append(mMap, Pagination{No: all, Current: all == current, Text: strconv.FormatInt(i, 10)})
-						break
-					}
+				if i-num == 10 && all-i > 2 {
+					mMap = append(mMap, Pagination{No: i, Current: false, Text: "..."})
+					mMap = append(mMap, Pagination{No: i + 1, Current: false, Text: strconv.FormatInt(all, 10)})
+					break
 				}
 				mMap = append(mMap, Pagination{No: i, Current: i == current, Text: strconv.FormatInt(i, 10)})
 			}
