@@ -76,7 +76,7 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 				num = 1
 			}
 			for i := num; i <= all; i++ {
-				if i-num == 11 {
+				if i-num == 12 {
 					break
 				}
 				if i-num == 9 && all-i > 2 {
