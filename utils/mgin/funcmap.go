@@ -64,25 +64,24 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 			return t.In(nocd.Loc).Format("2006-01-02 15:04:05")
 		},
 		"HasPrefix": strings.HasPrefix,
-		//TODO: 分页设计
 		"Pagination": func(all, current int64) []Pagination {
 			mMap := make([]Pagination, 0)
 			var i, num int64
-			if all > 11 {
-				if all-current < 11 {
-					num = all - 11
-				} else if current >= 6 {
-					num = current - 5
-				} else {
-					num = current
-				}
+			if current > 5 {
+				num = current - 5
 			} else {
 				num = 1
 			}
 			for i = num; i <= all; i++ {
-				if i-num > 10 && i != all {
-					mMap = append(mMap, Pagination{No: i, Current: i == current, Text: "..."})
+				if i-num == 11 {
 					break
+				}
+				if i-num == 10 {
+					if all > i+2 {
+						mMap = append(mMap, Pagination{No: i, Current: i == current, Text: "..."})
+						mMap = append(mMap, Pagination{No: i, Current: i == current, Text: strconv.FormatInt(i, 10)})
+						break
+					}
 				}
 				mMap = append(mMap, Pagination{No: i, Current: i == current, Text: strconv.FormatInt(i, 10)})
 			}
