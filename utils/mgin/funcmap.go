@@ -73,10 +73,10 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 				num = 1
 			}
 			for i := num; i <= all; i++ {
-				if i-num == 11 {
+				if i-num == 10 {
 					break
 				}
-				if i-num == 10 && all-i > 2 {
+				if i-num == 9 && all-i > 2 {
 					mMap = append(mMap, Pagination{No: i, Current: false, Text: "..."})
 					mMap = append(mMap, Pagination{No: i + 1, Current: false, Text: strconv.FormatInt(all, 10)})
 					break
