@@ -10,3 +10,5 @@ before_install:
 script:
   - go list ./... | xargs -L1 golint
   - go test -v -race ./...
+  - cd cmd/web
+  - go build
