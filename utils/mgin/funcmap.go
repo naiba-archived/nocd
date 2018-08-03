@@ -37,9 +37,6 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 		},
 		"TimeDiff": func(t1, t2 time.Time) string {
 			sec := t2.Sub(t1).Seconds()
-			if sec < 0 {
-				return "老长了"
-			}
 			if sec < 60 {
 				return fmt.Sprintf(" %.0f 秒", sec)
 			}
@@ -67,21 +64,21 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 		"Pagination": func(all, current int64) []Pagination {
 			mMap := make([]Pagination, 0)
 			var num int64
-			if current > 5 {
-				num = current - 4
-				if all-current <= 5 {
-					num = all - 10
-				}
-			} else {
+
+			if all < 11 {
 				num = 1
+			} else {
+				if current > 5 {
+					if all-current < 5 {
+						num = all - 10
+					}
+				} else {
+					num = 1
+				}
 			}
+
 			for i := num; i <= all; i++ {
 				if i-num == 12 {
-					break
-				}
-				if i-num == 9 && all-i > 1 {
-					mMap = append(mMap, Pagination{No: i, Current: false, Text: "..."})
-					mMap = append(mMap, Pagination{No: all, Current: false, Text: strconv.FormatInt(all, 10)})
 					break
 				}
 				mMap = append(mMap, Pagination{No: i, Current: i == current, Text: strconv.FormatInt(i, 10)})
