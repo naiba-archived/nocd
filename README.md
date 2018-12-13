@@ -1,6 +1,6 @@
 # NoCD 持续交付系统
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd) [![Build Status](https://travis-ci.com/naiba/nocd.svg?branch=master)](https://travis-ci.com/naiba/nocd) [![](https://images.microbadger.com/badges/image/naiba/nocd.svg)](https://microbadger.com/images/nocd/nocd "NoCD Docker Status") [![](https://images.microbadger.com/badges/version/naiba/nocd.svg)](https://microbadger.com/images/nocd/nocd "NoCD Docker Layer")
+[![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd) [![Build Status](https://travis-ci.com/naiba/nocd.svg?branch=master)](https://travis-ci.com/naiba/nocd) [![](https://images.microbadger.com/badges/image/naiba/nocd.svg)](https://microbadger.com/images/naiba/nocd "NoCD Docker Status") [![](https://images.microbadger.com/badges/version/naiba/nocd.svg)](https://microbadger.com/images/naiba/nocd "NoCD Docker Layer")
 
 **NoCD** 是一个 Go 实现的轻便可控的持续交付系统。
 
