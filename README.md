@@ -4,8 +4,6 @@
 
 **NoCD** 是一个 Go 实现的轻便可控的持续交付系统。
 
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnaiba%2Fnocd.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnaiba%2Fnocd?ref=badge_large)
-
 ## 界面预览
 
 | ![首页截图](https://github.com/naiba/nocd/raw/master/README/首页截图.png) | ![服务器管理](https://github.com/naiba/nocd/raw/master/README/服务器管理.png) | ![项目管理](https://github.com/naiba/nocd/raw/master/README/项目管理.png) |
@@ -41,7 +39,7 @@
    [nocd]
    cookie_key_pair = example
    debug = true
-   domain = mjj.cx
+   domain = cd.git.cm
    web_listen = 0.0.0.0:8000
    loc = Asia/Shanghai
    google_analysis = "NB-XXXXXX-1"
@@ -57,7 +55,7 @@
    ./web
    ```
 
-6. 在 `GitHub` 设置回调：`http://mjj.cx/oauth2/callback`
+6. 在 `GitHub` 设置回调：`https://cd.git.cm/oauth2/callback`
 
 ## 常见问题
 
@@ -70,6 +68,6 @@
 
 ## 版权声明
 
-本仓库代码遵循 MIT 协议
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnaiba%2Fnocd.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnaiba%2Fnocd?ref=badge_large)
 
-Copy &copy; 2018 Naiba
+Copy &copy; 2017-2018 Naiba
