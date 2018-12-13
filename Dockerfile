@@ -6,7 +6,7 @@ COPY . .
 RUN go get -u github.com/tmthrgd/go-bindata/... \
     && cd cmd/web \
     && go-bindata resource/... \
-    && go build
+    && go build -ldflags="-s -w"
 
 FROM alpine:latest
 RUN echo http://dl-2.alpinelinux.org/alpine/edge/community/ >> /etc/apk/repositories \
