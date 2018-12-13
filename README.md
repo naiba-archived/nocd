@@ -4,6 +4,8 @@
 
 **NoCD** 是一个 Go 实现的轻便可控的持续交付系统。
 
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnaiba%2Fnocd.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnaiba%2Fnocd?ref=badge_large)
+
 ## 界面预览
 
 | ![首页截图](https://github.com/naiba/nocd/raw/master/README/首页截图.png) | ![服务器管理](https://github.com/naiba/nocd/raw/master/README/服务器管理.png) | ![项目管理](https://github.com/naiba/nocd/raw/master/README/项目管理.png) |
@@ -60,10 +62,10 @@
 ## 常见问题
 
 1. 为什么我的部署脚本总是执行失败 或者 根本没有执行？<br>
-  `请检查您的 PATH 路径是否引入，建议提前 export 一下路径，自动部署的时候不会 source .bash_profile 。`
+    `请检查您的 PATH 路径是否引入，建议提前 export 一下路径，自动部署的时候不会 source .bash_profile 。`
 
 2. 如何保持后台运行？<br>
-  `可以使用 systemd 。`
+    `可以使用 systemd 。`
 
 
 ## 版权声明
