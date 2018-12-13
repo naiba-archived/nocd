@@ -1,6 +1,6 @@
 # NoCD 持续交付系统
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd) [![Build Status](https://travis-ci.com/naiba/nocd.svg?branch=master)](https://travis-ci.com/naiba/nocd)  [![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](http://opensource.org/licenses/MIT)  [![Version](https://img.shields.io/github/release/naiba/nocd/all.svg)](https://github.com/naiba/nocd/releases)
+[![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd)[![Build Status](https://travis-ci.com/naiba/nocd.svg?branch=master)](https://travis-ci.com/naiba/nocd)[![](https://images.microbadger.com/badges/image/naiba/nocd.svg)](https://microbadger.com/images/microscaling/microscaling "Get your own image badge on microbadger.com")[![](https://images.microbadger.com/badges/version/naiba/nocd.svg)](https://microbadger.com/images/microscaling/microscaling "Get your own version badge on microbadger.com")
 
 **NoCD** 是一个 Go 实现的轻便可控的持续交付系统。
 
@@ -18,8 +18,25 @@
 - 交付记录：可以查看部署记录，用户可以停止部署中的流程
 - 管理面板：查看系统状态，管理用户，管理部署中的流程
 
-
 ## 部署教程
+
+### Docker 部署
+
+1. 创建配置文件（如`/data/nocd`文件夹）
+
+   ```shell
+   nano /data/nocd/app.ini
+   ```
+
+   文件内容参考下面（ `web_listen = 0.0.0.0:8000` 配置不要改）
+
+2. 运行NoCD
+
+   ```
+   docker run -d --name=nocd -p 8000:8000 -v /data/nocd/:/data/conf naiba/nocd
+   ```
+
+### 源代码编译
 
 1. Clone 源代码
 
