@@ -1,6 +1,6 @@
 # NoCD 持续交付系统
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd)[![Build Status](https://travis-ci.com/naiba/nocd.svg?branch=master)](https://travis-ci.com/naiba/nocd)[![](https://images.microbadger.com/badges/image/naiba/nocd.svg)](https://microbadger.com/images/microscaling/microscaling "Get your own image badge on microbadger.com")[![](https://images.microbadger.com/badges/version/naiba/nocd.svg)](https://microbadger.com/images/microscaling/microscaling "Get your own version badge on microbadger.com")
+[![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd) [![Build Status](https://travis-ci.com/naiba/nocd.svg?branch=master)](https://travis-ci.com/naiba/nocd) [![](https://images.microbadger.com/badges/image/naiba/nocd.svg)](https://microbadger.com/images/microscaling/microscaling "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/naiba/nocd.svg)](https://microbadger.com/images/microscaling/microscaling "Get your own version badge on microbadger.com")
 
 **NoCD** 是一个 Go 实现的轻便可控的持续交付系统。
 
