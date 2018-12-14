@@ -1,6 +1,6 @@
 # NoCD 持续交付系统
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd) [![Build Status](https://travis-ci.com/naiba/nocd.svg?branch=master)](https://travis-ci.com/naiba/nocd) [![](https://images.microbadger.com/badges/image/naiba/nocd.svg)](https://microbadger.com/images/naiba/nocd "NoCD Docker Status") [![](https://images.microbadger.com/badges/version/naiba/nocd.svg)](https://microbadger.com/images/naiba/nocd "NoCD Docker Layer")
+[![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd) [![Build Status](https://travis-ci.com/naiba/nocd.svg?branch=master)](https://travis-ci.com/naiba/nocd) [![](https://images.microbadger.com/badges/image/naiba/nocd.svg)](https://microbadger.com/images/naiba/nocd) [![](https://img.shields.io/docker/pulls/naiba/nocd.svg)](https://microbadger.com/images/naiba/nocd)
 
 **NoCD** 是一个 Go 实现的轻便可控的持续交付系统。
 
@@ -10,7 +10,7 @@
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | ![交付记录](https://github.com/naiba/nocd/raw/master/README/交付记录.png) | ![管理中心](https://github.com/naiba/nocd/raw/master/README/查看日志.png) | ![查看日志](https://github.com/naiba/nocd/raw/master/README/管理中心.png)  |
 
-## 系统特色
+## 功能特色
 
 - 服务器：可以添加多个部署服务器。
 - 项目：支持解析 Gogs、GitHub、Gitlab、BitBucket 的 WebHook
@@ -18,9 +18,9 @@
 - 交付记录：可以查看部署记录，用户可以停止部署中的流程
 - 管理面板：查看系统状态，管理用户，管理部署中的流程
 
-## 部署教程
+## 部署指北
 
-### Docker 部署
+### Docker
 
 1. 创建配置文件（如`/data/nocd`文件夹）
 
@@ -36,11 +36,11 @@
    docker run -d --name=nocd -p 8000:8000 -v /data/nocd/:/data/conf naiba/nocd
    ```
 
-### 源代码编译
+### 源码编译
 
 1. Clone 源代码
 
-2. 进入应用目录 `nocd/cmd/web`
+2. 进入应用目录 `cd nocd/cmd/web`
 
 3. 打包资源文件并编译
 
@@ -76,11 +76,15 @@
 
 ## 常见问题
 
-1. 为什么我的部署脚本总是执行失败 或者 根本没有执行？<br>
-    `请检查您的 PATH 路径是否引入，建议提前 export 一下路径，自动部署的时候不会 source .bash_profile 。`
+1. 为什么我的部署脚本总是执行失败 或者 根本没有执行？
+
+    > 请检查您的 PATH 路径是否引入，建议提前 export 一下路径，自动部署的时候不会
+    >
+    > `source .bash_profile`。
 
 2. 如何保持后台运行？<br>
-    `可以使用 systemd 。`
+
+    > 可以使用` systemd` 。 更推荐使用docker方式运行。
 
 
 ## 版权声明
