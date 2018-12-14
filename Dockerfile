@@ -18,5 +18,5 @@ COPY --from=binarybuilder /go/src/github.com/naiba/nocd/cmd/web/web ./nocd
 
 # Configure Docker Container
 VOLUME ["/data/conf"]
-EXPOSE 8000 8000
+EXPOSE 8000
 CMD ["/data/nocd"]
