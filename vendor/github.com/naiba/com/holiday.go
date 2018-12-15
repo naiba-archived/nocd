@@ -1,13 +1,20 @@
 package com
 
 import (
-	"time"
 	"fmt"
+	"time"
 )
 
+//HolidayOvertimeWork 法定加班
 const HolidayOvertimeWork = 0
+
+//HolidayWorkingDay 工作日
 const HolidayWorkingDay = 1
+
+//HolidayWeekend 周末
 const HolidayWeekend = 2
+
+//HolidayGov 法定节假日
 const HolidayGov = 3
 
 var govHolidayList = map[string]int{
@@ -49,19 +56,19 @@ var govHolidayList = map[string]int{
 	"1007": HolidayGov,
 }
 
+//IsHoliday 中国法定节假日
 func IsHoliday(t time.Time) int {
 	mark := fmt.Sprintf(`%0.2d`, t.Month()) + fmt.Sprintf(`%0.2d`, t.Day())
 	if is, has := govHolidayList[mark]; has {
 		return is
-	} else {
-		if IsWeekend(t) {
-			return HolidayWeekend
-		} else {
-			return HolidayWorkingDay
-		}
 	}
+	if IsWeekend(t) {
+		return HolidayWeekend
+	}
+	return HolidayWorkingDay
 }
 
+//IsWeekend 周末判断
 func IsWeekend(t time.Time) bool {
 	if t.Weekday() == time.Saturday || t.Weekday() == time.Sunday {
 		return true

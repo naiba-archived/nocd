@@ -1,12 +1,13 @@
 package com
 
 import (
-	"os"
-	"net/http"
-	"io"
 	"fmt"
+	"io"
+	"net/http"
+	"os"
 )
 
+//Downloader simple http downloader
 func Downloader(url, save string) error {
 
 	// Create the file
