@@ -45,7 +45,7 @@
 3. 打包资源文件并编译
 
    ```shell
-   go get -u github.com/tmthrgd/go-bindata/...
+   go get -u github.com/tmthrgd/go-bindata/go-bindata
    go-bindata resource/...
    go build
    ```
