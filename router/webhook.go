@@ -11,17 +11,18 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	client "github.com/gogits/go-gogs-client"
+	client "github.com/gogs/go-gogs-client"
 	"gopkg.in/go-playground/webhooks.v3"
 	"gopkg.in/go-playground/webhooks.v3/bitbucket"
 	"gopkg.in/go-playground/webhooks.v3/github"
 	"gopkg.in/go-playground/webhooks.v3/gitlab"
 	"gopkg.in/go-playground/webhooks.v3/gogs"
 
+	"time"
+
 	"github.com/naiba/nocd"
 	"github.com/naiba/nocd/utils/ftqq"
 	"github.com/naiba/nocd/utils/ssh"
-	"time"
 )
 
 var webHookSQLIndex map[string]string

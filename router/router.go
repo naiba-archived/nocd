@@ -22,6 +22,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/utrack/gin-csrf"
 	"gopkg.in/go-playground/validator.v8"
+
 	// sqlite支持
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 	"github.com/naiba/com"
