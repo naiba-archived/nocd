@@ -12,3 +12,4 @@ script:
   - go test -v -race ./...
   - cd cmd/web
   - go build
+  - docker build -t naiba/nocd .
