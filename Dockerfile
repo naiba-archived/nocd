@@ -3,7 +3,7 @@ FROM golang:alpine AS binarybuilder
 RUN apk --no-cache --no-progress add --virtual build-deps build-base git linux-pam-dev
 WORKDIR /go/src/github.com/naiba/nocd/
 COPY . .
-RUN go get -u github.com/tmthrgd/go-bindata/... \
+RUN go get -u github.com/tmthrgd/go-bindata/go-bindata \
     && cd cmd/web \
     && go-bindata resource/... \
     && go build -ldflags="-s -w"

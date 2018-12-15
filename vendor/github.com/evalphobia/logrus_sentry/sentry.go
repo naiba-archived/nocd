@@ -203,7 +203,11 @@ func (hook *SentryHook) Fire(entry *logrus.Entry) error {
 			if currentStacktrace == nil {
 				currentStacktrace = raven.NewStacktrace(stConfig.Skip, stConfig.Context, stConfig.InAppPrefixes)
 			}
-			exc := raven.NewException(errors.Cause(err), currentStacktrace)
+			cause := errors.Cause(err)
+			if cause == nil {
+				cause = err
+			}
+			exc := raven.NewException(cause, currentStacktrace)
 			if !stConfig.SendExceptionType {
 				exc.Type = ""
 			}
@@ -309,7 +313,7 @@ func (hook *SentryHook) convertStackTrace(st errors.StackTrace) *raven.Stacktrac
 		pc := uintptr(stFrames[i])
 		fn := runtime.FuncForPC(pc)
 		file, line := fn.FileLine(pc)
-		frame := raven.NewStacktraceFrame(pc, file, line, stConfig.Context, stConfig.InAppPrefixes)
+		frame := raven.NewStacktraceFrame(pc, fn.Name(), file, line, stConfig.Context, stConfig.InAppPrefixes)
 		if frame != nil {
 			frames = append(frames, frame)
 		}

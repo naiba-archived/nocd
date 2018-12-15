@@ -28,7 +28,7 @@ func serveOauth2(r *gin.Engine) {
 	{
 		oauth2router.POST("/login", func(c *gin.Context) {
 			session := sessions.Default(c)
-			oauthToken := com.RandString(18)
+			oauthToken := com.RandomString(18)
 			session.Set("oauth_token", oauthToken)
 			session.Save()
 			c.Redirect(http.StatusMovedPermanently, oauthConf.AuthCodeURL(oauthToken, oauth2.AccessTypeOnline))

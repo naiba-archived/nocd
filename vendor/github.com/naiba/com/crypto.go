@@ -1,14 +1,16 @@
 package com
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"crypto/aes"
 	"crypto/cipher"
-	"errors"
+	"crypto/md5"
 	"crypto/rand"
+	"encoding/hex"
+	"errors"
+	"fmt"
 )
 
+//MD5 md5 encrypt
 func MD5(text string) string {
 	hash := md5.New()
 	hash.Write([]byte(text))
@@ -50,7 +52,7 @@ func AESGCMDecrypt(key, ciphertext []byte) ([]byte, error) {
 
 	size := gcm.NonceSize()
 	if len(ciphertext)-size <= 0 {
-		return nil, errors.New("Ciphertext is empty")
+		return nil, errors.New(fmt.Sprint("Ciphertext is empty"))
 	}
 
 	nonce := ciphertext[:size]
