@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	client "github.com/gogs/go-gogs-client"
@@ -120,6 +121,9 @@ func parsePayloadInfo(payload interface{}) (string, string) {
 		p := payload.(github.PushPayload).Pusher
 		who = p.Name + "(" + p.Email + ")"
 		branch = payload.(github.PushPayload).Ref
+		if strings.HasPrefix(branch, "refs/heads/") {
+			branch = branch[11:]
+		}
 		break
 
 	case bitbucket.PullRequestMergedPayload:
