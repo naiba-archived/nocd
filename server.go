@@ -14,7 +14,7 @@ type Server struct {
 	Name      string     `form:"name" binding:"required,min=1,max=12"`
 	Address   string     `form:"address" binding:"required,address,min=1,max=30"`
 	Port      int        `form:"port" binding:"required,min=1"`
-	Login     string     `form:"login" binding:"required,alphanum,min=1,max=30"`
+	Login     string     `form:"login"`
 	Status    int
 }
 
