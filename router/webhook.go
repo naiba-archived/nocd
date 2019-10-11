@@ -119,7 +119,7 @@ func parsePayloadInfo(payload interface{}) (string, string) {
 	case github.PushPayload:
 		p := payload.(github.PushPayload).Pusher
 		who = p.Name + "(" + p.Email + ")"
-		branch = payload.(github.PushPayload).Ref[11:]
+		branch = payload.(github.PushPayload).Ref
 		break
 
 	case bitbucket.PullRequestMergedPayload:
