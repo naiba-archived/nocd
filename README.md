@@ -1,6 +1,6 @@
 # NoCD 持续交付系统
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/naiba/nocd)](https://goreportcard.com/report/github.com/naiba/nocd) ![构建状态](https://github.com/naiba/nocd/workflows/Build%20Docker%20Image/badge.svg)
+[![GolangCI](https://golangci.com/badges/github.com/naiba/nocd.svg)](https://golangci.com/r/github.com/naiba/nocd) ![构建状态](https://github.com/naiba/nocd/workflows/Build%20Docker%20Image/badge.svg)
 
 **NoCD** 是一个 Go 实现的轻便可控的持续交付系统。
 
