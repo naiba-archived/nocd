@@ -14,6 +14,6 @@ jobs:
         env:
           DockerPassword: ${{ secrets.PACKAGE_TOKEN }}
         run: |
-          docker build --no-cache -t docker.pkg.github.com/naiba/nocd/app .
+          docker build --no-cache -t docker.pkg.github.com/naiba/dockerfiles/nocd .
           docker login -u naiba -p $DockerPassword docker.pkg.github.com
-          docker push docker.pkg.github.com/naiba/nocd/app
+          docker push docker.pkg.github.com/naiba/dockerfiles/nocd
