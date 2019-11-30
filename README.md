@@ -32,8 +32,8 @@
 
 2. 运行NoCD
 
-   ```
-   docker run -d --name=nocd -p 8000:8000 -v /data/nocd/:/data/conf naiba/nocd
+   ```shell
+   docker run -d --name=nocd -p 8000:8000 -v /data/nocd/:/data/conf docker.pkg.github.com/naiba/dockerfiles/nocd:latest
    ```
 
 ### 源码编译
