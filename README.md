@@ -45,8 +45,6 @@
 3. 打包资源文件并编译
 
    ```shell
-   go get -u github.com/tmthrgd/go-bindata/go-bindata
-   go-bindata resource/...
    go build
    ```
 
@@ -63,7 +61,7 @@
    [third_party]
    github_oauth2_client_id = example
    github_oauth2_client_secret = example
-   sentry_dsn = "https://example:xx@example.io/"
+   sentry_dsn = "https://example:xx@example.io/project_id"
    ```
 
 5. 运行
@@ -91,4 +89,4 @@
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnaiba%2Fnocd.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnaiba%2Fnocd?ref=badge_large)
 
-Copy &copy; 2017-2019 Naiba
+Copy &copy; 2017-2020 Naiba

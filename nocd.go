@@ -1,16 +1,17 @@
 /*
- * Copyright (c) 2018, 奶爸<1@5.nu>
+ * Copyright (c) 2017 - 2020, 奶爸<hi@nai.ba>
  * All rights reserved.
  */
 
 package nocd
 
 import (
+	"runtime"
+	"time"
+
 	"github.com/evalphobia/logrus_sentry"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/ini.v1"
-	"runtime"
-	"time"
 )
 
 //mLog of sentry logger

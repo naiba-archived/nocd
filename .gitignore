@@ -1,6 +1,4 @@
 /.idea
 /cmd/web/web
 /cmd/web/conf
-/cmd/web/bindata.go
-/build.sh
 .DS_Store

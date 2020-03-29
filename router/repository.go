@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 奶爸<1@5.nu>
+ * Copyright (c) 2017 - 2020, 奶爸<hi@nai.ba>
  * All rights reserved.
  */
 
@@ -7,12 +7,13 @@ package router
 
 import (
 	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/naiba/com"
 	"github.com/naiba/nocd"
 	"github.com/naiba/nocd/utils/mgin"
-	"net/http"
-	"time"
 )
 
 func serveRepository(r *gin.Engine) {

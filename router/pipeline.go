@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 奶爸<1@5.nu>
+ * Copyright (c) 2017 - 2020, 奶爸<hi@nai.ba>
  * All rights reserved.
  */
 
@@ -7,13 +7,14 @@ package router
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"github.com/naiba/nocd"
-	"github.com/naiba/nocd/utils/mgin"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/naiba/nocd"
+	"github.com/naiba/nocd/utils/mgin"
 )
 
 func servePipeline(r *gin.Engine) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 奶爸<1@5.nu>
+ * Copyright (c) 2017 - 2020, 奶爸<hi@nai.ba>
  * All rights reserved.
  */
 
@@ -12,14 +12,16 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"golang.org/x/crypto/ssh"
 	"net"
 	"strings"
 	"time"
 
+	"golang.org/x/crypto/ssh"
+
+	"io"
+
 	"github.com/naiba/nocd"
 	"github.com/pkg/errors"
-	"io"
 )
 
 //GenKeyPair 创建密钥对

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 奶爸<1@5.nu>
+ * Copyright (c) 2017 - 2020, 奶爸<hi@nai.ba>
  * All rights reserved.
  */
 
@@ -44,7 +44,7 @@ func AuthMiddleware(userService nocd.UserService) gin.HandlerFunc {
 			}
 		}
 		c.Set(CtxIsLogin, login)
-		c.Header("X-Owner", "Naiba(1@5.nu)")
+		c.Header("X-Owner", "Naiba(hi@nai.ba)")
 	}
 }
 

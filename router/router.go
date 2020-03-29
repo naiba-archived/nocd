@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018, 奶爸<1@5.nu>
+ * Copyright (c) 2017 - 2020, 奶爸<hi@nai.ba>
  * All rights reserved.
  */
 
@@ -20,7 +20,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/jinzhu/gorm"
-	"github.com/utrack/gin-csrf"
+	csrf "github.com/utrack/gin-csrf"
 	"gopkg.in/go-playground/validator.v8"
 
 	// sqlite支持

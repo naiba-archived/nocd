@@ -1,14 +1,15 @@
 /*
- * Copyright (c) 2018, 奶爸<1@5.nu>
+ * Copyright (c) 2017 - 2020, 奶爸<hi@nai.ba>
  * All rights reserved.
  */
 
 package mgin
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/utrack/gin-csrf"
 	"html/template"
+
+	"github.com/gin-gonic/gin"
+	csrf "github.com/utrack/gin-csrf"
 
 	"github.com/naiba/nocd"
 )

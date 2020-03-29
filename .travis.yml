@@ -3,10 +3,6 @@ go:
   - master
 before_install:
   - go get golang.org/x/lint/golint
-  - go get -u github.com/tmthrgd/go-bindata/go-bindata
-  - cd cmd/web
-  - go-bindata resource/...
-  - cd ../../
 script:
   - go list ./... | xargs -L1 golint
   - go test -v -race ./...

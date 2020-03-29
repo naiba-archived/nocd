@@ -1,15 +1,16 @@
 /*
- * Copyright (c) 2018, 奶爸<1@5.nu>
+ * Copyright (c) 2017 - 2020, 奶爸<hi@nai.ba>
  * All rights reserved.
  */
 
 package admin
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/naiba/nocd/utils/mgin"
 	"net/http"
 	"runtime"
+
+	"github.com/gin-gonic/gin"
+	"github.com/naiba/nocd/utils/mgin"
 )
 
 //Index 管理面板首页

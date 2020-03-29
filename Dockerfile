@@ -3,9 +3,7 @@ FROM golang:alpine AS binarybuilder
 RUN apk --no-cache --no-progress add --virtual build-deps build-base git linux-pam-dev
 WORKDIR /go/src/github.com/naiba/nocd/
 COPY . .
-RUN go get -u github.com/tmthrgd/go-bindata/go-bindata \
-    && cd cmd/web \
-    && go-bindata resource/... \
+RUN cd cmd/web \
     && go build -ldflags="-s -w"
 
 FROM alpine:latest
@@ -14,6 +12,7 @@ RUN echo http://dl-2.alpinelinux.org/alpine/edge/community/ >> /etc/apk/reposito
     tzdata
 # Copy binary to container
 WORKDIR /data
+ADD cmd/web/resource resource
 COPY --from=binarybuilder /go/src/github.com/naiba/nocd/cmd/web/web ./nocd
 
 # Configure Docker Container
