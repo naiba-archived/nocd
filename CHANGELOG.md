@@ -1,8 +1,9 @@
 # Changelog
 
-## govendor --> `go mod` (29/3/2020)
+## Breaking Changes (29/3/2020)
 
-Improve code base
+- move `govender` to `go mod`
+- add custom webhook
 
 ## Ready for Production use (13/12/2018)
 

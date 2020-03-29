@@ -14,7 +14,7 @@
 
 - 服务器：可以添加多个部署服务器。
 - 项目：支持解析 Gogs、GitHub、Gitlab、BitBucket 的 WebHook
-- 通知：部署成功或失败经 `Server酱` 推送到您的微信
+- 通知：自定义 Webhook 可以通过 钉钉、Server酱、WxPusher 等服务推送通知。
 - 交付记录：可以查看部署记录，用户可以停止部署中的流程
 - 管理面板：查看系统状态，管理用户，管理部署中的流程
 
@@ -80,13 +80,12 @@
     >
     > `source .bash_profile`。
 
-2. 如何保持后台运行？<br>
+2. 如何保持后台运行？
 
-    > 可以使用` systemd` 。 更推荐使用docker方式运行。
+    > 可以使用 `systemd` 。 更推荐使用docker方式运行。
 
-
-## 版权声明
+## License
 
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnaiba%2Fnocd.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnaiba%2Fnocd?ref=badge_large)
 
-Copy &copy; 2017-2020 Naiba
+Copy &copy; 2017-2020 naiba
