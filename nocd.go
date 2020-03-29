@@ -37,15 +37,17 @@ func InitSysConfig(file string) {
 		mLog.Panicln(err)
 	}
 	// initial sentry dsn
-	hook, err := logrus_sentry.NewSentryHook(Conf.Section("third_party").Key("sentry_dsn").String(), []log.Level{
-		log.PanicLevel,
-		log.FatalLevel,
-		log.ErrorLevel,
-	})
-	if err == nil {
-		mLog.Hooks.Add(hook)
-	} else {
-		mLog.Panicln(err)
+	if Conf.Section("third_party").Key("sentry_dsn").String() != "" {
+		hook, err := logrus_sentry.NewSentryHook(Conf.Section("third_party").Key("sentry_dsn").String(), []log.Level{
+			log.PanicLevel,
+			log.FatalLevel,
+			log.ErrorLevel,
+		})
+		if err == nil {
+			mLog.Hooks.Add(hook)
+		} else {
+			mLog.Panicln(err)
+		}
 	}
 	// set timezone
 	Loc, err = time.LoadLocation(Conf.Section("nocd").Key("loc").String())

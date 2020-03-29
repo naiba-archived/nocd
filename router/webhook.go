@@ -6,13 +6,20 @@
 package router
 
 import (
+	"bytes"
+	"crypto/tls"
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
 	"net/http"
+	"net/url"
 	"reflect"
 	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	client "github.com/gogs/go-gogs-client"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/go-playground/webhooks.v3"
 	"gopkg.in/go-playground/webhooks.v3/bitbucket"
 	"gopkg.in/go-playground/webhooks.v3/github"
@@ -22,7 +29,6 @@ import (
 	"time"
 
 	"github.com/naiba/nocd"
-	"github.com/naiba/nocd/utils/ftqq"
 	"github.com/naiba/nocd/utils/ssh"
 )
 
@@ -161,7 +167,7 @@ func deploy(pipeline nocd.Pipeline, who string) {
 	// 部署完成
 	pipelogService.Update(&deployLog)
 
-	if (deployLog.Status == nocd.PipeLogStatusSuccess && !pipeline.User.PushSuccess) || len(pipeline.User.Sckey) < 1 {
+	if (deployLog.Status == nocd.PipeLogStatusSuccess && !pipeline.User.PushSuccess) || len(pipeline.User.WebhookURL) < 1 {
 		return
 	}
 
@@ -186,5 +192,71 @@ func deploy(pipeline nocd.Pipeline, who string) {
 		status = "未知错误"
 	}
 
-	ftqq.SendMessage(pipeline.User.Sckey, "[NoCD]"+pipeline.Name+"-"+status, "# 部署日志\r\n```\r\n"+deployLog.Log+"\r\n```")
+	transCfg := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: pipeline.User.VerifySSL},
+	}
+	client := &http.Client{Transport: transCfg}
+	reqURL, err := url.Parse(pipeline.User.WebhookURL)
+	if err != nil {
+		nocd.Logger().Log(logrus.ErrorLevel, err)
+		return
+	}
+	var kv map[string]string
+	err = json.Unmarshal([]byte(pipeline.User.RequestBody), &kv)
+	if err != nil {
+		nocd.Logger().Log(logrus.ErrorLevel, err)
+		return
+	}
+	var resp *http.Response
+	if pipeline.User.RequestMethod == nocd.RequestMethodGet {
+		// GET 请求的 Webhook
+		for k, v := range kv {
+			reqURL.Query().Set(k, replaceParamsInString(v, status, &pipeline, &deployLog))
+		}
+		resp, err = client.Get(reqURL.String())
+	} else {
+		// POST 请求的 Webhook
+		if pipeline.User.RequestType == nocd.RequestTypeForm {
+			params := url.Values{}
+			for k, v := range kv {
+				params.Add(k, replaceParamsInString(v, status, &pipeline, &deployLog))
+			}
+			resp, err = client.PostForm(reqURL.String(), params)
+		} else {
+			for k, v := range kv {
+				kv[k] = replaceParamsInString(v, status, &pipeline, &deployLog)
+			}
+			jsonValue, err := json.Marshal(kv)
+			if err != nil {
+				nocd.Logger().Log(logrus.ErrorLevel, err)
+				return
+			}
+			resp, err = client.Post(reqURL.String(), "application/json", bytes.NewBuffer(jsonValue))
+		}
+	}
+	if err != nil {
+		nocd.Logger().Log(logrus.ErrorLevel, err)
+		return
+	}
+
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			nocd.Logger().Log(logrus.ErrorLevel, err)
+		}
+		nocd.Logger().Log(logrus.ErrorLevel, string(body))
+	}
+}
+
+func replaceParamsInString(str string, status string, pipeline *nocd.Pipeline, pipelog *nocd.PipeLog) string {
+	var dist string
+	dist = strings.ReplaceAll(str, "#Pusher#", pipelog.Pusher)
+	dist = strings.ReplaceAll(str, "#Log#", pipelog.Log)
+	dist = strings.ReplaceAll(str, "#Status#", status)
+	dist = strings.ReplaceAll(str, "#PipelineName#", pipeline.Name)
+	dist = strings.ReplaceAll(str, "#PipelineID#", fmt.Sprintf("%d", pipeline.ID))
+	dist = strings.ReplaceAll(str, "#StartedAt#", pipelog.StartedAt.String())
+	dist = strings.ReplaceAll(str, "#StoppedAt#", pipelog.StoppedAt.String())
+	return dist
 }
