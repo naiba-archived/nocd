@@ -12,7 +12,6 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"net"
 	"strings"
 	"time"
 
@@ -48,8 +47,9 @@ func GenKeyPair() (string, string, error) {
 }
 
 //CheckLogin 检查服务器是否存在
-func CheckLogin(address string, port int, privateKey string, login string) error {
-	conn, err := dial(address, login, privateKey, port)
+func CheckLogin(server nocd.Server) error {
+	return nil
+	conn, err := dial(server)
 	if err != nil {
 		nocd.Logger().Infoln("ssh.CheckLogin", err)
 		return errors.New("连接服务器失败")
@@ -61,7 +61,7 @@ func CheckLogin(address string, port int, privateKey string, login string) error
 	}
 	defer session.Close()
 	opt, err := session.Output("whoami")
-	if strings.TrimSpace(string(opt)) != login {
+	if strings.TrimSpace(string(opt)) != server.Login {
 		nocd.Logger().Infoln(string(opt) + "|" + err.Error())
 		return errors.New("用户名验证失败")
 	}
@@ -98,7 +98,7 @@ func Deploy(pipeline nocd.Pipeline, log *nocd.PipeLog) {
 		nocd.Logger().Debugln(log.ID, " deploy stop")
 	}()
 
-	conn, err := dial(pipeline.Server.Address, pipeline.Server.Login, pipeline.User.PrivateKey, pipeline.Server.Port)
+	conn, err := dial(pipeline.Server)
 	if err != nil {
 		nocd.Logger().Debugln(err)
 		run.Log.Status = nocd.PipeLogStatusErrorServerConn
@@ -193,20 +193,35 @@ func appendLog(start time.Time) string {
 	return fmt.Sprintf("%02.f", num/60/60) + ":" + fmt.Sprintf("%02d", int(num)%360/60) + ":" + fmt.Sprintf("%02d", int(num)%60) + "#"
 }
 
-func dial(address, user, pk string, port int) (*ssh.Client, error) {
-	privateKey, err := ssh.ParsePrivateKey([]byte(pk))
-	if err != nil {
-		nocd.Logger().Debug(err, pk)
-		return nil, errors.New("解析用户私钥失败")
+func dial(server nocd.Server) (*ssh.Client, error) {
+	var config *ssh.ClientConfig
+	switch server.LoginType {
+	case nocd.ServerLoginTypePassword:
+		config = &ssh.ClientConfig{
+			User:    server.Login,
+			Timeout: time.Second * 10,
+			Auth: []ssh.AuthMethod{
+				ssh.Password(server.Password),
+			},
+			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+		}
+	case nocd.ServerLoginTypePrivateKey:
+		privateKey, err := ssh.ParsePrivateKey([]byte(server.Password))
+		if err != nil {
+			nocd.Logger().Debug(err, server.Password)
+			return nil, errors.New("解析用户私钥失败")
+		}
+		config = &ssh.ClientConfig{
+			User:    server.Login,
+			Timeout: time.Second * 10,
+			Auth: []ssh.AuthMethod{
+				ssh.PublicKeys(privateKey),
+			},
+			HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+		}
+	default:
+		return nil, errors.New("认证方式有误")
 	}
-	return ssh.Dial("tcp", fmt.Sprintf("%s:%d", address, port), &ssh.ClientConfig{
-		User:    user,
-		Timeout: time.Second * 10,
-		Auth: []ssh.AuthMethod{
-			ssh.PublicKeys(privateKey),
-		},
-		HostKeyCallback: func(hostname string, remote net.Addr, key ssh.PublicKey) error {
-			return nil
-		},
-	})
+
+	return ssh.Dial("tcp", fmt.Sprintf("%s:%d", server.Address, server.Port), config)
 }

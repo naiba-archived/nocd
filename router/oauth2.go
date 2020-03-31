@@ -18,7 +18,6 @@ import (
 	"github.com/naiba/com"
 	"github.com/naiba/nocd"
 	"github.com/naiba/nocd/utils/mgin"
-	"github.com/naiba/nocd/utils/ssh"
 	"golang.org/x/oauth2"
 )
 
@@ -69,7 +68,6 @@ func serveOauth2(r *gin.Engine) {
 			if err != nil {
 				// 首次登录
 				if err == gorm.ErrRecordNotFound {
-					pub, private, err := ssh.GenKeyPair()
 					if err != nil {
 						nocd.Logger().Errorln(err)
 						c.String(http.StatusInternalServerError, "生成私钥失败，请再次常试")
@@ -83,8 +81,6 @@ func serveOauth2(r *gin.Engine) {
 					} else {
 						u.GName = u.GLogin
 					}
-					u.Pubkey = pub
-					u.PrivateKey = private
 					if userService.Create(u) != nil {
 						nocd.Logger().Errorln(err)
 						c.String(http.StatusInternalServerError, "数据库错误")

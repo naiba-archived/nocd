@@ -24,7 +24,7 @@ func CommonData(c *gin.Context, csrfToken bool, data gin.H) gin.H {
 	data["stat"] = nocd.GetStats()
 	data["domain"] = nocd.Conf.Section("nocd").Key("domain").String()
 	data["router"] = c.Request.RequestURI
-	data["GA_id"] = nocd.Conf.Section("nocd").Key("google_analysis").String()
+	data["GA_id"] = nocd.Conf.Section("third_party").Key("google_analysis").String()
 	isLogin := c.GetBool(CtxIsLogin)
 	data["isLogin"] = isLogin
 	if isLogin {

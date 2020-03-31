@@ -42,7 +42,7 @@
 
 2. 进入应用目录 `cd nocd/cmd/web`
 
-3. 打包资源文件并编译
+3. 编译二进制
 
    ```shell
    go build
@@ -52,16 +52,16 @@
 
    ```ini
    [nocd]
-   cookie_key_pair = example
+   cookie_key_pair = i_love_NoCD
    debug = true
-   domain = cd.git.cm
+   domain = your_domain_name # or ip:port
    web_listen = 0.0.0.0:8000
    loc = Asia/Shanghai
-   google_analysis = "NB-XXXXXX-1"
    [third_party]
+   google_analysis = "NB-XXXXXX-1" # optional
    github_oauth2_client_id = example
    github_oauth2_client_secret = example
-   sentry_dsn = "https://example:xx@example.io/project_id"
+   sentry_dsn = "https://example:xx@example.io/project_id" # optional
    ```
 
 5. 运行
@@ -70,7 +70,7 @@
    ./web
    ```
 
-6. 在 `GitHub` 设置回调：`https://cd.git.cm/oauth2/callback`
+6. 在 `GitHub` 设置回调：`http(s)://your_domain_name/oauth2/callback`
 
 ## 常见问题
 

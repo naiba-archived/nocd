@@ -36,7 +36,7 @@ func serverHandler(c *gin.Context) {
 			return
 		}
 		if method == http.MethodPost {
-			if err := ssh.CheckLogin(s.Address, s.Port, user.PrivateKey, s.Login); err != nil {
+			if err := ssh.CheckLogin(s); err != nil {
 				c.String(http.StatusForbidden, err.Error())
 				return
 			}
@@ -57,7 +57,7 @@ func serverHandler(c *gin.Context) {
 				return
 			}
 			if method == http.MethodPatch {
-				if err := ssh.CheckLogin(s.Address, s.Port, user.PrivateKey, s.Login); err != nil {
+				if err := ssh.CheckLogin(s); err != nil {
 					c.String(http.StatusForbidden, err.Error())
 					return
 				}
@@ -66,6 +66,8 @@ func serverHandler(c *gin.Context) {
 				server.Address = s.Address
 				server.Login = s.Login
 				server.Port = s.Port
+				server.LoginType = s.LoginType
+				server.Password = s.Password
 				if err := serverService.UpdateServer(&server); err != nil {
 					nocd.Logger().Errorln(err)
 					c.String(http.StatusInternalServerError, "数据库错误")

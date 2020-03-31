@@ -1,0 +1,52 @@
+{{define "components/addOrEditServer"}}
+<div class="modal fade" id="modalEditServer" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">管理服务器</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="formEditServer" method="post" onsubmit="return editServerHandler(isDelete)">
+                    <input id="formMethod" name="_method" type="hidden">
+                    <input id="inputID" name="id" type="hidden">
+                    <div class="form-group">
+                        <label for="inputName" class="col-form-label">备注名：</label>
+                        <input required name="name" type="text" class="form-control" id="inputName">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAddress" class="col-form-label">服务器地址：</label>
+                        <input required name="address" type="text" class="form-control" id="inputAddress">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPort" class="col-form-label">SSH 端口号：</label>
+                        <input required name="port" type="text" class="form-control" id="inputPort">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputLogin" class="col-form-label">SSH 用户名：</label>
+                        <input required name="login" type="text" class="form-control" id="inputLogin">
+                    </div>
+                    <div class="form-group">
+                        <label for="typeSelect">登录方式</label>
+                        <select name="login_type" class="form-control" id="typeSelect">
+                            <option value="1">密码</option>
+                            <option value="2">私钥</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordTextarea">密码或私钥</label>
+                        <textarea name="password" class="form-control" id="passwordTextarea" rows="3"></textarea>
+                    </div>
+                    {{.csrf_token}}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button id="btnSubmit" onclick="saveForm('#formEditServer')" class="btn btn-primary">管理</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

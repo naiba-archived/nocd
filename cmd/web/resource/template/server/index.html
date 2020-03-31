@@ -1,131 +1,44 @@
 {{define "server/index"}}
 {{template "common/header" .}}
 <div class="container">
-{{/*modal edit server START*/}}
-    <script>
-        var isDelete = '';
-    </script>
-    <div class="modal fade" id="modalEditServer" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">管理服务器</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+    <div class="alert alert-secondary">
+        <button type="submit" class="btn btn-secondary btn-block">添加服务器</button>
+    </div>
+    <div class="card-deck">
+        {{range $server := .servers}}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title limit-text-length"><i class="octicon octicon-server"></i>{{$server.Name}}
+                </h5>
+                <p class="card-text">
+                    服务器地址：<samp>{{$server.Address}}</samp><br>
+                    服务器端口：<samp>{{$server.Port}}</samp><br>
+                    登录用户名：<samp>{{$server.Login}}</samp>
+                </p>
+            </div>
+            <div class="card-footer d-flex justify-content-between">
+                <small class="text-muted p-2">
+                    <i class="octicon octicon-clock"></i>
+                    {{$log := LastServerLog .ID}}
+                    最后活动于{{TimeDiff $log.StoppedAt Now}}前
+                </small>
+                <div>
+                    <button class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalEditServer"
+                        data-delete="false" data-id="{{$server.ID}}" data-name="{{$server.Name}}"
+                        data-address="{{$server.Address}}" data-port="{{$server.Port}}"
+                        data-login="{{$server.Login}}"><i class="octicon octicon-pencil"></i>
+                    </button>
+                    <button class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalEditServer"
+                        data-delete="true" data-id="{{$server.ID}}" data-name="{{$server.Name}}"
+                        data-address="{{$server.Address}}" data-port="{{$server.Port}}"
+                        data-login="{{$server.Login}}"><i class="octicon octicon-trashcan"></i>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form id="formEditServer" method="post" onsubmit="return editServerHandler(isDelete)">
-                        <input id="formMethod" name="_method" type="hidden">
-                        <input id="inputID" name="id" type="hidden">
-                        <div class="form-group">
-                            <label for="inputName" class="col-form-label">备注名：</label>
-                            <input required name="name" type="text" class="form-control" id="inputName">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputAddress" class="col-form-label">服务器地址：</label>
-                            <input required name="address" type="text" class="form-control" id="inputAddress">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputPort" class="col-form-label">SSH 端口号：</label>
-                            <input required name="port" type="text" class="form-control" id="inputPort">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputLogin" class="col-form-label">SSH 用户名：</label>
-                            <input required name="login" type="text" class="form-control" id="inputLogin">
-                        </div>
-                    {{.csrf_token}}
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button id="btnSubmit" onclick="saveForm('#formEditServer')" class="btn btn-primary">管理</button>
-                </div>
             </div>
         </div>
-    </div>
-{{/*modal edit server END*/}}
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">添加服务器</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">必须先在服务器添加公钥</h6>
-                    <form id="formAddServer" onsubmit="return addServerHandler()">
-                        <div class="form-group">
-                            <label for="inputAddress">服务器 IP 地址或域名</label>
-                            <input name="address" required type="text" class="form-control" id="inputAddress"
-                                   placeholder="mjj.cx 或 127.0.0.1">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputPort">SSH 端口号</label>
-                            <input name="port" required type="number" class="form-control" id="inputPort"
-                                   value="22">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputLogin">SSH 用户名</label>
-                            <input name="login" required type="text" class="form-control" id="inputLogin"
-                                   value="root">
-                        </div>
-                        <div class="form-group">
-                            <label for="inputName">备注名</label>
-                            <input name="name" required type="text" class="form-control" id="inputName"
-                                   placeholder="华北 s1">
-                        </div>
-                    {{.csrf_token}}
-                        <button type="submit" class="btn btn-primary btn-block"><i
-                                class="octicon octicon-plus"></i>添加服务器
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-8">
-            <div id="alertServerConfig" class="alert alert-warning" role="alert">
-                <h5 class="alert-heading">服务器配置</h5>
-                <p>您必须将下面的公钥添加到服务器的<code>/home/user/.ssh/authorized_keys</code>中</p>
-                <label style="width: 100%">
-                    <textarea readonly class="form-control" rows="4">{{.user.Pubkey}}</textarea>
-                </label>
-            </div>
-            <div class="card-deck">
-            {{range $server := .servers}}
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title limit-text-length"><i
-                                class="octicon octicon-server"></i>{{$server.Name}}</h5>
-                        <p class="card-text">
-                            服务器地址：<samp>{{$server.Address}}</samp><br>
-                            服务器端口：<samp>{{$server.Port}}</samp><br>
-                            登录用户名：<samp>{{$server.Login}}</samp>
-                        </p>
-                    </div>
-                    <div class="card-footer d-flex justify-content-between">
-                        <small class="text-muted p-2">
-                            <i class="octicon octicon-clock"></i>
-                        {{$log := LastServerLog .ID}}
-                            最后活动于{{TimeDiff $log.StoppedAt Now}}前
-                        </small>
-                        <div>
-                            <button class="btn btn-sm btn-secondary" data-toggle="modal"
-                                    data-target="#modalEditServer" data-delete="false" data-id="{{$server.ID}}"
-                                    data-name="{{$server.Name}}"
-                                    data-address="{{$server.Address}}" data-port="{{$server.Port}}"
-                                    data-login="{{$server.Login}}"><i class="octicon octicon-pencil"></i>
-                            </button>
-                            <button class="btn btn-sm btn-secondary" data-toggle="modal"
-                                    data-target="#modalEditServer" data-delete="true" data-id="{{$server.ID}}"
-                                    data-name="{{$server.Name}}"
-                                    data-address="{{$server.Address}}" data-port="{{$server.Port}}"
-                                    data-login="{{$server.Login}}"><i class="octicon octicon-trashcan"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            {{end}}
-            </div>
-        </div>
+        {{end}}
     </div>
 </div>
+{{template "components/addOrEditServer" .}}
 {{template "common/footer" .}}
 {{end}}
