@@ -10,7 +10,11 @@ window.onload = function () {
     // clipboard
     var clipboard = new ClipboardJS('.copy-btn', {
         text: function (e) {
-            return e.getAttribute('data-text')
+            let extPrefix = '';
+            if (e.getAttribute('data-ext') == 'protocol_prefix') {
+                extPrefix = window.location.protocol + '//';
+            }
+            return extPrefix + e.getAttribute('data-text')
         }
     });
     clipboard.on('success', function () {
@@ -27,7 +31,7 @@ window.onload = function () {
         var modal = $("#listEventCheckbox");
         modal.empty();
         for (var k in platform) {
-            var container = $('<div/>', {class: 'form-check form-check-inline'});
+            var container = $('<div/>', { class: 'form-check form-check-inline' });
             $('<input/>', {
                 name: 'events[]',
                 class: 'form-check-input',
@@ -35,7 +39,7 @@ window.onload = function () {
                 id: 'ic' + k,
                 value: k
             }).appendTo(container);
-            $('<label/>', {class: 'form-check-label', for: 'ic' + k, text: platform[k]}).appendTo(container);
+            $('<label/>', { class: 'form-check-label', for: 'ic' + k, text: platform[k] }).appendTo(container);
             container.appendTo(modal);
         }
         // 是否是添加
@@ -150,8 +154,8 @@ function stopDeploy(fromAdmin) {
 }
 
 function logout() {
-    $.removeCookie("uid", {path: '/'});
-    $.removeCookie("token", {path: '/'});
+    $.removeCookie("uid", { path: '/' });
+    $.removeCookie("token", { path: '/' });
     window.location.href = "/"
 }
 

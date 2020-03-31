@@ -8,8 +8,7 @@
     <footer class="pt-4 pt-md-5 border-top">
         <div class="row">
             <div class="col-12 col-md">
-                <img class="mb-2" src="/static/image/logo.png" alt="" width="24"
-                     height="24">
+                <img class="mb-2" src="/static/image/logo.png" alt="" width="24" height="24">
                 <small class="d-block mb-3 text-muted">&copy; 2017-2020 NoCD</small>
             </div>
             <div class="col-6 col-md">
@@ -41,7 +40,8 @@
 <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.0/dist/clipboard.min.js"></script>
 <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="/static/js/nocd.js?14"></script>
+<script type="text/javascript" src="/static/js/nocd.js"></script>
+{{if .GA_id}}
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id={{.GA_id}}"></script>
 <script>
@@ -53,9 +53,11 @@
 
     gtag('js', new Date());
 
-    gtag('config', {{.GA_id}});
+    gtag('config', {{.GA_id }});
 </script>
+{{end}}
 
 </body>
+
 </html>
 {{end}}
