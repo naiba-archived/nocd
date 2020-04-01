@@ -6,14 +6,21 @@
 package router
 
 import (
+	"bytes"
+	"crypto/tls"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"net/url"
 	"reflect"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 	client "github.com/gogs/go-gogs-client"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/go-playground/webhooks.v3"
 	"gopkg.in/go-playground/webhooks.v3/bitbucket"
 	"gopkg.in/go-playground/webhooks.v3/github"
@@ -105,6 +112,7 @@ func dispatchWebHook(id uint) webhooks.ProcessPayloadFunc {
 		for _, p := range ps {
 			if err := pipelineService.Server(&p); err == nil {
 				pipelineService.User(&p)
+				pipelineService.Webhooks(&p)
 				go deploy(p, who)
 			} else {
 				nocd.Logger().Errorln(err)
@@ -161,10 +169,6 @@ func deploy(pipeline nocd.Pipeline, who string) {
 	// 部署完成
 	pipelogService.Update(&deployLog)
 
-	// if (deployLog.Status == nocd.PipeLogStatusSuccess && !pipeline.User.PushSuccess) || len(pipeline.User.WebhookURL) < 1 {
-	// 	return
-	// }
-
 	status := ""
 	switch deployLog.Status {
 	case nocd.PipeLogStatusSuccess:
@@ -185,63 +189,88 @@ func deploy(pipeline nocd.Pipeline, who string) {
 	default:
 		status = "未知错误"
 	}
-	fmt.Println(status)
 
-	// transCfg := &http.Transport{
-	// 	TLSClientConfig: &tls.Config{InsecureSkipVerify: pipeline.User.VerifySSL},
-	// }
-	// client := &http.Client{Transport: transCfg}
-	// reqURL, err := url.Parse(pipeline.User.WebhookURL)
-	// if err != nil {
-	// 	nocd.Logger().Log(logrus.ErrorLevel, err)
-	// 	return
-	// }
-	// var kv map[string]string
-	// err = json.Unmarshal([]byte(pipeline.User.RequestBody), &kv)
-	// if err != nil {
-	// 	nocd.Logger().Log(logrus.ErrorLevel, err)
-	// 	return
-	// }
-	// var resp *http.Response
-	// if pipeline.User.RequestMethod == nocd.RequestMethodGet {
-	// 	// GET 请求的 Webhook
-	// 	for k, v := range kv {
-	// 		reqURL.Query().Set(k, replaceParamsInString(v, status, &pipeline, &deployLog))
-	// 	}
-	// 	resp, err = client.Get(reqURL.String())
-	// } else {
-	// 	// POST 请求的 Webhook
-	// 	if pipeline.User.RequestType == nocd.RequestTypeForm {
-	// 		params := url.Values{}
-	// 		for k, v := range kv {
-	// 			params.Add(k, replaceParamsInString(v, status, &pipeline, &deployLog))
-	// 		}
-	// 		resp, err = client.PostForm(reqURL.String(), params)
-	// 	} else {
-	// 		for k, v := range kv {
-	// 			kv[k] = replaceParamsInString(v, status, &pipeline, &deployLog)
-	// 		}
-	// 		jsonValue, err := json.Marshal(kv)
-	// 		if err != nil {
-	// 			nocd.Logger().Log(logrus.ErrorLevel, err)
-	// 			return
-	// 		}
-	// 		resp, err = client.Post(reqURL.String(), "application/json", bytes.NewBuffer(jsonValue))
-	// 	}
-	// }
-	// if err != nil {
-	// 	nocd.Logger().Log(logrus.ErrorLevel, err)
-	// 	return
-	// }
+	nocd.Logger().Debugln("正在触发Webhook", deployLog.ID)
+	var wg sync.WaitGroup
+	for i := 0; i < len(pipeline.Webhook); i++ {
+		wg.Add(1)
+		go procWebhook(&wg, pipeline.Webhook[i], status, &pipeline, &deployLog)
+	}
+	wg.Wait()
+	nocd.Logger().Debugln("Webhook 推送完成", deployLog.ID)
+}
 
-	// if resp.StatusCode < 200 || resp.StatusCode > 299 {
-	// 	defer resp.Body.Close()
-	// 	body, err := ioutil.ReadAll(resp.Body)
-	// 	if err != nil {
-	// 		nocd.Logger().Log(logrus.ErrorLevel, err)
-	// 	}
-	// 	nocd.Logger().Log(logrus.ErrorLevel, string(body))
-	// }
+func procWebhook(wg *sync.WaitGroup, w nocd.Webhook, status string, pipeline *nocd.Pipeline, deployLog *nocd.PipeLog) {
+	defer wg.Done()
+	var verifySSL, pushSuccess bool
+	// 检查 Webhook 状态
+	if w.Enable == nil || !*w.Enable {
+		return
+	}
+	if w.PushSuccess != nil && *w.PushSuccess {
+		pushSuccess = true
+	}
+	if !pushSuccess && deployLog.Status == nocd.PipeLogStatusSuccess {
+		return
+	}
+	if w.VerifySSL != nil && *w.VerifySSL {
+		verifySSL = true
+	}
+	transCfg := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: verifySSL},
+	}
+	client := &http.Client{Transport: transCfg, Timeout: time.Minute * 10}
+	reqURL, err := url.Parse(w.URL)
+	if err != nil {
+		nocd.Logger().Log(logrus.ErrorLevel, err)
+		return
+	}
+	var kv map[string]string
+	err = json.Unmarshal([]byte(w.RequestBody), &kv)
+	if err != nil {
+		nocd.Logger().Log(logrus.ErrorLevel, err)
+		return
+	}
+	var resp *http.Response
+	if w.RequestMethod == nocd.WebhookRequestMethodGET {
+		// GET 请求的 Webhook
+		for k, v := range kv {
+			reqURL.Query().Set(k, replaceParamsInString(v, status, pipeline, deployLog))
+		}
+		resp, err = client.Get(reqURL.String())
+	} else {
+		// POST 请求的 Webhook
+		if w.RequestType == nocd.WebhookRequestTypeForm {
+			params := url.Values{}
+			for k, v := range kv {
+				params.Add(k, replaceParamsInString(v, status, pipeline, deployLog))
+			}
+			resp, err = client.PostForm(reqURL.String(), params)
+		} else {
+			for k, v := range kv {
+				kv[k] = replaceParamsInString(v, status, pipeline, deployLog)
+			}
+			jsonValue, err := json.Marshal(kv)
+			if err != nil {
+				nocd.Logger().Log(logrus.ErrorLevel, err)
+				return
+			}
+			resp, err = client.Post(reqURL.String(), "application/json", bytes.NewBuffer(jsonValue))
+		}
+	}
+	if err != nil {
+		nocd.Logger().Log(logrus.ErrorLevel, err)
+		return
+	}
+
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			nocd.Logger().Log(logrus.ErrorLevel, err)
+		}
+		nocd.Logger().Log(logrus.ErrorLevel, string(body))
+	}
 }
 
 func replaceParamsInString(str string, status string, pipeline *nocd.Pipeline, pipelog *nocd.PipeLog) string {

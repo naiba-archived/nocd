@@ -36,4 +36,5 @@ type PipelineService interface {
 	GetPipelinesByRidAndEventAndBranch(rid uint, event string, branch string) ([]Pipeline, error)
 	Server(p *Pipeline) error
 	User(p *Pipeline) error
+	Webhooks(p *Pipeline) error
 }

@@ -78,3 +78,8 @@ func (ps *PipelineService) Server(p *nocd.Pipeline) error {
 func (ps *PipelineService) User(p *nocd.Pipeline) error {
 	return ps.DB.Model(p).Related(&p.User).Error
 }
+
+//Webhooks ..
+func (ps *PipelineService) Webhooks(p *nocd.Pipeline) error {
+	return ps.DB.Model(p).Related(&p.Webhook).Error
+}
