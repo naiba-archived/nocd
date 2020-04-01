@@ -28,8 +28,6 @@
                     href="/repository/"><i class="octicon octicon-repo"></i> 项目</a>
                 <a class="p-2 {{if HasPrefix .router "/pipelog/"}}text-dark{{else}}text-secondary{{end}}"
                     href="/pipelog/"><i class="octicon octicon-zap"></i> 交付</a>
-                <a class="p-2 {{if HasPrefix .router "/settings/"}}text-dark{{else}}text-secondary{{end}}"
-                    href="/settings/"><i class="octicon octicon-settings"></i> 配置</a>
             </nav>
             {{if .isLogin}}
             <div class="nav-item dropdown">

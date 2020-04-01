@@ -82,14 +82,14 @@ window.onload = function () {
         }
     });
 
-    $('#modalAddOrEditServer').on('show.bs.modal', function (event) {
+    $('#modalServer').on('show.bs.modal', function (event) {
         const button = $(event.relatedTarget)
         const server = button.parent().data('server')
         const method = button.data('method')
-        $('#modalAddOrEditServer').find('form').attr('method', method)
+        $('#modalServer').find('form').attr('method', method)
         switch (method) {
             case "post":
-                $("#modalAddOrEditServer").find("input,select,textarea").each(function () {
+                $("#modalServer").find("input,select,textarea").each(function () {
                     $(this).attr('disabled', false)
                 });
                 $("#btnSubmit").removeClass("btn-danger");
@@ -106,7 +106,7 @@ window.onload = function () {
                 break;
 
             case "delete":
-                $("#modalAddOrEditServer").find("input,select,textarea").each(function () {
+                $("#modalServer").find("input,select,textarea").each(function () {
                     $(this).attr('disabled', true)
                 });
                 $("#btnSubmit").removeClass("btn-secondary");
@@ -123,7 +123,7 @@ window.onload = function () {
                 break;
 
             case "patch":
-                $("#modalAddOrEditServer").find("input,select,textarea").each(function () {
+                $("#modalServer").find("input,select,textarea").each(function () {
                     $(this).attr('disabled', false)
                 });
                 $("#btnSubmit").removeClass("btn-secondary");
@@ -137,6 +137,78 @@ window.onload = function () {
                 $("#inputLogin").val(server.login);
                 $("#inputLoginType").val(server.login_type);
                 $("#inputPassword").text(server.password);
+                break
+
+            default:
+                break;
+        }
+    });
+
+    $('#modalWebhook').on('show.bs.modal', function (event) {
+        const modal = $('#modalWebhook')
+        const button = $(event.relatedTarget)
+        const webhook = button.parent().data('webhook')
+        const method = button.data('method')
+        $('#modalWebhook').find('form').attr('method', method)
+        modal.find("#checkVerifySSL").removeAttr('checked');
+        modal.find("#checkPushSuccess").removeAttr('checked');
+        modal.find("#checkEnable").removeAttr('checked');
+        switch (method) {
+            case "post":
+                modal.find("input,select,textarea").each(function () {
+                    $(this).attr('disabled', false)
+                });
+                modal.find("#btnSubmit").removeClass("btn-danger");
+                modal.find("#btnSubmit").removeClass("btn-primary");
+                modal.find("#btnSubmit").addClass("btn-secondary");
+                modal.find("#btnSubmit").text("添加");
+
+                modal.find("#inputID").val('');
+                modal.find("#inputPipelineID").val(button.data('pipeline'));
+                modal.find("#inputURL").val('');
+                modal.find("#selectMethod").val('');
+                modal.find("#selectType").val('');
+                modal.find("#textareaBody").text('');
+                break;
+
+            case "delete":
+                modal.find("input,select,textarea").each(function () {
+                    $(this).attr('disabled', true)
+                });
+                modal.find("#btnSubmit").removeClass("btn-secondary");
+                modal.find("#btnSubmit").removeClass("btn-primary");
+                modal.find("#btnSubmit").addClass("btn-danger");
+                modal.find("#btnSubmit").text("删除");
+
+                modal.find("#inputID").val(webhook.id);
+                modal.find("#inputPipelineID").val(webhook.pipeline_id);
+                modal.find("#inputURL").val(webhook.url);
+                modal.find("#selectMethod").val(webhook.request_method);
+                modal.find("#selectType").val(webhook.request_type);
+                modal.find("#textareaBody").text(webhook.request_body);
+                if (webhook.verify_ssl !== null) modal.find("#checkVerifySSL").attr('checked', 'checked');
+                if (webhook.push_success !== null) modal.find("#checkPushSuccess").attr('checked', 'checked');
+                if (webhook.enable !== null) modal.find("#checkEnable").attr('checked', 'checked');
+                break;
+
+            case "patch":
+                $("#modalWebhook").find("input,select,textarea").each(function () {
+                    $(this).attr('disabled', false)
+                });
+                $("#btnSubmit").removeClass("btn-secondary");
+                $("#btnSubmit").removeClass("btn-danger");
+                $("#btnSubmit").addClass("btn-primary");
+                $("#btnSubmit").text("修改");
+
+                modal.find("#inputID").val(webhook.id);
+                modal.find("#inputPipelineID").val(webhook.pipeline_id);
+                modal.find("#inputURL").val(webhook.url);
+                modal.find("#selectMethod").val(webhook.request_method);
+                modal.find("#selectType").val(webhook.request_type);
+                modal.find("#textareaBody").text(webhook.request_body);
+                if (webhook.verify_ssl) modal.find("#checkVerifySSL").attr('checked', 'checked');
+                if (webhook.push_success) modal.find("#checkPushSuccess").attr('checked', 'checked');
+                if (webhook.enable) modal.find("#checkEnable").attr('checked', 'checked');
                 break
 
             default:
@@ -208,14 +280,6 @@ function parseLog(str, number) {
     $('#console').append(text)
 }
 
-function addServerHandler() {
-    return ajaxUtil("/server/", "#formAddServer", 'POST')
-}
-
-function setNotification() {
-    return ajaxUtil("/settings/", "#formNotify", 'POST')
-}
-
 function addRepoHandler(mth) {
     return ajaxUtil("/repository/", "#formAddRepo", mth)
 }
@@ -228,8 +292,12 @@ function pipelineHandler(mth) {
     return ajaxUtil("/pipeline/", "#formAddPipeline", mth)
 }
 
-function editServerHandler() {
+function serverHandler() {
     return ajaxUtil("/server/", "#formEditServer", $("#formEditServer").attr('method'))
+}
+
+function webhookHandler() {
+    return ajaxUtil("/pipeline/webhook", "#formWebhook", $("#formWebhook").attr('method'))
 }
 
 function toggleUser(uid, toggle, col) {

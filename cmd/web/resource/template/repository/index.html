@@ -11,19 +11,19 @@
                 <div class="form-group mx-sm-3 mb-2">
                     <label for="selectPlatform">托管平台：</label>
                     <select name="platform" id="selectPlatform" class="form-control">
-                    {{range $k,$v := .platforms}}
+                        {{range $k,$v := .platforms}}
                         <option value="{{$k}}">{{$v}}</option>
-                    {{end}}
+                        {{end}}
                     </select>
                 </div>
-            {{.csrf_token}}
+                {{.csrf_token}}
                 <button type="submit" class="btn btn-secondary mb-2 ml-3">添加项目</button>
             </form>
         </div>
     </div>
-{{/*modal add pipeline START*/}}
+    {{/*modal add pipeline START*/}}
     <script>
-        var events = {{.events}};
+        var events = {{.events }};
         var mth = 'POST';
     </script>
     <div class="modal fade" id="modalAddPipeline" tabindex="-1" role="dialog" aria-hidden="true">
@@ -49,7 +49,7 @@
                         <div class="form-group">
                             <label for="inputBranch" class="col-form-label">监控分支：</label>
                             <input required name="branch" type="text" class="form-control" id="inputBranch"
-                                   value="master">
+                                value="master">
                         </div>
                         <div class="form-group">
                             <p>响应事件：
@@ -60,16 +60,16 @@
                         <div class="form-group">
                             <label for="slMPlatform" class="col-form-label">部署服务器：</label>
                             <select name="server" class="custom-select my-1 mr-sm-2" id="slMPlatform">
-                            {{range $server := .servers}}
+                                {{range $server := .servers}}
                                 <option value="{{.ID}}">{{.Name}} - {{.Address}}</option>
-                            {{end}}
+                                {{end}}
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="inputShell" class="col-form-label">执行命令：</label>
                             <textarea required name="shell" class="form-control" id="inputShell">./nb-deploy</textarea>
                         </div>
-                    {{.csrf_token}}
+                        {{.csrf_token}}
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -80,8 +80,8 @@
             </div>
         </div>
     </div>
-{{/*modal add pipeline END*/}}
-{{/*modal repo START*/}}
+    {{/*modal add pipeline END*/}}
+    {{/*modal repo START*/}}
     <div class="modal fade" id="modalRepo" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -104,12 +104,12 @@
                         <div class="form-group">
                             <label for="selectPlatform">托管平台：</label>
                             <select name="platform" id="selectPlatform" class="form-control">
-                            {{range $k,$v := .platforms}}
+                                {{range $k,$v := .platforms}}
                                 <option value="{{$k}}">{{$v}}</option>
-                            {{end}}
+                                {{end}}
                             </select>
                         </div>
-                    {{.csrf_token}}
+                        {{.csrf_token}}
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -121,38 +121,33 @@
             </div>
         </div>
     </div>
-{{/*modal repo END*/}}
+    {{/*modal repo END*/}}
     <div class="card-deck">
-    {{range $repo := .repos}}
+        {{range $repo := .repos}}
         <div class="card mb-3" style="min-width: 300px">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <h5 class="mt-1 limit-text-length">
                         <i class="octicon octicon-repo"></i>
                         <span class="badge badge-light">{{index $.platforms .Platform}}</span>
-                    {{.Name}}
+                        {{.Name}}
                     </h5>
                     <div style="min-width: 150px">
                         <button type="button" class="btn btn-sm btn-secondary pr-1 pl-2 copy-btn"
-                                data-text="{{$.domain}}/webhook/{{.ID}}"
-                                data-ext="protocol_prefix"
-                                data-toggle="tooltip"
-                                data-placement="top" title="点击复制 WebHook 地址">
+                            data-text="{{$.domain}}/webhook/{{.ID}}" data-ext="protocol_prefix" data-toggle="tooltip"
+                            data-placement="top" title="点击复制 WebHook 地址">
                             <i class="octicon octicon-plug"></i>
                         </button>
                         <button type="button" class="btn btn-sm btn-secondary pr-1 pl-2 copy-btn"
-                                data-text="{{.Secret}}"
-                                data-toggle="tooltip"
-                                data-placement="top" title="点击复制 WebHook 密钥">
+                            data-text="{{.Secret}}" data-toggle="tooltip" data-placement="top" title="点击复制 WebHook 密钥">
                             <i class="octicon octicon-gist-secret"></i>
                         </button>
-                        <button class="btn btn-sm btn-secondary pr-1 pl-2" data-toggle="modal"
-                                data-target="#modalRepo" data-id="{{.ID}}" data-name="{{.Name}}"
-                                data-platform="{{.Platform}}">
+                        <button class="btn btn-sm btn-secondary pr-1 pl-2" data-toggle="modal" data-target="#modalRepo"
+                            data-id="{{.ID}}" data-name="{{.Name}}" data-platform="{{.Platform}}">
                             <i class="octicon octicon-pencil"></i>
                         </button>
                         <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="POST" data-toggle="modal"
-                                data-target="#modalAddPipeline" data-repo="{{.ID}}" data-whatever="{{.Platform}}">
+                            data-target="#modalAddPipeline" data-repo="{{.ID}}" data-whatever="{{.Platform}}">
                             <i class="octicon octicon-plus"></i>
                         </button>
                     </div>
@@ -160,69 +155,70 @@
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">备注</th>
-                            <th scope="col" style="min-width: 90px">最后触发</th>
-                            <th scope="col">状态</th>
-                            <th scope="col">管理</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">备注</th>
+                                <th scope="col" style="min-width: 90px">最后触发</th>
+                                <th scope="col">状态</th>
+                                <th scope="col">管理</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        {{range $p:= RepoPipelines .ID}}
-                        {{$log := LastPipelineLog $p.ID}}
-                        <tr>
-                            <th scope="row">{{$p.ID}}</th>
-                            <td style="min-width: 100px">{{$p.Name}}</td>
-                            <td>{{if eq (len $log.Pusher) 0}}Nobody{{else}}{{$log.Pusher}}{{end}}</td>
-                            <td>
-                            <a href="/pipelog/{{if lt 0 $log.ID }}{{$log.ID}}{{end}}" target="_blank"
-                            {{if eq $log.Status 1}}
-                               class="btn btn-success btn-sm">部署成功
-                               </a>
-                            {{else if eq $log.Status 2}}
-                                class="btn btn-dark btn-sm">服务器错误</a>
-                            {{else if eq $log.Status 3}}
-                                class="btn btn-danger btn-sm">脚本错误</a>
-                            {{else if eq $log.Status 4}}
-                                class="btn btn-primary btn-sm">正在运行</a>
-                            {{else if eq $log.Status 5}}
-                                class="btn btn-info btn-sm">人工停止</a>
-                            {{else if eq $log.Status 6}}
-                                class="btn btn-warning btn-sm">执行超时</a>
-                            {{else}}
-                                class="btn btn-secondary btn-sm">未知状态</a>
+                            {{range $p:= RepoPipelines .ID}}
+                            {{$log := LastPipelineLog $p.ID}}
+                            <tr>
+                                <th scope="row">{{$p.ID}}</th>
+                                <td style="min-width: 100px">{{$p.Name}}</td>
+                                <td>{{if eq (len $log.Pusher) 0}}Nobody{{else}}{{$log.Pusher}}{{end}}</td>
+                                <td>
+                                    <a href="/pipelog/{{if lt 0 $log.ID }}{{$log.ID}}{{end}}" target="_blank"
+                                        {{if eq $log.Status 1}} class="btn btn-success btn-sm">部署成功
+                                    </a>
+                                    {{else if eq $log.Status 2}}
+                                    class="btn btn-dark btn-sm">服务器错误</a>
+                                    {{else if eq $log.Status 3}}
+                                    class="btn btn-danger btn-sm">脚本错误</a>
+                                    {{else if eq $log.Status 4}}
+                                    class="btn btn-primary btn-sm">正在运行</a>
+                                    {{else if eq $log.Status 5}}
+                                    class="btn btn-info btn-sm">人工停止</a>
+                                    {{else if eq $log.Status 6}}
+                                    class="btn btn-warning btn-sm">执行超时</a>
+                                    {{else}}
+                                    class="btn btn-secondary btn-sm">未知状态</a>
+                                    {{end}}
+                                </td>
+                                <td style="min-width: 130px">
+                                    <button class="btn btn-sm btn-secondary pr-1 pl-2" data-toggle="modal"
+                                        data-target="#modalWebhookPipe{{$p.ID}}">
+                                        <i class="octicon octicon-plug"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="PATCH"
+                                        data-toggle="modal" data-target="#modalAddPipeline" data-id="{{$p.ID}}"
+                                        data-repo="{{$p.RepositoryID}}" data-name="{{$p.Name}}"
+                                        data-branch="{{$p.Branch}}" data-server="{{$p.ServerID}}"
+                                        data-shell="{{$p.Shell}}" data-events="{{$p.Events}}"
+                                        data-whatever="{{$repo.Platform}}">
+                                        <i class="octicon octicon-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="DELETE"
+                                        data-toggle="modal" data-target="#modalAddPipeline" data-id="{{$p.ID}}"
+                                        data-repo="{{$p.RepositoryID}}" data-name="{{$p.Name}}"
+                                        data-branch="{{$p.Branch}}" data-server="{{$p.ServerID}}" data-shell="HIDDEN"
+                                        data-events="{{$p.Events}}" data-whatever="{{$repo.Platform}}">
+                                        <i class="octicon octicon-trashcan"></i>
+                                    </button>
+                                </td>
+                            </tr>
                             {{end}}
-                            </td>
-                            <td style="min-width: 90px">
-                                <button class="btn btn-sm btn-secondary pr-1 pl-2 " data-method="PATCH"
-                                        data-toggle="modal"
-                                        data-target="#modalAddPipeline" data-id="{{$p.ID}}"
-                                        data-repo="{{$p.RepositoryID}}" data-name="{{$p.Name}}"
-                                        data-branch="{{$p.Branch}}" data-server="{{$p.ServerID}}"
-                                        data-shell="{{$p.Shell}}"
-                                        data-events="{{$p.Events}}" data-whatever="{{$repo.Platform}}">
-                                    <i class="octicon octicon-pencil"></i>
-                                </button>
-                                <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="DELETE"
-                                        data-toggle="modal"
-                                        data-target="#modalAddPipeline" data-id="{{$p.ID}}"
-                                        data-repo="{{$p.RepositoryID}}" data-name="{{$p.Name}}"
-                                        data-branch="{{$p.Branch}}" data-server="{{$p.ServerID}}"
-                                        data-shell="HIDDEN"
-                                        data-events="{{$p.Events}}" data-whatever="{{$repo.Platform}}">
-                                    <i class="octicon octicon-trashcan"></i>
-                                </button>
-                            </td>
-                        </tr>
-                        {{end}}
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-    {{end}}
+        {{end}}
     </div>
 </div>
+{{template "components/webhook_list" .}}
 {{template "common/footer" .}}
 {{end}}

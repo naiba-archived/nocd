@@ -32,6 +32,8 @@ var serverService nocd.ServerService
 var repoService nocd.RepositoryService
 var pipelineService nocd.PipelineService
 var pipelogService nocd.PipeLogService
+var webhookService nocd.WebhookService
+var db *gorm.DB
 
 var oauthConf *oauth2.Config
 
@@ -50,7 +52,6 @@ func Start() {
 	servePipeline(r)
 	serveServer(r)
 	serveRepository(r)
-	serveSettings(r)
 	serveWebHook(r)
 	serveAdmin(r)
 
@@ -76,7 +77,7 @@ func initEngine() *gin.Engine {
 	r.Use(sentry.Recovery(raven.DefaultClient, false))
 	r.Use(gin.Recovery())
 	r.Use(mgin.AuthMiddleware(userService))
-	r.SetFuncMap(mgin.FuncMap(pipelineService, pipelogService))
+	r.SetFuncMap(mgin.FuncMap(pipelineService, pipelogService, webhookService))
 	// csrf protection
 	r.Use(sessions.Sessions("nocd_session", cookie.NewStore([]byte(nocd.Conf.Section("nocd").Key("cookie_key_pair").String()))))
 	r.Use(csrf.Middleware(csrf.Options{
@@ -95,8 +96,9 @@ func initEngine() *gin.Engine {
 }
 
 func initService() {
+	var err error
 	// init service
-	db, err := gorm.Open("sqlite3", "conf/app.db?_loc="+nocd.Conf.Section("nocd").Key("loc").String())
+	db, err = gorm.Open("sqlite3", "conf/app.db?_loc="+nocd.Conf.Section("nocd").Key("loc").String())
 	if err != nil {
 		nocd.Logger().Panicln(err)
 	}
@@ -104,26 +106,17 @@ func initService() {
 		db.Debug()
 		db.LogMode(nocd.Debug)
 	}
-	db.AutoMigrate(nocd.User{}, nocd.Server{}, nocd.Repository{}, nocd.Pipeline{}, nocd.PipeLog{})
+	db.AutoMigrate(nocd.User{}, nocd.Server{}, nocd.Repository{}, nocd.Pipeline{}, nocd.PipeLog{}, nocd.Webhook{})
 
 	upgradeV002(db)
 	nocd.InitStats(db)
 
-	// user service
-	sus := sqlite3.UserService{DB: db}
-	userService = &sus
-	// server service
-	ss := sqlite3.ServerService{DB: db}
-	serverService = &ss
-	// repo service
-	rs := sqlite3.RepositoryService{DB: db}
-	repoService = &rs
-	// pipeline service
-	ps := sqlite3.PipelineService{DB: db}
-	pipelineService = &ps
-	// pipelog service
-	pl := sqlite3.PipeLogService{DB: db}
-	pipelogService = &pl
+	userService = &sqlite3.UserService{DB: db}
+	serverService = &sqlite3.ServerService{DB: db}
+	repoService = &sqlite3.RepositoryService{DB: db}
+	pipelineService = &sqlite3.PipelineService{DB: db}
+	pipelogService = &sqlite3.PipeLogService{DB: db}
+	webhookService = &sqlite3.WebhookService{DB: db}
 }
 
 func upgradeV002(db *gorm.DB) {

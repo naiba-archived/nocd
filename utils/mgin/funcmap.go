@@ -25,10 +25,18 @@ type Pagination struct {
 }
 
 //FuncMap 自定义模板函数
-func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogService) template.FuncMap {
+func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogService, webhookService nocd.WebhookService) template.FuncMap {
 	return template.FuncMap{
 		"RepoPipelines": func(rid uint) []nocd.Pipeline {
 			return pipelineService.RepoPipelines(&nocd.Repository{ID: rid})
+		},
+		"UserPipelines": func(uid uint) []nocd.Pipeline {
+			var u nocd.User
+			u.ID = uid
+			return pipelineService.UserPipelines(&u)
+		},
+		"PipelineWebhooks": func(pid uint) []nocd.Webhook {
+			return webhookService.PipelineWebhooks(&nocd.Pipeline{ID: pid})
 		},
 		"LastServerLog": func(rid uint) nocd.PipeLog {
 			return pipelogService.LastServerLog(rid)

@@ -21,13 +21,77 @@ func servePipeline(r *gin.Engine) {
 	pipeline := r.Group("/pipeline")
 	pipeline.Use(mgin.FilterMiddleware(mgin.FilterOption{User: true}))
 	{
-		pipeline.Any("/", pipelineX)
+		pipeline.Any("/", pipelineHandler)
+		pipeline.Any("/webhook", pipelineWebhook)
 	}
 	pipelog := r.Group("/pipelog")
 	pipelog.Use(mgin.FilterMiddleware(mgin.FilterOption{User: true}))
 	{
 		pipelog.GET("/", pipeLogs)
 		pipelog.GET("/:id", viewLog)
+	}
+}
+
+func pipelineWebhook(c *gin.Context) {
+	user := c.MustGet(mgin.CtxUser).(*nocd.User)
+	var wb nocd.Webhook
+	if err := c.ShouldBind(&wb); err != nil {
+		c.String(http.StatusForbidden, "数据不规范，请检查后重新填写"+err.Error())
+		return
+	}
+
+	var kv map[string]string
+	err := json.Unmarshal([]byte(wb.RequestBody), &kv)
+	if err != nil {
+		c.String(http.StatusForbidden, "输入不符合规范：Body解析错误"+err.Error())
+		return
+	}
+	if wb.RequestType < nocd.WebhookRequestTypeJSON || wb.RequestType > nocd.WebhookRequestTypeForm || wb.RequestMethod < nocd.WebhookRequestMethodGET || wb.RequestMethod > nocd.WebhookRequestMethodPOST {
+		c.String(http.StatusForbidden, "输入不符合规范：类型不存在")
+		return
+	}
+
+	// 鉴权
+	_, err = pipelineService.UserPipeline(user.ID, wb.PipelineID)
+	if err != nil {
+		c.String(http.StatusForbidden, "Pipeline 不存在："+err.Error())
+		return
+	}
+
+	var webhook nocd.Webhook
+	if c.Request.Method == http.MethodPost {
+		webhook.PipelineID = wb.PipelineID
+		webhook.URL = wb.URL
+		webhook.RequestMethod = wb.RequestMethod
+		webhook.RequestType = wb.RequestType
+		webhook.RequestBody = wb.RequestBody
+		webhook.VerifySSL = wb.VerifySSL
+		webhook.PushSuccess = wb.PushSuccess
+		webhook.Enable = wb.Enable
+		err = webhookService.Create(&webhook)
+	}
+
+	if c.Request.Method == http.MethodDelete || c.Request.Method == http.MethodPatch {
+		err = db.First(&webhook, "id = ? AND pipeline_id = ?", wb.ID, wb.PipelineID).Error
+		if err == nil {
+			if c.Request.Method == http.MethodPatch {
+				webhook.URL = wb.URL
+				webhook.RequestMethod = wb.RequestMethod
+				webhook.RequestType = wb.RequestType
+				webhook.RequestBody = wb.RequestBody
+				webhook.VerifySSL = wb.VerifySSL
+				webhook.PushSuccess = wb.PushSuccess
+				webhook.Enable = wb.Enable
+				err = db.Save(&webhook).Error
+			} else {
+				err = db.Delete(&webhook).Error
+			}
+		}
+	}
+
+	if err != nil {
+		c.String(http.StatusForbidden, "数据库错误："+err.Error())
+		return
 	}
 }
 
@@ -145,7 +209,7 @@ func viewLog(c *gin.Context) {
 	}))
 }
 
-func pipelineX(c *gin.Context) {
+func pipelineHandler(c *gin.Context) {
 	if c.Request.Method == http.MethodGet {
 		c.HTML(http.StatusOK, "pipeline/index", mgin.CommonData(c, true, gin.H{}))
 	} else {

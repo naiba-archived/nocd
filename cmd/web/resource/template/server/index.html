@@ -2,7 +2,7 @@
 {{template "common/header" .}}
 <div class="container">
     <div class="alert alert-secondary">
-        <button data-toggle="modal" data-method="post" data-target="#modalAddOrEditServer"
+        <button data-toggle="modal" data-method="post" data-target="#modalServer"
             class="btn btn-secondary btn-block">添加服务器</button>
     </div>
     <div class="card-deck">
@@ -25,9 +25,9 @@
                 </small>
                 <div data-server="{{$server|JSON}}">
                     <button class="btn btn-sm btn-secondary" data-method="patch" data-toggle="modal"
-                        data-target="#modalAddOrEditServer"><i class="octicon octicon-pencil"></i>
+                        data-target="#modalServer"><i class="octicon octicon-pencil"></i>
                     </button>
-                    <button class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalAddOrEditServer"
+                    <button class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalServer"
                         data-method="delete"><i class="octicon octicon-trashcan"></i>
                     </button>
                 </div>
@@ -36,6 +36,6 @@
         {{end}}
     </div>
 </div>
-{{template "components/addOrEditServer" .}}
+{{template "components/server" .}}
 {{template "common/footer" .}}
 {{end}}

@@ -1,0 +1,62 @@
+{{define "components/webhook_list"}}
+{{range $p := UserPipelines .user.ID}}
+<div id="modalWebhookPipe{{$p.ID}}" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="card ">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <h5 class="mt-1 limit-text-length">
+                            <i class="octicon octicon-plug"></i>
+                            Webhook 管理
+                        </h5>
+                        <div>
+                            <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="post" data-toggle="modal"
+                                data-target="#modalWebhook" data-pipeline="{{$p.ID}}">
+                                <i class="octicon octicon-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">URL</th>
+                                    <th scope="col">SSL</th>
+                                    <th scope="col">推送成功消息</th>
+                                    <th scope="col">启用</th>
+                                    <th scope="col">管理</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{range $w := PipelineWebhooks $p.ID}}
+                                <tr>
+                                    <th scope="row">{{$w.ID}}</th>
+                                    <td style="min-width: 100px">{{$w.URL}}</td>
+                                    <td>{{$w.VerifySSL}}</td>
+                                    <td>{{$w.PushSuccess}}</td>
+                                    <td>{{$w.Enable}}</td>
+                                    <td style="min-width: 130px" data-webhook="{{$w|JSON}}">
+                                        <button class="btn btn-sm btn-secondary pr-1 pl-2" data-toggle="modal"
+                                            data-target="#modalWebhook" data-method="patch">
+                                            <i class="octicon octicon-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-secondary pr-1 pl-2" data-toggle="modal"
+                                            data-target="#modalWebhook" data-method="delete">
+                                            <i class=" octicon octicon-trashcan"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {{end}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}
+{{template "components/webhook" .}}
+{{end}}
