@@ -48,7 +48,6 @@ func GenKeyPair() (string, string, error) {
 
 //CheckLogin 检查服务器是否存在
 func CheckLogin(server nocd.Server) error {
-	return nil
 	conn, err := dial(server)
 	if err != nil {
 		nocd.Logger().Infoln("ssh.CheckLogin", err)

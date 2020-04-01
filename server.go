@@ -15,17 +15,17 @@ const (
 
 //Server 服务器
 type Server struct {
-	ID        uint `form:"id" binding:"min=0"`
-	UserID    uint
-	User      User       `form:"-" binding:"-"`
-	Pipelines []Pipeline `form:"-" binding:"-"`
-	Name      string     `form:"name" binding:"required,min=1,max=12"`
-	Address   string     `form:"address" binding:"required,min=1,max=30"`
-	Port      int        `form:"port" binding:"required,min=1"`
-	Login     string     `form:"login"`
-	LoginType uint       `form:"login_type" binding:"required"`
-	Password  string     `form:"password" gorm:"longtext" binding:"required,min=1"`
-	Status    int
+	ID        uint       `form:"id" binding:"min=0" json:"id,omitempty"`
+	UserID    uint       `json:"user_id,omitempty"`
+	User      User       `form:"-" binding:"-" json:"-"`
+	Pipelines []Pipeline `form:"-" binding:"-" json:"-"`
+	Name      string     `form:"name" binding:"required,min=1,max=12" json:"name,omitempty"`
+	Address   string     `form:"address" binding:"required,min=1,max=30" json:"address,omitempty"`
+	Port      int        `form:"port" binding:"required,min=1" json:"port,omitempty"`
+	Login     string     `form:"login" json:"login,omitempty"`
+	LoginType uint       `form:"login_type" binding:"required" json:"login_type,omitempty"`
+	Password  string     `form:"password" gorm:"longtext" binding:"required,min=1" json:"password,omitempty"`
+	Status    int        `json:"status,omitempty"`
 }
 
 //ServerService 服务器服务

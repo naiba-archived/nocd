@@ -1,6 +1,7 @@
 {{define "common/header"}}
 <!doctype html>
 <html lang="zh">
+
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -9,50 +10,50 @@
     <!-- Bootstrap CSS -->
     <link rel="shortcut icon" type="image/png" href="/static/image/logo.png">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://cdn.bootcss.com/octicons/4.4.0/font/octicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/nocd.css?_11">
+    <link rel="stylesheet" href="/static/css/nocd.css">
 
     <title>NoCD —— Go 开源持续交付系统</title>
 </head>
+
 <body>
-<div class="p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-    <div class="container d-flex flex-column flex-md-row align-items-center">
-        <h5 class="my-0 mr-md-auto font-weight-normal"><a class="text-secondary" href="/">NoCD</a></h5>
-        <nav class="my-2 my-md-0 mr-md-3">
-            <a class="p-2 {{if HasPrefix .router "/server/"}}text-dark{{else}}text-secondary{{end}}" href="/server/"><i
-                    class="octicon octicon-server"></i> 服务器</a>
-            <a class="p-2 {{if HasPrefix .router "/repository/"}}text-dark{{else}}text-secondary{{end}}"
-               href="/repository/"><i class="octicon octicon-repo"></i> 项目</a>
-            <a class="p-2 {{if HasPrefix .router "/pipelog/"}}text-dark{{else}}text-secondary{{end}}"
-               href="/pipelog/"><i class="octicon octicon-zap"></i> 交付</a>
-            <a class="p-2 {{if HasPrefix .router "/settings/"}}text-dark{{else}}text-secondary{{end}}"
-               href="/settings/"><i
-                    class="octicon octicon-settings"></i> 配置</a>
-        </nav>
-    {{if .isLogin}}
-        <div class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-secondary" href="#" id="navbarDropdownMenuLink"
-               data-toggle="dropdown"
-               aria-haspopup="true" aria-expanded="false">
-                <i class="octicon octicon-mark-github"></i> {{.user.GName}}
-            </a>
-            <div class="dropdown-menu" style="min-width: auto" aria-labelledby="navbarDropdownMenuLink">
-            {{if .user.IsAdmin}}
-                <a class="dropdown-item" href="/admin"><i class="octicon octicon-settings"></i> 管理面板</a>
-                <div class="dropdown-divider"></div>
-            {{end}}
-                <button class="dropdown-item" onclick="logout()"><i class="octicon octicon-sign-out"></i> 注销</button>
+    <div class="p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+        <div class="container d-flex flex-column flex-md-row align-items-center">
+            <h5 class="my-0 mr-md-auto font-weight-normal"><a class="text-secondary" href="/">NoCD</a></h5>
+            <nav class="my-2 my-md-0 mr-md-3">
+                <a class="p-2 {{if HasPrefix .router "/server/"}}text-dark{{else}}text-secondary{{end}}"
+                    href="/server/"><i class="octicon octicon-server"></i> 服务器</a>
+                <a class="p-2 {{if HasPrefix .router "/repository/"}}text-dark{{else}}text-secondary{{end}}"
+                    href="/repository/"><i class="octicon octicon-repo"></i> 项目</a>
+                <a class="p-2 {{if HasPrefix .router "/pipelog/"}}text-dark{{else}}text-secondary{{end}}"
+                    href="/pipelog/"><i class="octicon octicon-zap"></i> 交付</a>
+                <a class="p-2 {{if HasPrefix .router "/settings/"}}text-dark{{else}}text-secondary{{end}}"
+                    href="/settings/"><i class="octicon octicon-settings"></i> 配置</a>
+            </nav>
+            {{if .isLogin}}
+            <div class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-secondary" href="#" id="navbarDropdownMenuLink"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="octicon octicon-mark-github"></i> {{.user.GName}}
+                </a>
+                <div class="dropdown-menu" style="min-width: auto" aria-labelledby="navbarDropdownMenuLink">
+                    {{if .user.IsAdmin}}
+                    <a class="dropdown-item" href="/admin"><i class="octicon octicon-settings"></i> 管理面板</a>
+                    <div class="dropdown-divider"></div>
+                    {{end}}
+                    <button class="dropdown-item" onclick="logout()"><i class="octicon octicon-sign-out"></i>
+                        注销</button>
+                </div>
             </div>
+            {{else}}
+            <form id="loginForm" action="/oauth2/login" method="post">
+                {{.csrf_token}}
+            </form>
+            <button onclick="saveForm('#loginForm')" class="btn btn-outline-primary"><i
+                    class="octicon octicon-mark-github"></i> 登录
+            </button>
+            {{end}}
         </div>
-    {{else}}
-        <form id="loginForm" action="/oauth2/login" method="post">
-        {{.csrf_token}}
-        </form>
-        <button onclick="saveForm('#loginForm')" class="btn btn-outline-primary"><i
-                class="octicon octicon-mark-github"></i> 登录
-        </button>
-    {{end}}
     </div>
-</div>
-{{end}}
+    {{end}}

@@ -6,6 +6,7 @@
 package mgin
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"runtime"
@@ -31,6 +32,10 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 		},
 		"LastServerLog": func(rid uint) nocd.PipeLog {
 			return pipelogService.LastServerLog(rid)
+		},
+		"JSON": func(obj interface{}) string {
+			b, _ := json.Marshal(obj)
+			return string(b)
 		},
 		"LastPipelineLog": func(pid uint) nocd.PipeLog {
 			return pipelogService.LastPipelineLog(pid)

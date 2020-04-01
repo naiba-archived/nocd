@@ -1,5 +1,5 @@
 {{define "components/addOrEditServer"}}
-<div class="modal fade" id="modalEditServer" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="modalAddOrEditServer" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,8 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form id="formEditServer" method="post" onsubmit="return editServerHandler(isDelete)">
-                    <input id="formMethod" name="_method" type="hidden">
+                <form id="formEditServer" onsubmit="return editServerHandler()">
                     <input id="inputID" name="id" type="hidden">
                     <div class="form-group">
                         <label for="inputName" class="col-form-label">备注名：</label>
@@ -29,15 +28,15 @@
                         <input required name="login" type="text" class="form-control" id="inputLogin">
                     </div>
                     <div class="form-group">
-                        <label for="typeSelect">登录方式</label>
-                        <select name="login_type" class="form-control" id="typeSelect">
+                        <label for="inputLoginType">登录方式</label>
+                        <select name="login_type" class="form-control" id="inputLoginType">
                             <option value="1">密码</option>
                             <option value="2">私钥</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="passwordTextarea">密码或私钥</label>
-                        <textarea name="password" class="form-control" id="passwordTextarea" rows="3"></textarea>
+                        <label for="inputPassword">密码或私钥</label>
+                        <textarea name="password" class="form-control" id="inputPassword" rows="3"></textarea>
                     </div>
                     {{.csrf_token}}
                 </form>

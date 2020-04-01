@@ -81,32 +81,69 @@ window.onload = function () {
             setForm(button, false);
         }
     });
-    $('#modalEditServer').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget);
-        var isd = button.data('delete');
-        isDelete = isd ? "DELETE" : "PATCH";
-        $("#formMethod").val(isDelete);
-        if (isd) {
-            $("#modalEditServer").find("input").each(function () {
-                $(this).attr('disabled', true)
-            });
-            $("#btnSubmit").text("删除");
-            $("#btnSubmit").removeClass("btn-primary");
-            $("#btnSubmit").addClass("btn-danger");
-        } else {
-            $("input").each(function () {
-                $(this).attr('disabled', false)
-            });
-            $("#btnSubmit").text("修改");
-            $("#btnSubmit").removeClass("btn-danger");
-            $("#btnSubmit").addClass("btn-primary");
+
+    $('#modalAddOrEditServer').on('show.bs.modal', function (event) {
+        const button = $(event.relatedTarget)
+        const server = button.parent().data('server')
+        const method = button.data('method')
+        $('#modalAddOrEditServer').find('form').attr('method', method)
+        switch (method) {
+            case "post":
+                $("#modalAddOrEditServer").find("input,select,textarea").each(function () {
+                    $(this).attr('disabled', false)
+                });
+                $("#btnSubmit").removeClass("btn-danger");
+                $("#btnSubmit").removeClass("btn-primary");
+                $("#btnSubmit").addClass("btn-secondary");
+                $("#btnSubmit").text("添加");
+                $("#inputID").val('');
+                $("#inputName").val('');
+                $("#inputAddress").val('');
+                $("#inputPort").val('');
+                $("#inputLogin").val('');
+                $("#inputLoginType").val('');
+                $("#inputPassword").text('');
+                break;
+
+            case "delete":
+                $("#modalAddOrEditServer").find("input,select,textarea").each(function () {
+                    $(this).attr('disabled', true)
+                });
+                $("#btnSubmit").removeClass("btn-secondary");
+                $("#btnSubmit").removeClass("btn-primary");
+                $("#btnSubmit").addClass("btn-danger");
+                $("#btnSubmit").text("删除");
+                $("#inputID").val(server.id);
+                $("#inputName").val(server.name);
+                $("#inputAddress").val(server.address);
+                $("#inputPort").val(server.port);
+                $("#inputLogin").val(server.login);
+                $("#inputLoginType").val(server.login_type);
+                $("#inputPassword").text(server.password);
+                break;
+
+            case "patch":
+                $("#modalAddOrEditServer").find("input,select,textarea").each(function () {
+                    $(this).attr('disabled', false)
+                });
+                $("#btnSubmit").removeClass("btn-secondary");
+                $("#btnSubmit").removeClass("btn-danger");
+                $("#btnSubmit").addClass("btn-primary");
+                $("#btnSubmit").text("修改");
+                $("#inputID").val(server.id);
+                $("#inputName").val(server.name);
+                $("#inputAddress").val(server.address);
+                $("#inputPort").val(server.port);
+                $("#inputLogin").val(server.login);
+                $("#inputLoginType").val(server.login_type);
+                $("#inputPassword").text(server.password);
+                break
+
+            default:
+                break;
         }
-        $("#inputID").val(button.data('id'));
-        $("#inputName").val(button.data('name'));
-        $("#inputAddress").val(button.data('address'));
-        $("#inputPort").val(button.data('port'));
-        $("#inputLogin").val(button.data('login'));
     });
+
     $('#modalRepo').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         $(this).find("#inputID").val(button.data('id'));
@@ -191,8 +228,8 @@ function pipelineHandler(mth) {
     return ajaxUtil("/pipeline/", "#formAddPipeline", mth)
 }
 
-function editServerHandler(mth) {
-    return ajaxUtil("/server/", "#formEditServer", mth)
+function editServerHandler() {
+    return ajaxUtil("/server/", "#formEditServer", $("#formEditServer").attr('method'))
 }
 
 function toggleUser(uid, toggle, col) {
@@ -205,11 +242,11 @@ function toggleUser(uid, toggle, col) {
 }
 
 function ajaxUtil(url, form, mth) {
-    if (mth === "DELETE") {
+    if (mth === "delete") {
         $(form).find(':input:disabled').removeAttr('disabled')
     }
-    var ajaxUrl = mth === "DELETE" ? url + "?" + $(form).serialize() : url;
-    var ajaxData = mth === "DELETE" ? {} : $(form).serialize();
+    var ajaxUrl = mth === "delete" ? url + "?" + $(form).serialize() : url;
+    var ajaxData = mth === "delete" ? {} : $(form).serialize();
     $.ajax({
         url: ajaxUrl,
         type: mth,

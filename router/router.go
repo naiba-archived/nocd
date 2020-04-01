@@ -7,7 +7,6 @@ package router
 
 import (
 	"net/http"
-	"reflect"
 	"strings"
 
 	"golang.org/x/oauth2"
@@ -18,14 +17,11 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"github.com/jinzhu/gorm"
 	csrf "github.com/utrack/gin-csrf"
-	"gopkg.in/go-playground/validator.v8"
 
 	// sqlite支持
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"github.com/naiba/com"
 	"github.com/naiba/nocd"
 	"github.com/naiba/nocd/sqlite3"
 	"github.com/naiba/nocd/utils/mgin"
@@ -45,11 +41,6 @@ func Start() {
 	initOauthConf()
 
 	r := initEngine()
-	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		v.RegisterValidation("address", func(v *validator.Validate, topStruct reflect.Value, currentStruct reflect.Value, field reflect.Value, fieldtype reflect.Type, fieldKind reflect.Kind, param string) bool {
-			return com.IsDomain(field.String()) || com.IsIPv4(field.String())
-		})
-	}
 
 	r.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "page/index", mgin.CommonData(c, true, gin.H{}))

@@ -2,7 +2,8 @@
 {{template "common/header" .}}
 <div class="container">
     <div class="alert alert-secondary">
-        <button type="submit" class="btn btn-secondary btn-block">添加服务器</button>
+        <button data-toggle="modal" data-method="post" data-target="#modalAddOrEditServer"
+            class="btn btn-secondary btn-block">添加服务器</button>
     </div>
     <div class="card-deck">
         {{range $server := .servers}}
@@ -22,16 +23,12 @@
                     {{$log := LastServerLog .ID}}
                     最后活动于{{TimeDiff $log.StoppedAt Now}}前
                 </small>
-                <div>
-                    <button class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalEditServer"
-                        data-delete="false" data-id="{{$server.ID}}" data-name="{{$server.Name}}"
-                        data-address="{{$server.Address}}" data-port="{{$server.Port}}"
-                        data-login="{{$server.Login}}"><i class="octicon octicon-pencil"></i>
+                <div data-server="{{$server|JSON}}">
+                    <button class="btn btn-sm btn-secondary" data-method="patch" data-toggle="modal"
+                        data-target="#modalAddOrEditServer"><i class="octicon octicon-pencil"></i>
                     </button>
-                    <button class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalEditServer"
-                        data-delete="true" data-id="{{$server.ID}}" data-name="{{$server.Name}}"
-                        data-address="{{$server.Address}}" data-port="{{$server.Port}}"
-                        data-login="{{$server.Login}}"><i class="octicon octicon-trashcan"></i>
+                    <button class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalAddOrEditServer"
+                        data-method="delete"><i class="octicon octicon-trashcan"></i>
                     </button>
                 </div>
             </div>
