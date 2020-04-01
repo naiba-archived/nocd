@@ -1,5 +1,9 @@
 # Changelog
 
+## Multi webhook in single pipeline (1/4/2020)
+
+- enable multi webhook in single pipeline
+
 ## Breaking Changes (29/3/2020)
 
 - move `govender` to `go mod`
