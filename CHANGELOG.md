@@ -1,20 +1,22 @@
 # Changelog
 
-## Multi webhook in single pipeline (1/4/2020)
+- Transfer account to another user (2/4/2020)
 
-- enable multi webhook in single pipeline
+- Multi webhook in single pipeline (1/4/2020)
 
-## Breaking Changes (29/3/2020)
+- Breaking Changes (29/3/2020)
 
-- move `govender` to `go mod`
-- add custom webhook
+ - move `govender` to `go mod`
 
-## Ready for Production use (13/12/2018)
+ - add custom webhook
 
-We just supported the Docker deployment.
+- Ready for Production use (13/12/2018)
 
-- Died simple
-- Easy to use
-- So small
+    We just supported the Docker deployment.
+
+    - Died simple
+    - Easy to use
+    - So small
 
 Enjoy it.
+
