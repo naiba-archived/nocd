@@ -7,6 +7,7 @@ package router
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -40,19 +41,25 @@ func pipelineWebhook(c *gin.Context) {
 		return
 	}
 	var err error
-	if wb.RequestType == nocd.WebhookRequestTypeForm || wb.RequestMethod == nocd.WebhookRequestMethodGET {
+	if wb.RequestType == nocd.WebhookRequestTypeForm {
 		var kv map[string]string
 		err = json.Unmarshal([]byte(wb.RequestBody), &kv)
+	} else {
+		var data interface{}
+		jsonValue := replaceParamsInJSON(wb.RequestBody, "部署成功", &nocd.Pipeline{}, &nocd.PipeLog{})
+		err = json.Unmarshal([]byte(jsonValue), &data)
 		if err != nil {
-			c.String(http.StatusForbidden, "输入不符合规范：Body解析错误"+err.Error())
-			return
+			err = fmt.Errorf("JSON解析有误，请确认：%s", jsonValue)
 		}
+	}
+	if err != nil {
+		c.String(http.StatusForbidden, "输入不符合规范：Body解析错误"+err.Error())
+		return
 	}
 	if wb.RequestType < nocd.WebhookRequestTypeJSON || wb.RequestType > nocd.WebhookRequestTypeForm || wb.RequestMethod < nocd.WebhookRequestMethodGET || wb.RequestMethod > nocd.WebhookRequestMethodPOST {
 		c.String(http.StatusForbidden, "输入不符合规范：类型不存在")
 		return
 	}
-
 	// 鉴权
 	_, err = pipelineService.UserPipeline(user.ID, wb.PipelineID)
 	if err != nil {

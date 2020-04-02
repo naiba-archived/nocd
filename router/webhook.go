@@ -246,7 +246,7 @@ func procWebhook(wg *sync.WaitGroup, w nocd.Webhook, status string, pipeline *no
 				resp, err = client.PostForm(reqURL.String(), params)
 			} else {
 				jsonValue := replaceParamsInJSON(w.RequestBody, status, pipeline, deployLog)
-				nocd.Logger().Info("Webhook Post JSON", jsonValue)
+				nocd.Logger().Infof("Webhook Post JSON: %s", jsonValue)
 				if err == nil {
 					resp, err = client.Post(reqURL.String(), "application/json", strings.NewReader(jsonValue))
 				}
