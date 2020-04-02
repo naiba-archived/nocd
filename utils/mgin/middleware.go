@@ -44,7 +44,7 @@ func AuthMiddleware(userService nocd.UserService) gin.HandlerFunc {
 			}
 		}
 		c.Set(CtxIsLogin, login)
-		c.Header("X-Powered-By", "NoCD <naiba(hi@nai.ba)>")
+		c.Header("X-Powered-By", "NoCD naiba(hi@nai.ba)")
 	}
 }
 
