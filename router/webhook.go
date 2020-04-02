@@ -6,7 +6,6 @@
 package router
 
 import (
-	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
@@ -32,28 +31,28 @@ import (
 	"github.com/naiba/nocd/utils/ssh"
 )
 
-var webHookSQLIndex map[string]string
+var webhookSQLIndex map[string]string
 
 func init() {
-	webHookSQLIndex = make(map[string]string)
+	webhookSQLIndex = make(map[string]string)
 	// github
-	webHookSQLIndex["github.PushPayload"] = string(github.PushEvent)
+	webhookSQLIndex["github.PushPayload"] = string(github.PushEvent)
 	// bitBucket
-	webHookSQLIndex["bitbucket.PullRequestMergedPayload"] = string(bitbucket.PullRequestMergedEvent)
+	webhookSQLIndex["bitbucket.PullRequestMergedPayload"] = string(bitbucket.PullRequestMergedEvent)
 	// gitlab
-	webHookSQLIndex["gitlab.PushEventPayload"] = string(gitlab.PushEvents)
+	webhookSQLIndex["gitlab.PushEventPayload"] = string(gitlab.PushEvents)
 	// gogs
-	webHookSQLIndex["gogs.PushPayload"] = string(gogs.PushEvent)
+	webhookSQLIndex["gogs.PushPayload"] = string(gogs.PushEvent)
 }
 
 func serveWebHook(r *gin.Engine) {
 	hook := r.Group("/webhook")
 	{
-		hook.POST("/:id", webHook)
+		hook.POST("/:id", webhook)
 	}
 }
 
-func webHook(c *gin.Context) {
+func webhook(c *gin.Context) {
 	rid := c.Param("id")
 	id, err := strconv.ParseUint(rid, 10, 64)
 	if err != nil {
@@ -99,7 +98,7 @@ func webHook(c *gin.Context) {
 func dispatchWebHook(id uint) webhooks.ProcessPayloadFunc {
 	return func(payload interface{}, header webhooks.Header) {
 		payloadType := reflect.TypeOf(payload).String()
-		p, has := webHookSQLIndex[payloadType]
+		p, has := webhookSQLIndex[payloadType]
 		if !has {
 			return
 		}
@@ -226,7 +225,7 @@ func procWebhook(wg *sync.WaitGroup, w nocd.Webhook, status string, pipeline *no
 	var reqURL *url.URL
 	reqURL, err = url.Parse(w.URL)
 	var data map[string]string
-	if err == nil {
+	if err == nil && (w.RequestMethod == nocd.WebhookRequestMethodGET || w.RequestType == nocd.WebhookRequestTypeForm) {
 		err = json.Unmarshal([]byte(w.RequestBody), &data)
 	}
 	var resp *http.Response
@@ -246,13 +245,10 @@ func procWebhook(wg *sync.WaitGroup, w nocd.Webhook, status string, pipeline *no
 				}
 				resp, err = client.PostForm(reqURL.String(), params)
 			} else {
-				for k, v := range data {
-					data[k] = replaceParamsInString(v, status, pipeline, deployLog)
-				}
-				var jsonValue []byte
-				jsonValue, err = json.Marshal(data)
+				jsonValue := replaceParamsInJSON(w.RequestBody, status, pipeline, deployLog)
+				nocd.Logger().Info("Webhook Post JSON", jsonValue)
 				if err == nil {
-					resp, err = client.Post(reqURL.String(), "application/json", bytes.NewBuffer(jsonValue))
+					resp, err = client.Post(reqURL.String(), "application/json", strings.NewReader(jsonValue))
 				}
 			}
 		}
@@ -272,13 +268,32 @@ func procWebhook(wg *sync.WaitGroup, w nocd.Webhook, status string, pipeline *no
 }
 
 func replaceParamsInString(str string, status string, pipeline *nocd.Pipeline, pipelog *nocd.PipeLog) string {
-	var dist string
-	dist = strings.ReplaceAll(str, "#Pusher#", pipelog.Pusher)
-	dist = strings.ReplaceAll(str, "#Log#", pipelog.Log)
-	dist = strings.ReplaceAll(str, "#Status#", status)
-	dist = strings.ReplaceAll(str, "#PipelineName#", pipeline.Name)
-	dist = strings.ReplaceAll(str, "#PipelineID#", fmt.Sprintf("%d", pipeline.ID))
-	dist = strings.ReplaceAll(str, "#StartedAt#", pipelog.StartedAt.String())
-	dist = strings.ReplaceAll(str, "#StoppedAt#", pipelog.StoppedAt.String())
-	return dist
+	str = strings.ReplaceAll(str, "#Pusher#", pipelog.Pusher)
+	str = strings.ReplaceAll(str, "#Log#", pipelog.Log)
+	str = strings.ReplaceAll(str, "#Status#", status)
+	str = strings.ReplaceAll(str, "#PipelineName#", pipeline.Name)
+	str = strings.ReplaceAll(str, "#PipelineID#", fmt.Sprintf("%d", pipeline.ID))
+	str = strings.ReplaceAll(str, "#StartedAt#", pipelog.StartedAt.String())
+	str = strings.ReplaceAll(str, "#StoppedAt#", pipelog.StoppedAt.String())
+	return str
+}
+
+func replaceParamsInJSON(str string, status string, pipeline *nocd.Pipeline, pipelog *nocd.PipeLog) string {
+	str = strings.ReplaceAll(str, "#Pusher#", jsonEscape(pipelog.Pusher))
+	str = strings.ReplaceAll(str, "#Log#", jsonEscape(pipelog.Log))
+	str = strings.ReplaceAll(str, "#Status#", jsonEscape(status))
+	str = strings.ReplaceAll(str, "#PipelineName#", jsonEscape(pipeline.Name))
+	str = strings.ReplaceAll(str, "#PipelineID#", jsonEscape(pipeline.ID))
+	str = strings.ReplaceAll(str, "#StartedAt#", jsonEscape(pipelog.StartedAt.String()))
+	str = strings.ReplaceAll(str, "#StoppedAt#", jsonEscape(pipelog.StoppedAt.String()))
+	return str
+}
+
+func jsonEscape(raw interface{}) string {
+	b, _ := json.Marshal(raw)
+	strb := string(b)
+	if strings.HasPrefix(strb, "\"") {
+		return strb[1 : len(strb)-1]
+	}
+	return strb
 }

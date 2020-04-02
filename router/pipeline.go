@@ -39,12 +39,14 @@ func pipelineWebhook(c *gin.Context) {
 		c.String(http.StatusForbidden, "数据不规范，请检查后重新填写"+err.Error())
 		return
 	}
-
-	var kv map[string]string
-	err := json.Unmarshal([]byte(wb.RequestBody), &kv)
-	if err != nil {
-		c.String(http.StatusForbidden, "输入不符合规范：Body解析错误"+err.Error())
-		return
+	var err error
+	if wb.RequestType == nocd.WebhookRequestTypeForm || wb.RequestMethod == nocd.WebhookRequestMethodGET {
+		var kv map[string]string
+		err = json.Unmarshal([]byte(wb.RequestBody), &kv)
+		if err != nil {
+			c.String(http.StatusForbidden, "输入不符合规范：Body解析错误"+err.Error())
+			return
+		}
 	}
 	if wb.RequestType < nocd.WebhookRequestTypeJSON || wb.RequestType > nocd.WebhookRequestTypeForm || wb.RequestMethod < nocd.WebhookRequestMethodGET || wb.RequestMethod > nocd.WebhookRequestMethodPOST {
 		c.String(http.StatusForbidden, "输入不符合规范：类型不存在")
