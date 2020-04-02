@@ -21,6 +21,12 @@ func (us *UserService) UserByGID(gid int64) (*nocd.User, error) {
 	return &u, us.DB.Where("g_id = ?", gid).First(&u).Error
 }
 
+//UserByGName 根据 GitHubName 获取用户
+func (us *UserService) UserByGName(name string) (*nocd.User, error) {
+	var u nocd.User
+	return &u, us.DB.Where("g_name = ?", name).First(&u).Error
+}
+
 //Users 获取所有用户
 func (us *UserService) Users(page, size int64) ([]*nocd.User, int64) {
 	var ul []*nocd.User
@@ -54,4 +60,19 @@ func (us *UserService) Update(u *nocd.User) error {
 func (us *UserService) Verify(uid, token string) (*nocd.User, error) {
 	var u nocd.User
 	return &u, us.DB.Where("id = ? AND token = ?", uid, token).First(&u).Error
+}
+
+// Transfer 账户迁移
+func (us *UserService) Transfer(origin *nocd.User, dist *nocd.User) error {
+	tx := us.DB.Begin()
+	tx.Table("servers").Where("user_id = ?", origin.ID).Updates(map[string]interface{}{
+		"user_id": dist.ID,
+	})
+	tx.Table("repositories").Where("user_id = ?", origin.ID).Updates(map[string]interface{}{
+		"user_id": dist.ID,
+	})
+	tx.Table("pipelines").Where("user_id = ?", origin.ID).Updates(map[string]interface{}{
+		"user_id": dist.ID,
+	})
+	return tx.Commit().Error
 }

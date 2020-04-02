@@ -2,7 +2,7 @@
 {{template "common/header" .}}
 <div class="container">
     <div class="alert alert-secondary">
-        <button data-toggle="modal" data-method="post" data-target="#modalServer"
+        <button data-toggle="modal" data-method="POST" data-target="#modalServer"
             class="btn btn-secondary btn-block">添加服务器</button>
     </div>
     <div class="card-deck">
@@ -24,11 +24,11 @@
                     最后活动于{{TimeDiff $log.StoppedAt Now}}前
                 </small>
                 <div data-server="{{$server|JSON}}">
-                    <button class="btn btn-sm btn-secondary" data-method="patch" data-toggle="modal"
+                    <button class="btn btn-sm btn-secondary" data-method="PATCH" data-toggle="modal"
                         data-target="#modalServer"><i class="octicon octicon-pencil"></i>
                     </button>
                     <button class="btn btn-sm btn-secondary" data-toggle="modal" data-target="#modalServer"
-                        data-method="delete"><i class="octicon octicon-trashcan"></i>
+                        data-method="DELETE"><i class="octicon octicon-trashcan"></i>
                     </button>
                 </div>
             </div>

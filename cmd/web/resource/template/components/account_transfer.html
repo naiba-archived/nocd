@@ -1,0 +1,30 @@
+{{define "components/accountTransfer"}}
+<div class="modal fade" id="modalAccountTransfer" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">账户迁移</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert">
+                    此操作将会把账户下所有的<b>服务器</b>、<b>仓库</b>（及仓库<b>下属所有</b>的 交付流程、Webhook）迁移给对方。
+                </div>
+                <form id="formAccountTransfer" method="POST" onsubmit="return accountTransferHandler()">
+                    <div class="form-group">
+                        <label for="inputGName" class="col-form-label">对方 GitHub 登录名：</label>
+                        <input required name="name" type="text" class="form-control" id="inputGName">
+                    </div>
+                    {{.csrf_token}}
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                <button id="btnSubmit" onclick="saveForm('#formAccountTransfer')" class="btn btn-primary">迁移</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{end}}

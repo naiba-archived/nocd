@@ -54,6 +54,7 @@ func Start() {
 	serveRepository(r)
 	serveWebHook(r)
 	serveAdmin(r)
+	serveUser(r)
 
 	r.Run(nocd.Conf.Section("nocd").Key("web_listen").String())
 }

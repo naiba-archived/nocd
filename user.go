@@ -29,8 +29,10 @@ type User struct {
 //UserService 用户服务
 type UserService interface {
 	UserByGID(gid int64) (*User, error)
+	UserByGName(name string) (*User, error)
 	Create(u *User) error
 	Update(u *User) error
+	Transfer(origin *User, dist *User) error
 	Verify(uid, token string) (*User, error)
 	Users(page, size int64) ([]*User, int64)
 }

@@ -40,12 +40,16 @@
                     <a class="dropdown-item" href="/admin"><i class="octicon octicon-settings"></i> 管理面板</a>
                     <div class="dropdown-divider"></div>
                     {{end}}
+                    <button class="dropdown-item" data-toggle="modal" data-target="#modalAccountTransfer"><i
+                            class="octicon octicon-sync"></i>
+                        账户迁移</button>
+                    <div class="dropdown-divider"></div>
                     <button class="dropdown-item" onclick="logout()"><i class="octicon octicon-sign-out"></i>
                         注销</button>
                 </div>
             </div>
             {{else}}
-            <form id="loginForm" action="/oauth2/login" method="post">
+            <form id="loginForm" action="/oauth2/login" method="POST">
                 {{.csrf_token}}
             </form>
             <button onclick="saveForm('#loginForm')" class="btn btn-outline-primary"><i
@@ -54,4 +58,5 @@
             {{end}}
         </div>
     </div>
+    {{template "components/accountTransfer" .}}
     {{end}}

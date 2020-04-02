@@ -68,10 +68,10 @@ window.onload = function () {
                 $('#slMPlatform').find('>option:selected').attr('selected', false);
             }
         };
-        if (mth === 'patch') {
+        if (mth === 'PATCH') {
             toggle(this, false, 'btn-danger', 'btn-primary', "修改")
             setForm(button, false);
-        } else if (mth === 'delete') {
+        } else if (mth === 'DELETE') {
             toggle(this, true, 'btn-primary', 'btn-danger', "删除")
             setForm(button, false);
         } else {
@@ -87,7 +87,7 @@ window.onload = function () {
         const method = button.data('method')
         $('#modalServer').find('form').attr('method', method)
         switch (method) {
-            case "post":
+            case "POST":
                 $("#modalServer").find("input,select,textarea").each(function () {
                     $(this).attr('disabled', false)
                 });
@@ -104,7 +104,7 @@ window.onload = function () {
                 $("#inputPassword").text('');
                 break;
 
-            case "delete":
+            case "DELETE":
                 $("#modalServer").find("input,select,textarea").each(function () {
                     $(this).attr('disabled', true)
                 });
@@ -121,7 +121,7 @@ window.onload = function () {
                 $("#inputPassword").text(server.password);
                 break;
 
-            case "patch":
+            case "PATCH":
                 $("#modalServer").find("input,select,textarea").each(function () {
                     $(this).attr('disabled', false)
                 });
@@ -153,7 +153,7 @@ window.onload = function () {
         modal.find("#checkPushSuccess").removeAttr('checked');
         modal.find("#checkEnable").removeAttr('checked');
         switch (method) {
-            case "post":
+            case "POST":
                 modal.find("input,select,textarea").each(function () {
                     $(this).attr('disabled', false)
                 });
@@ -170,7 +170,7 @@ window.onload = function () {
                 modal.find("#textareaBody").text('');
                 break;
 
-            case "delete":
+            case "DELETE":
                 modal.find("input,select,textarea").each(function () {
                     $(this).attr('disabled', true)
                 });
@@ -190,7 +190,7 @@ window.onload = function () {
                 if (webhook.enable !== null) modal.find("#checkEnable").attr('checked', 'checked');
                 break;
 
-            case "patch":
+            case "PATCH":
                 $("#modalWebhook").find("input,select,textarea").each(function () {
                     $(this).attr('disabled', false)
                 });
@@ -287,6 +287,10 @@ function editRepoHandler(mth) {
     return ajaxUtil("/repository/", "#formEditRepo", mth)
 }
 
+function accountTransferHandler() {
+    return ajaxUtil("/user/transfer", "#formAccountTransfer", "POST")
+}
+
 function pipelineHandler() {
     return ajaxUtil("/pipeline/", "#formAddPipeline", $("#formAddPipeline").attr('method'))
 }
@@ -309,11 +313,11 @@ function toggleUser(uid, toggle, col) {
 }
 
 function ajaxUtil(url, form, mth) {
-    if (mth === "delete") {
+    if (mth === "DELETE") {
         $(form).find(':input:disabled').removeAttr('disabled')
     }
-    var ajaxUrl = mth === "delete" ? url + "?" + $(form).serialize() : url;
-    var ajaxData = mth === "delete" ? {} : $(form).serialize();
+    var ajaxUrl = mth === "DELETE" ? url + "?" + $(form).serialize() : url;
+    var ajaxData = mth === "DELETE" ? {} : $(form).serialize();
     $.ajax({
         url: ajaxUrl,
         type: mth,
