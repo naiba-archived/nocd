@@ -28,9 +28,9 @@ window.onload = function () {
         var button = $(event.relatedTarget);
         var platform = events[button.data('whatever')];
         const mth = button.data('method');
-        $('#modalAddPipeline').find('form').attr('method', mth)
-        $("#inputHDRepoID").val(button.data('repo'));
-        var eventCheckBox = $("#listEventCheckbox");
+        $(this).find('form').attr('method', mth)
+        $(this).find('#inputHDRepoID').val(button.data('repo'));
+        var eventCheckBox = $(this).find('#listEventCheckbox');
         eventCheckBox.empty();
         for (var k in platform) {
             var container = $('<div/>', { class: 'form-check form-check-inline' });
@@ -44,28 +44,29 @@ window.onload = function () {
             $('<label/>', { class: 'form-check-label', for: 'ic' + k, text: platform[k] }).appendTo(container);
             container.appendTo(eventCheckBox);
         }
+        const modal = $(this)
         // 是否是添加
         var toggle = function (md, togg, clazzold, clazznew, btn) {
-            $('#btnEditRepo').removeClass(clazzold);
-            $('#btnEditRepo').addClass(clazznew);
+            modal.find('#btnEditRepo').removeClass(clazzold);
+            modal.find('#btnEditRepo').addClass(clazznew);
             $(md).find('input').attr('disabled', togg);
             $(md).find('select').attr('disabled', togg);
             $(md).find('textarea').attr('disabled', togg);
-            $('#btnEditRepo').text(btn);
+            modal.find('#btnEditRepo').text(btn);
         };
         var setForm = function (button, isAdd) {
-            $('#iMEditPlName').val(isAdd ? '' : button.data('name'));
-            $('#inputID').val(isAdd ? '' : button.data('id'));
-            $('#inputHDRepoID').val(button.data('repo'));
-            $('#inputBranch').val(isAdd ? 'master' : button.data('branch'));
-            $('#inputShell').text(isAdd ? './nb-deploy' : button.data('shell'));
+            modal.find('#iMEditPlName').val(isAdd ? '' : button.data('name'));
+            modal.find('#inputID').val(isAdd ? '' : button.data('id'));
+            modal.find('#inputHDRepoID').val(button.data('repo'));
+            modal.find('#inputBranch').val(isAdd ? 'master' : button.data('branch'));
+            modal.find('#inputShell').text(isAdd ? './nb-deploy' : button.data('shell'));
             if (!isAdd) {
                 button.data('events').forEach(function (value) {
-                    $('#ic' + value).attr('checked', true)
+                    modal.find('#ic' + value).attr('checked', true)
                 });
-                $('#slMPlatform').find('>option[value=' + button.data('server') + ']').attr('selected', true);
+                modal.find('#slMPlatform').find('>option[value=' + button.data('server') + ']').attr('selected', true);
             } else {
-                $('#slMPlatform').find('>option:selected').attr('selected', false);
+                modal.find('#slMPlatform').find('>option:selected').attr('selected', false);
             }
         };
         if (mth === 'PATCH') {
@@ -78,64 +79,63 @@ window.onload = function () {
             // 填充表单
             setForm(button, true);
         }
-        console.log(mth)
     });
 
     $('#modalServer').on('show.bs.modal', function (event) {
         const button = $(event.relatedTarget)
         const server = button.parent().data('server')
         const method = button.data('method')
-        $('#modalServer').find('form').attr('method', method)
+        $(this).find('form').attr('method', method)
         switch (method) {
             case "POST":
-                $("#modalServer").find("input,select,textarea").each(function () {
+                $(this).find("input,select,textarea").each(function () {
                     $(this).attr('disabled', false)
                 });
-                $("#btnSubmit").removeClass("btn-danger");
-                $("#btnSubmit").removeClass("btn-primary");
-                $("#btnSubmit").addClass("btn-secondary");
-                $("#btnSubmit").text("添加");
-                $("#inputID").val('');
-                $("#inputName").val('');
-                $("#inputAddress").val('');
-                $("#inputPort").val('');
-                $("#inputLogin").val('');
-                $("#inputLoginType").val('');
-                $("#inputPassword").text('');
+                $(this).find("#btnSubmit").removeClass("btn-danger");
+                $(this).find("#btnSubmit").removeClass("btn-primary");
+                $(this).find("#btnSubmit").addClass("btn-secondary");
+                $(this).find("#btnSubmit").text("添加");
+                $(this).find("#inputID").val('');
+                $(this).find("#inputName").val('');
+                $(this).find("#inputAddress").val('');
+                $(this).find("#inputPort").val('');
+                $(this).find("#inputLogin").val('');
+                $(this).find("#inputLoginType").val('');
+                $(this).find("#inputPassword").text('');
                 break;
 
             case "DELETE":
-                $("#modalServer").find("input,select,textarea").each(function () {
+                $(this).find("input,select,textarea").each(function () {
                     $(this).attr('disabled', true)
                 });
-                $("#btnSubmit").removeClass("btn-secondary");
-                $("#btnSubmit").removeClass("btn-primary");
-                $("#btnSubmit").addClass("btn-danger");
-                $("#btnSubmit").text("删除");
-                $("#inputID").val(server.id);
-                $("#inputName").val(server.name);
-                $("#inputAddress").val(server.address);
-                $("#inputPort").val(server.port);
-                $("#inputLogin").val(server.login);
-                $("#inputLoginType").val(server.login_type);
-                $("#inputPassword").text(server.password);
+                $(this).find("#btnSubmit").removeClass("btn-secondary");
+                $(this).find("#btnSubmit").removeClass("btn-primary");
+                $(this).find("#btnSubmit").addClass("btn-danger");
+                $(this).find("#btnSubmit").text("删除");
+                $(this).find("#inputID").val(server.id);
+                $(this).find("#inputName").val(server.name);
+                $(this).find("#inputAddress").val(server.address);
+                $(this).find("#inputPort").val(server.port);
+                $(this).find("#inputLogin").val(server.login);
+                $(this).find("#inputLoginType").val(server.login_type);
+                $(this).find("#inputPassword").text(server.password);
                 break;
 
             case "PATCH":
-                $("#modalServer").find("input,select,textarea").each(function () {
+                $(this).find("input,select,textarea").each(function () {
                     $(this).attr('disabled', false)
                 });
-                $("#btnSubmit").removeClass("btn-secondary");
-                $("#btnSubmit").removeClass("btn-danger");
-                $("#btnSubmit").addClass("btn-primary");
-                $("#btnSubmit").text("修改");
-                $("#inputID").val(server.id);
-                $("#inputName").val(server.name);
-                $("#inputAddress").val(server.address);
-                $("#inputPort").val(server.port);
-                $("#inputLogin").val(server.login);
-                $("#inputLoginType").val(server.login_type);
-                $("#inputPassword").text(server.password);
+                $(this).find("#btnSubmit").removeClass("btn-secondary");
+                $(this).find("#btnSubmit").removeClass("btn-danger");
+                $(this).find("#btnSubmit").addClass("btn-primary");
+                $(this).find("#btnSubmit").text("修改");
+                $(this).find("#inputID").val(server.id);
+                $(this).find("#inputName").val(server.name);
+                $(this).find("#inputAddress").val(server.address);
+                $(this).find("#inputPort").val(server.port);
+                $(this).find("#inputLogin").val(server.login);
+                $(this).find("#inputLoginType").val(server.login_type);
+                $(this).find("#inputPassword").text(server.password);
                 break
 
             default:
@@ -144,70 +144,69 @@ window.onload = function () {
     });
 
     $('#modalWebhook').on('show.bs.modal', function (event) {
-        const modal = $('#modalWebhook')
         const button = $(event.relatedTarget)
         const webhook = button.parent().data('webhook')
         const method = button.data('method')
-        $('#modalWebhook').find('form').attr('method', method)
-        modal.find("#checkVerifySSL").removeAttr('checked');
-        modal.find("#checkPushSuccess").removeAttr('checked');
-        modal.find("#checkEnable").removeAttr('checked');
+        $(this).find('form').attr('method', method)
+        $(this).find("#checkVerifySSL").removeAttr('checked');
+        $(this).find("#checkPushSuccess").removeAttr('checked');
+        $(this).find("#checkEnable").removeAttr('checked');
         switch (method) {
             case "POST":
-                modal.find("input,select,textarea").each(function () {
+                $(this).find("input,select,textarea").each(function () {
                     $(this).attr('disabled', false)
                 });
-                modal.find("#btnSubmit").removeClass("btn-danger");
-                modal.find("#btnSubmit").removeClass("btn-primary");
-                modal.find("#btnSubmit").addClass("btn-secondary");
-                modal.find("#btnSubmit").text("添加");
+                $(this).find("#btnSubmit").removeClass("btn-danger");
+                $(this).find("#btnSubmit").removeClass("btn-primary");
+                $(this).find("#btnSubmit").addClass("btn-secondary");
+                $(this).find("#btnSubmit").text("添加");
 
-                modal.find("#inputID").val('');
-                modal.find("#inputPipelineID").val(button.data('pipeline'));
-                modal.find("#inputURL").val('');
-                modal.find("#selectMethod").val('');
-                modal.find("#selectType").val('');
-                modal.find("#textareaBody").text('');
+                $(this).find("#inputID").val('');
+                $(this).find("#inputPipelineID").val(button.data('pipeline'));
+                $(this).find("#inputURL").val('');
+                $(this).find("#selectMethod").val('');
+                $(this).find("#selectType").val('');
+                $(this).find("#textareaBody").text('');
                 break;
 
             case "DELETE":
-                modal.find("input,select,textarea").each(function () {
+                $(this).find("input,select,textarea").each(function () {
                     $(this).attr('disabled', true)
                 });
-                modal.find("#btnSubmit").removeClass("btn-secondary");
-                modal.find("#btnSubmit").removeClass("btn-primary");
-                modal.find("#btnSubmit").addClass("btn-danger");
-                modal.find("#btnSubmit").text("删除");
+                $(this).find("#btnSubmit").removeClass("btn-secondary");
+                $(this).find("#btnSubmit").removeClass("btn-primary");
+                $(this).find("#btnSubmit").addClass("btn-danger");
+                $(this).find("#btnSubmit").text("删除");
 
-                modal.find("#inputID").val(webhook.id);
-                modal.find("#inputPipelineID").val(webhook.pipeline_id);
-                modal.find("#inputURL").val(webhook.url);
-                modal.find("#selectMethod").val(webhook.request_method);
-                modal.find("#selectType").val(webhook.request_type);
-                modal.find("#textareaBody").text(webhook.request_body);
-                if (webhook.verify_ssl !== null) modal.find("#checkVerifySSL").attr('checked', 'checked');
-                if (webhook.push_success !== null) modal.find("#checkPushSuccess").attr('checked', 'checked');
-                if (webhook.enable !== null) modal.find("#checkEnable").attr('checked', 'checked');
+                $(this).find("#inputID").val(webhook.id);
+                $(this).find("#inputPipelineID").val(webhook.pipeline_id);
+                $(this).find("#inputURL").val(webhook.url);
+                $(this).find("#selectMethod").val(webhook.request_method);
+                $(this).find("#selectType").val(webhook.request_type);
+                $(this).find("#textareaBody").text(webhook.request_body);
+                if (webhook.verify_ssl !== null) $(this).find("#checkVerifySSL").attr('checked', 'checked');
+                if (webhook.push_success !== null) $(this).find("#checkPushSuccess").attr('checked', 'checked');
+                if (webhook.enable !== null) $(this).find("#checkEnable").attr('checked', 'checked');
                 break;
 
             case "PATCH":
-                $("#modalWebhook").find("input,select,textarea").each(function () {
+                $(this).find("input,select,textarea").each(function () {
                     $(this).attr('disabled', false)
                 });
-                $("#btnSubmit").removeClass("btn-secondary");
-                $("#btnSubmit").removeClass("btn-danger");
-                $("#btnSubmit").addClass("btn-primary");
-                $("#btnSubmit").text("修改");
+                $(this).find("#btnSubmit").removeClass("btn-secondary");
+                $(this).find("#btnSubmit").removeClass("btn-danger");
+                $(this).find("#btnSubmit").addClass("btn-primary");
+                $(this).find("#btnSubmit").text("修改");
 
-                modal.find("#inputID").val(webhook.id);
-                modal.find("#inputPipelineID").val(webhook.pipeline_id);
-                modal.find("#inputURL").val(webhook.url);
-                modal.find("#selectMethod").val(webhook.request_method);
-                modal.find("#selectType").val(webhook.request_type);
-                modal.find("#textareaBody").text(webhook.request_body);
-                if (webhook.verify_ssl) modal.find("#checkVerifySSL").attr('checked', 'checked');
-                if (webhook.push_success) modal.find("#checkPushSuccess").attr('checked', 'checked');
-                if (webhook.enable) modal.find("#checkEnable").attr('checked', 'checked');
+                $(this).find("#inputID").val(webhook.id);
+                $(this).find("#inputPipelineID").val(webhook.pipeline_id);
+                $(this).find("#inputURL").val(webhook.url);
+                $(this).find("#selectMethod").val(webhook.request_method);
+                $(this).find("#selectType").val(webhook.request_type);
+                $(this).find("#textareaBody").text(webhook.request_body);
+                if (webhook.verify_ssl) $(this).find("#checkVerifySSL").attr('checked', 'checked');
+                if (webhook.push_success) $(this).find("#checkPushSuccess").attr('checked', 'checked');
+                if (webhook.enable) $(this).find("#checkEnable").attr('checked', 'checked');
                 break
 
             default:
@@ -292,15 +291,15 @@ function accountTransferHandler() {
 }
 
 function pipelineHandler() {
-    return ajaxUtil("/pipeline/", "#formAddPipeline", $("#formAddPipeline").attr('method'))
+    return ajaxUtil("/pipeline/", "#formAddPipeline", $('#formAddPipeline').attr('method'))
 }
 
 function serverHandler() {
-    return ajaxUtil("/server/", "#formEditServer", $("#formEditServer").attr('method'))
+    return ajaxUtil("/server/", "#formEditServer", $('#formEditServer').attr('method'))
 }
 
 function webhookHandler() {
-    return ajaxUtil("/pipeline/webhook", "#formWebhook", $("#formWebhook").attr('method'))
+    return ajaxUtil("/pipeline/webhook", "#formWebhook", $('#formWebhook').attr('method'))
 }
 
 function toggleUser(uid, toggle, col) {

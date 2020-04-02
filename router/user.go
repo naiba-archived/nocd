@@ -31,12 +31,17 @@ func accountTransfer(c *gin.Context) {
 		c.String(http.StatusForbidden, "数据不规范，请检查后重新填写："+err.Error())
 		return
 	}
-	dist, err := userService.UserByGName(req.Name)
-	if err != nil {
-		c.String(http.StatusForbidden, "目标用户未找到："+err.Error())
+	origin := c.MustGet(mgin.CtxUser).(*nocd.User)
+	if origin.GName == req.Name {
+		c.String(http.StatusForbidden, "目标账户不可与当前账户相同")
 		return
 	}
-	if err = userService.Transfer(c.MustGet(mgin.CtxUser).(*nocd.User), dist); err != nil {
+	dist, err := userService.UserByGName(req.Name)
+	if err != nil {
+		c.String(http.StatusForbidden, "目标用户未找到，是否从未登录过平台？")
+		return
+	}
+	if err = userService.Transfer(origin, dist); err != nil {
 		c.String(http.StatusForbidden, "数据库错误："+err.Error())
 		return
 	}
