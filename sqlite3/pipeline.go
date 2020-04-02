@@ -29,17 +29,17 @@ func (ps *PipelineService) Update(p *nocd.Pipeline) error {
 func (ps *PipelineService) Delete(pid uint) error {
 	db := ps.DB.Begin()
 	err := db.Where("pipeline_id = ?", pid).Delete(nocd.PipeLog{}).Error
+	if err == nil {
+		err = db.Where("pipeline_id = ?", pid).Delete(nocd.Webhook{}).Error
+	}
+	if err == nil {
+		err = db.Where("id = ?", pid).Delete(nocd.Pipeline{}).Error
+	}
 	if err != nil {
 		db.Rollback()
 		return err
 	}
-	err = db.Where("id = ?", pid).Delete(nocd.Pipeline{}).Error
-	if err != nil {
-		db.Rollback()
-		return err
-	}
-	db.Commit()
-	return nil
+	return db.Commit().Error
 }
 
 //UserPipelines 获取用户的所有部署流

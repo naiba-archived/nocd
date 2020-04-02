@@ -27,9 +27,11 @@ window.onload = function () {
     $('#modalAddPipeline').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget);
         var platform = events[button.data('whatever')];
+        const mth = button.data('method');
+        $('#modalAddPipeline').find('form').attr('method', mth)
         $("#inputHDRepoID").val(button.data('repo'));
-        var modal = $("#listEventCheckbox");
-        modal.empty();
+        var eventCheckBox = $("#listEventCheckbox");
+        eventCheckBox.empty();
         for (var k in platform) {
             var container = $('<div/>', { class: 'form-check form-check-inline' });
             $('<input/>', {
@@ -40,10 +42,9 @@ window.onload = function () {
                 value: k
             }).appendTo(container);
             $('<label/>', { class: 'form-check-label', for: 'ic' + k, text: platform[k] }).appendTo(container);
-            container.appendTo(modal);
+            container.appendTo(eventCheckBox);
         }
         // 是否是添加
-        mth = button.data('method');
         var toggle = function (md, togg, clazzold, clazznew, btn) {
             $('#btnEditRepo').removeClass(clazzold);
             $('#btnEditRepo').addClass(clazznew);
@@ -67,19 +68,17 @@ window.onload = function () {
                 $('#slMPlatform').find('>option:selected').attr('selected', false);
             }
         };
-        if (mth === 'POST') {
-            toggle(this, false, 'btn-danger', 'btn-primary', "添加");
-            // 重置表单
-            setForm(button, true);
-        } else {
-            if (mth === 'PATCH') {
-                toggle(this, false, 'btn-danger', 'btn-primary', "修改")
-            } else if (mth === 'DELETE') {
-                toggle(this, true, 'btn-primary', 'btn-danger', "删除")
-            }
-            // 填充表单
+        if (mth === 'patch') {
+            toggle(this, false, 'btn-danger', 'btn-primary', "修改")
             setForm(button, false);
+        } else if (mth === 'delete') {
+            toggle(this, true, 'btn-primary', 'btn-danger', "删除")
+            setForm(button, false);
+        } else {
+            // 填充表单
+            setForm(button, true);
         }
+        console.log(mth)
     });
 
     $('#modalServer').on('show.bs.modal', function (event) {
@@ -288,8 +287,8 @@ function editRepoHandler(mth) {
     return ajaxUtil("/repository/", "#formEditRepo", mth)
 }
 
-function pipelineHandler(mth) {
-    return ajaxUtil("/pipeline/", "#formAddPipeline", mth)
+function pipelineHandler() {
+    return ajaxUtil("/pipeline/", "#formAddPipeline", $("#formAddPipeline").attr('method'))
 }
 
 function serverHandler() {

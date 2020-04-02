@@ -3,7 +3,7 @@
 <div class="container">
     <div class="alert alert-secondary pt-4">
         <div class="d-flex justify-content-center">
-            <form id="formAddRepo" class="form-inline" onsubmit="return addRepoHandler('POST')">
+            <form id="formAddRepo" class="form-inline" onsubmit="return addRepoHandler('post')">
                 <div class="form-group mx-sm-3 mb-2">
                     <label for="inputName">项目名：</label>
                     <input required name="name" type="text" class="form-control" id="inputName" placeholder="项目名称">
@@ -24,7 +24,7 @@
     {{/*modal add pipeline START*/}}
     <script>
         var events = {{.events }};
-        var mth = 'POST';
+        var mth = 'post';
     </script>
     <div class="modal fade" id="modalAddPipeline" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -114,8 +114,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button id="btnEditRepo" onclick="editRepoHandler('DELETE')" class="btn btn-danger">删除
-                        <button id="btnEditRepo" onclick="editRepoHandler('PATCH')" class="btn btn-primary">更新
+                    <button id="btnEditRepo" onclick="editRepoHandler('delete')" class="btn btn-danger">删除
+                        <button id="btnEditRepo" onclick="editRepoHandler('patch')" class="btn btn-primary">更新
                         </button>
                 </div>
             </div>
@@ -146,7 +146,7 @@
                             data-id="{{.ID}}" data-name="{{.Name}}" data-platform="{{.Platform}}">
                             <i class="octicon octicon-pencil"></i>
                         </button>
-                        <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="POST" data-toggle="modal"
+                        <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="post" data-toggle="modal"
                             data-target="#modalAddPipeline" data-repo="{{.ID}}" data-whatever="{{.Platform}}">
                             <i class="octicon octicon-plus"></i>
                         </button>
@@ -193,7 +193,7 @@
                                         data-target="#modalWebhookPipe{{$p.ID}}">
                                         <i class="octicon octicon-plug"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="PATCH"
+                                    <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="patch"
                                         data-toggle="modal" data-target="#modalAddPipeline" data-id="{{$p.ID}}"
                                         data-repo="{{$p.RepositoryID}}" data-name="{{$p.Name}}"
                                         data-branch="{{$p.Branch}}" data-server="{{$p.ServerID}}"
@@ -201,11 +201,12 @@
                                         data-whatever="{{$repo.Platform}}">
                                         <i class="octicon octicon-pencil"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="DELETE"
+                                    <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="delete"
                                         data-toggle="modal" data-target="#modalAddPipeline" data-id="{{$p.ID}}"
                                         data-repo="{{$p.RepositoryID}}" data-name="{{$p.Name}}"
-                                        data-branch="{{$p.Branch}}" data-server="{{$p.ServerID}}" data-shell="HIDDEN"
-                                        data-events="{{$p.Events}}" data-whatever="{{$repo.Platform}}">
+                                        data-branch="{{$p.Branch}}" data-server="{{$p.ServerID}}"
+                                        data-shell="{{$p.Shell}}" data-events="{{$p.Events}}"
+                                        data-whatever="{{$repo.Platform}}">
                                         <i class="octicon octicon-trashcan"></i>
                                     </button>
                                 </td>

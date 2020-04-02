@@ -31,26 +31,25 @@ func (rs *RepositoryService) Delete(rid uint) error {
 		ids = append(ids, p.ID)
 	}
 	db := rs.DB.Begin()
+	// 删除关联 Webhook
+	err := db.Where("pipeline_id IN (?)", ids).Delete(nocd.Webhook{}).Error
 	// 删除关联 PipeLog
-	err := db.Where("pipeline_id IN (?)", ids).Delete(nocd.PipeLog{}).Error
-	if err != nil {
-		db.Rollback()
-		return err
+	if err == nil {
+		err = db.Where("pipeline_id IN (?)", ids).Delete(nocd.PipeLog{}).Error
 	}
 	// 删除关联 Pipeline
-	err = db.Where("id IN (?)", ids).Delete(nocd.Pipeline{}).Error
-	if err != nil {
-		db.Rollback()
-		return err
+	if err == nil {
+		err = db.Where("id IN (?)", ids).Delete(nocd.Pipeline{}).Error
 	}
 	// 删除项目
-	err = db.Where("id = ?", rid).Delete(nocd.Repository{}).Error
+	if err == nil {
+		err = db.Where("id = ?", rid).Delete(nocd.Repository{}).Error
+	}
 	if err != nil {
 		db.Rollback()
 		return err
 	}
-	db.Commit()
-	return nil
+	return db.Commit().Error
 }
 
 //Update 更新项目
