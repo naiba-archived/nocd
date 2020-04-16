@@ -137,18 +137,7 @@ func Deploy(pipeline nocd.Pipeline, log *nocd.PipeLog) {
 				b := make([]byte, 10)
 				num, err := pr.Read(b)
 				if err != nil {
-					if run.Closed {
-						return
-					}
-					if err == io.ErrClosedPipe {
-						run.Log.Status = nocd.PipeLogStatusSuccess
-					} else {
-						nocd.Logger().Debugln(err)
-						run.Log.Status = nocd.PipeLogStatusErrorShellExec
-						run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
-					}
-					run.Finish <- true
-					break
+					return
 				}
 				newLine := b[num-1] == '\n'
 				s := strings.Split(old+string(b[:num]), "\n")
@@ -171,6 +160,8 @@ func Deploy(pipeline nocd.Pipeline, log *nocd.PipeLog) {
 			run.Log.Status = nocd.PipeLogStatusErrorShellExec
 			run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
 			run.RunningLog = append(run.RunningLog, appendLog(start)+err.Error())
+		} else {
+			run.Log.Status = nocd.PipeLogStatusSuccess
 		}
 		pw.Close()
 		pr.Close()
