@@ -165,16 +165,15 @@ func Deploy(pipeline nocd.Pipeline, log *nocd.PipeLog) {
 		}
 		pw.Close()
 		pr.Close()
+		run.Finish <- true
 	}()
 
 	select {
 	case <-timer.C:
 		run.Closed = true
 		run.Log.Status = nocd.PipeLogStatusErrorTimeout
-		return
 	case <-run.Finish:
 		run.Closed = true
-		return
 	}
 }
 
