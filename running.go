@@ -5,6 +5,8 @@
 
 package nocd
 
+import "sync"
+
 //Running 运行中的任务
 type Running struct {
 	Finish     chan bool
@@ -15,7 +17,10 @@ type Running struct {
 
 //RunningLogs 系统中在运行的任务
 var RunningLogs map[uint]*Running
+var RunningLogsLock sync.RWMutex
 
 func init() {
+	RunningLogsLock.Lock()
+	defer RunningLogsLock.Unlock()
 	RunningLogs = make(map[uint]*Running)
 }

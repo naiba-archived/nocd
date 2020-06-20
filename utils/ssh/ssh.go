@@ -83,11 +83,15 @@ func Deploy(pipeline nocd.Pipeline, log *nocd.PipeLog) {
 		Log:        log,
 		RunningLog: make([]string, 0),
 	}
+	nocd.RunningLogsLock.Lock()
 	nocd.RunningLogs[log.ID] = run
+	nocd.RunningLogsLock.Unlock()
 
 	defer func() {
 		close(run.Finish)
+		nocd.RunningLogsLock.Lock()
 		delete(nocd.RunningLogs, log.ID)
+		nocd.RunningLogsLock.Unlock()
 		run.Log.Log = strings.Join(run.RunningLog, "\n")
 		// 保留最后8000字
 		if len(run.Log.Log) > 8000 {
