@@ -19,11 +19,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	client "github.com/gogs/go-gogs-client"
-	"gopkg.in/go-playground/webhooks.v3"
-	"gopkg.in/go-playground/webhooks.v3/bitbucket"
-	"gopkg.in/go-playground/webhooks.v3/github"
-	"gopkg.in/go-playground/webhooks.v3/gitlab"
-	"gopkg.in/go-playground/webhooks.v3/gogs"
+	"gopkg.in/go-playground/webhooks.v5/bitbucket"
+	"gopkg.in/go-playground/webhooks.v5/github"
+	"gopkg.in/go-playground/webhooks.v5/gitlab"
+	"gopkg.in/go-playground/webhooks.v5/gogs"
 
 	"time"
 
@@ -38,7 +37,7 @@ func init() {
 	// github
 	webhookSQLIndex["github.PushPayload"] = string(github.PushEvent)
 	// bitBucket
-	webhookSQLIndex["bitbucket.PullRequestMergedPayload"] = string(bitbucket.PullRequestMergedEvent)
+	webhookSQLIndex["bitbucket.RepoPushPayload"] = string(bitbucket.RepoPushEvent)
 	// gitlab
 	webhookSQLIndex["gitlab.PushEventPayload"] = string(gitlab.PushEvents)
 	// gogs
@@ -64,57 +63,83 @@ func webhook(c *gin.Context) {
 		c.String(http.StatusForbidden, "项目不存在："+err.Error())
 		return
 	}
-	// 设置监听事件
-	var hook webhooks.Webhook
-	webhooks.DefaultLog = webhooks.NewLogger(nocd.Debug)
+
 	switch repo.Platform {
 	case nocd.RepoPlatGitHub:
-		gh := github.New(&github.Config{Secret: repo.Secret})
-		gh.RegisterEvents(dispatchWebHook(repo.ID), github.PushEvent)
-		hook = gh
-		break
+		gh, err := github.New(github.Options.Secret(repo.Secret))
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+		payload, err := gh.Parse(c.Request, github.PushEvent)
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+		proccessPayload(repo.ID, payload)
+
 	case nocd.RepoPlatBitBucket:
-		bb := bitbucket.New(&bitbucket.Config{UUID: repo.Secret})
-		bb.RegisterEvents(dispatchWebHook(repo.ID), bitbucket.PullRequestMergedEvent)
-		hook = bb
-		break
+		bb, err := bitbucket.New(bitbucket.Options.UUID(repo.Secret))
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+		payload, err := bb.Parse(c.Request, bitbucket.RepoPushEvent)
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+		proccessPayload(repo.ID, payload)
+
 	case nocd.RepoPlatGitlab:
-		gl := gitlab.New(&gitlab.Config{Secret: repo.Secret})
-		gl.RegisterEvents(dispatchWebHook(repo.ID), gitlab.PushEvents)
-		hook = gl
-		break
+		gl, err := gitlab.New(gitlab.Options.Secret(repo.Secret))
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+		payload, err := gl.Parse(c.Request, gitlab.PushEvents)
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+		proccessPayload(repo.ID, payload)
+
 	case nocd.RepoPlatGogs:
-		gs := gogs.New(&gogs.Config{Secret: repo.Secret})
-		gs.RegisterEvents(dispatchWebHook(repo.ID), gogs.PushEvent)
-		hook = gs
-		break
+		gs, err := gogs.New(gogs.Options.Secret(repo.Secret))
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+		payload, err := gs.Parse(c.Request, gogs.PushEvent)
+		if err != nil {
+			c.String(http.StatusInternalServerError, err.Error())
+			return
+		}
+		proccessPayload(repo.ID, payload)
+
 	default:
 		c.String(http.StatusInternalServerError, "服务器错误，不支持的托管平台："+strconv.Itoa(repo.Platform))
-		return
 	}
-	hook.ParsePayload(c.Writer, c.Request)
 }
 
-func dispatchWebHook(id uint) webhooks.ProcessPayloadFunc {
-	return func(payload interface{}, header webhooks.Header) {
-		payloadType := reflect.TypeOf(payload).String()
-		p, has := webhookSQLIndex[payloadType]
-		if !has {
-			return
-		}
-		who, branch := parsePayloadInfo(payload)
-		ps, err := pipelineService.GetPipelinesByRidAndEventAndBranch(id, p, branch)
-		if err != nil {
-			return
-		}
-		for _, p := range ps {
-			if err := pipelineService.Server(&p); err == nil {
-				pipelineService.User(&p)
-				pipelineService.Webhooks(&p)
-				go deploy(p, who)
-			} else {
-				nocd.Logger().Errorln(err)
-			}
+func proccessPayload(repoID uint, payload interface{}) {
+	payloadType := reflect.TypeOf(payload).String()
+	p, has := webhookSQLIndex[payloadType]
+	if !has {
+		return
+	}
+	who, branch := parsePayloadInfo(payload)
+	ps, err := pipelineService.GetPipelinesByRidAndEventAndBranch(repoID, p, branch)
+	if err != nil {
+		return
+	}
+	for _, p := range ps {
+		if err := pipelineService.Server(&p); err == nil {
+			pipelineService.User(&p)
+			pipelineService.Webhooks(&p)
+			go deploy(p, who)
+		} else {
+			nocd.Logger().Errorln(err)
 		}
 	}
 }
@@ -134,7 +159,7 @@ func parsePayloadInfo(payload interface{}) (string, string) {
 
 	case bitbucket.PullRequestMergedPayload:
 		p := payload.(bitbucket.PullRequestMergedPayload)
-		who = p.Actor.Username
+		who = p.Actor.DisplayName
 		branch = p.PullRequest.Destination.Branch.Name
 		break
 

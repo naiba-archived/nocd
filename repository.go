@@ -6,10 +6,10 @@
 package nocd
 
 import (
-	"gopkg.in/go-playground/webhooks.v3/bitbucket"
-	"gopkg.in/go-playground/webhooks.v3/github"
-	"gopkg.in/go-playground/webhooks.v3/gitlab"
-	"gopkg.in/go-playground/webhooks.v3/gogs"
+	"gopkg.in/go-playground/webhooks.v5/bitbucket"
+	"gopkg.in/go-playground/webhooks.v5/github"
+	"gopkg.in/go-playground/webhooks.v5/gitlab"
+	"gopkg.in/go-playground/webhooks.v5/gogs"
 )
 
 const (
@@ -36,7 +36,7 @@ type Repository struct {
 	UserID   uint
 	User     User `form:"-" binding:"-"`
 	Secret   string
-	Name     string     `form:"name" binding:"required,min=1,max=12"`
+	Name     string     `form:"name" binding:"required,min=1,max=50"`
 	Platform int        `form:"platform" binding:"required,min=1,max=4"`
 	Pipeline []Pipeline `form:"-" binding:"-"`
 }

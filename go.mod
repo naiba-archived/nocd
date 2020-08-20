@@ -21,6 +21,6 @@ require (
 	github.com/utrack/gin-csrf v0.0.0-20190424104817-40fb8d2c8fca
 	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
-	gopkg.in/go-playground/webhooks.v3 v3.13.0
+	gopkg.in/go-playground/webhooks.v5 v5.15.0
 	gopkg.in/ini.v1 v1.55.0
 )
