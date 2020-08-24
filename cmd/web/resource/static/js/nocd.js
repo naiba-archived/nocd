@@ -228,18 +228,18 @@ window.onload = function () {
         parseLog(consoleText, 0);
     }
     if (running === "true") {
-        var timerHandler = setInterval(function () {
+        const fetchLog = function () {
             $.get('?ajax=1&act=view&line=' + logLineNumber, function (res) {
                 if (res.log && res.log.length > 0) {
                     parseLog(res.log, logLineNumber);
                 }
                 if (res.end === "false") {
                     logLineNumber = res.line;
-                } else {
-                    clearInterval(timerHandler)
+                    setTimeout(fetchLog, 1000)
                 }
             })
-        }, 3000)
+        }
+        setTimeout(fetchLog, 0)
     }
 };
 

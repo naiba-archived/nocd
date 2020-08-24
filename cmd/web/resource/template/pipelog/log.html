@@ -1,9 +1,9 @@
 {{define "pipelog/log"}}
 {{template "common/header" .}}
 <div class="container">
-{{if eq .log.Status 4}}
+    {{if eq .log.Status 4}}
     <button class="btn btn-danger mb-3" onclick="stopDeploy({{.fromAdmin}})">停止部署</button>
-{{end}}
+    {{end}}
     <div id="console" running="{{eq .log.Status 4}}" text="{{.log.Log}}">
     </div>
 </div>

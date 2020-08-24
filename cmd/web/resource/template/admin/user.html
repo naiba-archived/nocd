@@ -3,69 +3,68 @@
 <div class="container">
     <div class="row">
         <div class="col-md-3 pt-2 text-center">
-        {{template "common/admin_sidebar" .}}
+            {{template "common/admin_sidebar" .}}
         </div>
         <div class="col-md-9 pt-2">
             <div class="table-responsive">
                 <table class="table table-striped">
                     <thead class="thead-light">
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">昵称</th>
-                        <th scope="col">GItHub</th>
-                        <th scope="col">服务器</th>
-                        <th scope="col">项目</th>
-                        <th scope="col">部署</th>
-                        <th scope="col">最后活动</th>
-                        <th scope="col">管理</th>
-                    </tr>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">昵称</th>
+                            <th scope="col">GItHub</th>
+                            <th scope="col">服务器</th>
+                            <th scope="col">项目</th>
+                            <th scope="col">部署</th>
+                            <th scope="col">最后活动</th>
+                            <th scope="col">管理</th>
+                        </tr>
                     </thead>
                     <tbody>
-                    {{range $u := .users}}
-                    <tr>
-                        <th scope="row">{{.ID}}</th>
-                        <td style="min-width: 60px">{{.GName}}</td>
-                        <td><a href="https://github.com/{{.GLogin}}" target="_blank"><i
-                                class="octicon octicon-mark-github"></i>{{.GLogin}}</a></td>
-                        <td style="min-width: 80px">{{len .Servers}}</td>
-                        <td style="min-width: 60px">{{len .Repositories}}</td>
-                        <td style="min-width: 60px">{{len .Pipelines}}</td>
-                        <td style="min-width: 200px">{{TimeFormat .UpdatedAt}}</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Basic example">
-                                <button onclick="toggleUser({{.GID}},{{.IsAdmin}},'admin')" type="button"
+                        {{range $u := .users}}
+                        <tr>
+                            <th scope="row">{{.ID}}</th>
+                            <td style="min-width: 60px">{{.GName}}</td>
+                            <td><a href="https://github.com/{{.GLogin}}" target="_blank"><i
+                                        class="octicon octicon-mark-github"></i>{{.GLogin}}</a></td>
+                            <td style="min-width: 80px">{{len .Servers}}</td>
+                            <td style="min-width: 60px">{{len .Repositories}}</td>
+                            <td style="min-width: 60px">{{len .Pipelines}}</td>
+                            <td style="min-width: 200px">{{TimeFormat .UpdatedAt}}</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button onclick="toggleUser({{.GID}},{{.IsAdmin}},'admin')" type="button"
                                         class="btn btn-sm btn-light">
-                                {{if .IsAdmin}}取消{{else}}设置{{end}}管理
-                                </button>
-                                <button onclick="toggleUser({{.GID}},{{.IsBlocked}},'block')" type="button"
+                                        {{if .IsAdmin}}取消{{else}}设置{{end}}管理
+                                    </button>
+                                    <button onclick="toggleUser({{.GID}},{{.IsBlocked}},'block')" type="button"
                                         class="btn btn-sm btn-secondary">
-                                {{if .IsBlocked}}解禁{{else}}禁用{{end}}账户
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    {{end}}
+                                        {{if .IsBlocked}}解禁{{else}}禁用{{end}}账户
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {{end}}
                     </tbody>
                 </table>
             </div>
-        {{if gt .allPage 0}}
+            {{if gt .allPage 0}}
             <nav aria-label="用户分页">
                 <ul class="pagination">
                     <li class="page-item{{if eq .currentPage 1}} disabled{{end}}">
                         <a class="page-link" href="?page={{MathSub .currentPage 1}}" tabindex="-1">&laquo;</a>
                     </li>
-                {{range $page := Pagination .allPage .currentPage}}
+                    {{range $page := Pagination .allPage .currentPage}}
                     <li class="page-item{{if .Current}} active{{end}}{{if eq .Text "..."}} disabled{{end}}"><a
-                            class="page-link"
-                            href="?page={{.No}}">{{.Text}}</a>
+                            class="page-link" href="?page={{.No}}">{{.Text}}</a>
                     </li>
-                {{end}}
+                    {{end}}
                     <li class="page-item{{if eq .currentPage .allPage}} disabled{{end}}">
                         <a class="page-link" href="?page={{MathAdd .currentPage 1}}">&raquo;</a>
                     </li>
                 </ul>
             </nav>
-        {{end}}
+            {{end}}
         </div>
     </div>
 </div>

@@ -159,8 +159,8 @@ func viewLog(c *gin.Context) {
 	lineNumber, _ := strconv.Atoi(lineNumberStr)
 	if isAjax {
 		nocd.RunningLogsLock.RLock()
+		defer nocd.RunningLogsLock.RUnlock()
 		run, has := nocd.RunningLogs[log.ID]
-		nocd.RunningLogsLock.RUnlock()
 		switch actStr {
 		case "view":
 			if has {

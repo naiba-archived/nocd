@@ -13,7 +13,7 @@ const (
 	PipeLogStatusSuccess
 	//PipeLogStatusErrorServerConn 服务器链接失败
 	PipeLogStatusErrorServerConn
-	//PipeLogStatusErrorShellExec 脚本错误
+	//PipeLogStatusErrorShellExec 执行错误
 	PipeLogStatusErrorShellExec
 	//PipeLogStatusRunning 正在执行部署
 	PipeLogStatusRunning
