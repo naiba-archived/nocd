@@ -119,9 +119,23 @@ func pipeLogs(c *gin.Context) {
 	}
 
 	logs, num := pipelogService.UserLogs(user.ID, pageInt-1, 20)
+
+	var repoIDs []uint
 	for i, l := range logs {
 		pipelogService.Pipeline(&l)
 		logs[i] = l
+		repoIDs = append(repoIDs, l.Pipeline.RepositoryID)
+	}
+
+	var repos []nocd.Repository
+	db.Find(&repos, "id in (?)", repoIDs)
+	repoIndex := make(map[uint]nocd.Repository)
+	for i := 0; i < len(repos); i++ {
+		repoIndex[repos[i].ID] = repos[i]
+	}
+
+	for i := 0; i < len(logs); i++ {
+		logs[i].Pipeline.Repository = repoIndex[logs[i].Pipeline.RepositoryID]
 	}
 
 	c.HTML(http.StatusOK, "pipelog/index", mgin.CommonData(c, false, gin.H{

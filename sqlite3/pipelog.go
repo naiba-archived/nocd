@@ -47,16 +47,20 @@ func (ps *PipeLogService) LastServerLog(sid uint) nocd.PipeLog {
 
 //UserLogs 用户的所有日志
 func (ps *PipeLogService) UserLogs(uid uint, page, size int64) ([]nocd.PipeLog, int64) {
-	var pipelines []nocd.Pipeline
 	var pl []nocd.PipeLog
-	var user nocd.User
 	var num int64
+
+	var user nocd.User
 	user.ID = uid
-	ps.DB.Model(&user).Select("id").Association("Pipelines").Find(&pipelines)
+	ps.DB.Model(&user).Select("id,repository_id").Association("Pipelines").Find(&user.Pipelines)
+
+	pipelineIndex := make(map[uint]uint)
 	id := make([]uint, 0)
-	for _, p := range pipelines {
+	for _, p := range user.Pipelines {
 		id = append(id, p.ID)
+		pipelineIndex[p.ID] = p.RepositoryID
 	}
+
 	// 控制显示的历史 log 数
 	ps.DB.Offset(page*size).Limit(size).Select("id,started_at,stopped_at,pipeline_id,pusher,status").Order("id desc").Where("pipeline_id IN (?)", id).Find(&pl)
 	ps.DB.Model(&nocd.PipeLog{}).Where("pipeline_id IN (?)", id).Count(&num)
@@ -64,21 +68,6 @@ func (ps *PipeLogService) UserLogs(uid uint, page, size int64) ([]nocd.PipeLog, 
 		num = num / size
 	} else {
 		num = num/size + 1
-	}
-
-	var repoIDs []uint
-	for i := 0; i < len(pl); i++ {
-		repoIDs = append(repoIDs, pl[i].Pipeline.RepositoryID)
-	}
-	var repos []nocd.Repository
-	ps.DB.Find(&repos, "id in (?)", repoIDs)
-	repoIndex := make(map[uint]nocd.Repository)
-	for i := 0; i < len(repos); i++ {
-		repoIndex[repos[i].ID] = repos[i]
-	}
-
-	for i := 0; i < len(pl); i++ {
-		pl[i].Pipeline.Repository = repoIndex[pl[i].Pipeline.RepositoryID]
 	}
 
 	return pl, num
