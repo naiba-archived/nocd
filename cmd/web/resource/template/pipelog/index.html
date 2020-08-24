@@ -2,23 +2,24 @@
 {{template "common/header" .}}
 <div class="container">
     <div class="table-responsive">
-        <table class="table table-hover">
+        <table class="table table-hover" style="min-width: 1500px;">
             <thead class="thead-light">
                 <tr>
                     <th scope="col">#</th>
+                    <th scope="col">日志</th>
                     <th scope="col">所属流程</th>
                     <th scope="col">状态</th>
-                    <th scope="col">触发者</th>
                     <th scope="col">触发时间</th>
                     <th scope="col">部署时长</th>
-                    <th scope="col">日志</th>
+                    <th scope="col">触发者</th>
                 </tr>
             </thead>
             <tbody>
                 {{range $l := .logs}}
                 <tr>
                     <th scope="row">{{$l.ID}}</th>
-                    <td style="min-width: 200px">{{$l.Pipeline.Name}}</td>
+                    <td><a class="btn btn-sm btn-secondary" href="/pipelog/{{$l.ID}}">Log</a></td>
+                    <td>{{$l.Pipeline.Name}}</td>
                     <td>
                         <button{{if eq $l.Status 1}} class="btn btn-success btn-sm">部署成功
                             </button>
@@ -36,29 +37,23 @@
                             class="btn btn-secondary btn-sm">未知状态</button>
                             {{end}}
                     </td>
-                    <td>{{$l.Pusher}}</td>
                     <td>{{TimeFormat $l.StartedAt}}</td>
                     <td>{{TimeDiff $l.StartedAt $l.StoppedAt}}</td>
-                    <td><a class="btn btn-sm btn-secondary" href="/pipelog/{{$l.ID}}">Log</a></td>
+                    <td>{{$l.Pusher}}</td>
                 </tr>
                 {{end}}
             </tbody>
         </table>
     </div>
     {{if gt .allPage 0}}
-    <nav aria-label="部署日志分页">
+    <nav aria-label="Page navigation">
         <ul class="pagination">
-            <li class="page-item{{if eq .currentPage 1}} disabled{{end}}">
-                <a class="page-link" href="?page={{MathSub .currentPage 1}}" tabindex="-1">&laquo;</a>
-            </li>
-            {{range $page := Pagination .allPage .currentPage}}
-            <li class="page-item{{if .Current}} active{{end}}{{if eq .Text "..."}} disabled{{end}}"><a class="page-link"
-                    href="?page={{.No}}">{{.Text}}</a>
-            </li>
+            {{if gt .currentPage 1}}
+            <li class="page-item"><a class="page-link" href="?page={{MathSub .currentPage 1}}">上一页</a></li>
             {{end}}
-            <li class="page-item{{if eq .currentPage .allPage}} disabled{{end}}">
-                <a class="page-link" href="?page={{MathAdd .currentPage 1}}">&raquo;</a>
-            </li>
+            {{if lt .currentPage .allPage}}
+            <li class="page-item"><a class="page-link" href="?page={{MathAdd .currentPage 1}}">下一页</a></li>
+            {{end}}
         </ul>
     </nav>
     {{end}}

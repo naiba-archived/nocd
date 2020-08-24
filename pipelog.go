@@ -13,8 +13,8 @@ const (
 	PipeLogStatusSuccess
 	//PipeLogStatusErrorServerConn 服务器链接失败
 	PipeLogStatusErrorServerConn
-	//PipeLogStatusErrorShellExec 执行错误
-	PipeLogStatusErrorShellExec
+	//PipeLogStatusErrorExec 执行错误
+	PipeLogStatusErrorExec
 	//PipeLogStatusRunning 正在执行部署
 	PipeLogStatusRunning
 	//PipeLogStatusHumanStopped 人工停止

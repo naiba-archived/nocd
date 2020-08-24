@@ -49,19 +49,14 @@
                 </table>
             </div>
             {{if gt .allPage 0}}
-            <nav aria-label="用户分页">
+            <nav aria-label="Page navigation">
                 <ul class="pagination">
-                    <li class="page-item{{if eq .currentPage 1}} disabled{{end}}">
-                        <a class="page-link" href="?page={{MathSub .currentPage 1}}" tabindex="-1">&laquo;</a>
-                    </li>
-                    {{range $page := Pagination .allPage .currentPage}}
-                    <li class="page-item{{if .Current}} active{{end}}{{if eq .Text "..."}} disabled{{end}}"><a
-                            class="page-link" href="?page={{.No}}">{{.Text}}</a>
-                    </li>
+                    {{if gt .currentPage 1}}
+                    <li class="page-item"><a class="page-link" href="?page={{MathSub .currentPage 1}}">上一页</a></li>
                     {{end}}
-                    <li class="page-item{{if eq .currentPage .allPage}} disabled{{end}}">
-                        <a class="page-link" href="?page={{MathAdd .currentPage 1}}">&raquo;</a>
-                    </li>
+                    {{if lt .currentPage .allPage}}
+                    <li class="page-item"><a class="page-link" href="?page={{MathAdd .currentPage 1}}">下一页</a></li>
+                    {{end}}
                 </ul>
             </nav>
             {{end}}

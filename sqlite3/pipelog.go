@@ -65,6 +65,22 @@ func (ps *PipeLogService) UserLogs(uid uint, page, size int64) ([]nocd.PipeLog, 
 	} else {
 		num = num/size + 1
 	}
+
+	var repoIDs []uint
+	for i := 0; i < len(pl); i++ {
+		repoIDs = append(repoIDs, pl[i].Pipeline.RepositoryID)
+	}
+	var repos []nocd.Repository
+	ps.DB.Find(&repos, "id in (?)", repoIDs)
+	repoIndex := make(map[uint]nocd.Repository)
+	for i := 0; i < len(repos); i++ {
+		repoIndex[repos[i].ID] = repos[i]
+	}
+
+	for i := 0; i < len(pl); i++ {
+		pl[i].Pipeline.Repository = repoIndex[pl[i].Pipeline.RepositoryID]
+	}
+
 	return pl, num
 }
 

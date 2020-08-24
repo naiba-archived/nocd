@@ -125,7 +125,7 @@ func Deploy(pipeline nocd.Pipeline, log *nocd.PipeLog) {
 		err = session.Start(pipeline.Shell)
 		if err != nil {
 			nocd.Logger().Debugln(err)
-			run.Log.Status = nocd.PipeLogStatusErrorShellExec
+			run.Log.Status = nocd.PipeLogStatusErrorExec
 			run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
 			run.RunningLog = append(run.RunningLog, appendLog(start)+err.Error())
 			run.Finish <- true
@@ -161,7 +161,7 @@ func Deploy(pipeline nocd.Pipeline, log *nocd.PipeLog) {
 		}
 		if err != nil {
 			nocd.Logger().Debugln(err)
-			run.Log.Status = nocd.PipeLogStatusErrorShellExec
+			run.Log.Status = nocd.PipeLogStatusErrorExec
 			run.RunningLog = append(run.RunningLog, appendLog(start)+stderr.String())
 			run.RunningLog = append(run.RunningLog, appendLog(start)+err.Error())
 		} else {

@@ -10,19 +10,11 @@ import (
 	"fmt"
 	"html/template"
 	"runtime"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/naiba/nocd"
 )
-
-//Pagination 分页
-type Pagination struct {
-	No      int64
-	Current bool
-	Text    string
-}
 
 //FuncMap 自定义模板函数
 func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogService, webhookService nocd.WebhookService) template.FuncMap {
@@ -49,6 +41,9 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 			return pipelogService.LastPipelineLog(pid)
 		},
 		"TimeDiff": func(t1, t2 time.Time) string {
+			if t2.IsZero() {
+				return "正在运行"
+			}
 			sec := t2.Sub(t1).Seconds()
 			if sec < 60 {
 				return fmt.Sprintf(" %.0f 秒", sec)
@@ -74,30 +69,6 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 			return t.In(nocd.Loc).Format("2006-01-02 15:04:05")
 		},
 		"HasPrefix": strings.HasPrefix,
-		"Pagination": func(all, current int64) []Pagination {
-			mMap := make([]Pagination, 0)
-			var num int64
-
-			if all < 11 {
-				num = 1
-			} else {
-				if current > 5 {
-					if all-current < 5 {
-						num = all - 10
-					}
-				} else {
-					num = 1
-				}
-			}
-
-			for i := num; i <= all; i++ {
-				if i-num == 12 {
-					break
-				}
-				mMap = append(mMap, Pagination{No: i, Current: i == current, Text: strconv.FormatInt(i, 10)})
-			}
-			return mMap
-		},
 		"MathSub": func(o, n int64) int64 {
 			return o - n
 		},

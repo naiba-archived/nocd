@@ -197,8 +197,8 @@ func deploy(pipeline nocd.Pipeline, who string) {
 	case nocd.PipeLogStatusSuccess:
 		status = "交付成功"
 		break
-	case nocd.PipeLogStatusErrorShellExec:
-		status = "Shell错误"
+	case nocd.PipeLogStatusErrorExec:
+		status = "执行错误"
 		break
 	case nocd.PipeLogStatusErrorServerConn:
 		status = "服务器连接错误"
