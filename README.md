@@ -1,6 +1,6 @@
 # NoCD 持续交付系统
 
-[![GolangCI](https://golangci.com/badges/github.com/naiba/nocd.svg)](https://golangci.com/r/github.com/naiba/nocd) ![构建状态](https://github.com/naiba/nocd/workflows/Build%20Docker%20Image/badge.svg)
+![构建状态](https://github.com/naiba/nocd/workflows/Build%20Docker%20Image/badge.svg)
 
 **NoCD** 是一个 Go 实现的轻便可控的持续交付系统。
 
@@ -12,9 +12,9 @@
 
 ## 功能特色
 
-- 服务器：可以添加多个部署服务器。
-- 项目：支持解析 Gogs、GitHub、Gitlab、BitBucket 的 WebHook
-- 通知：自定义 Webhook 可以通过 钉钉、Server酱、WxPusher 等服务推送通知。
+- 服务器：可以添加多个部署服务器
+- 项目：支持解析各种流行 Git 托管平台的 Webhook
+- 通知：灵活的自定义 Webhook
 - 交付记录：可以查看部署记录，用户可以停止部署中的流程
 - 管理面板：查看系统状态，管理用户，管理部署中的流程
 
@@ -86,6 +86,4 @@
 
 ## License
 
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fnaiba%2Fnocd.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fnaiba%2Fnocd?ref=badge_large)
-
-Copy &copy; 2017-2020 naiba
+MIT
