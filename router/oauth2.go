@@ -68,11 +68,6 @@ func serveOauth2(r *gin.Engine) {
 			if err != nil {
 				// 首次登录
 				if err == gorm.ErrRecordNotFound {
-					if err != nil {
-						nocd.Logger().Errorln(err)
-						c.String(http.StatusInternalServerError, "生成私钥失败，请再次常试")
-						return
-					}
 					u = new(nocd.User)
 					u.GID = uint(user.GetID())
 					u.GLogin = user.GetLogin()
