@@ -3,7 +3,7 @@
 <div class="container">
     <div class="alert alert-secondary">
         <button data-toggle="modal" data-method="POST" data-target="#modalServer"
-            class="btn btn-secondary btn-block">添加服务器</button>
+            class="btn btn-secondary btn-block">{{T .Localizer "create_server" nil}}</button>
     </div>
     <div class="card-deck">
         {{range $server := .servers}}
@@ -12,16 +12,16 @@
                 <h5 class="card-title limit-text-length"><i class="octicon octicon-server"></i>{{$server.Name}}
                 </h5>
                 <p class="card-text">
-                    服务器地址：<samp>{{$server.Address}}</samp><br>
-                    服务器端口：<samp>{{$server.Port}}</samp><br>
-                    登录用户名：<samp>{{$server.Login}}</samp>
+                    {{T $.Localizer "server_address" nil}}<samp>{{$server.Address}}</samp><br>
+                    {{T $.Localizer "ssh_port" nil}}<samp>{{$server.Port}}</samp><br>
+                    {{T $.Localizer "ssh_login_name" nil}}<samp>{{$server.Login}}</samp>
                 </p>
             </div>
             <div class="card-footer d-flex justify-content-between">
                 <small class="text-muted p-2">
                     <i class="octicon octicon-clock"></i>
                     {{$log := LastServerLog .ID}}
-                    最后活动于{{TimeDiff $log.StoppedAt Now}}前
+                    Last connected {{TimeDiff $log.StoppedAt Now}} ago
                 </small>
                 <div data-server="{{$server|JSON}}">
                     <button class="btn btn-sm btn-secondary" data-method="PATCH" data-toggle="modal"

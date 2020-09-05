@@ -33,6 +33,7 @@ func CommonData(c *gin.Context, csrfToken bool, data gin.H) gin.H {
 	if csrfToken || isLogin {
 		data["csrf_token"] = template.HTML(`<input type="hidden" name="_csrf" value="` + csrf.GetToken(c) + `">`)
 	}
+	data["Localizer"] = c.MustGet("i18n")
 	return data
 }
 

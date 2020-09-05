@@ -11,13 +11,13 @@
                     <thead class="thead-light">
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">昵称</th>
-                            <th scope="col">GItHub</th>
-                            <th scope="col">服务器</th>
-                            <th scope="col">项目</th>
-                            <th scope="col">部署</th>
-                            <th scope="col">最后活动</th>
-                            <th scope="col">管理</th>
+                            <th scope="col">{{T .Localizer "nickname" nil}}</th>
+                            <th scope="col">GitHub</th>
+                            <th scope="col">{{T .Localizer "nav_server" nil}}</th>
+                            <th scope="col">{{T .Localizer "nav_project" nil}}</th>
+                            <th scope="col">{{T .Localizer "nav_pipeline" nil}}</th>
+                            <th scope="col">{{T .Localizer "last_active" nil}}</th>
+                            <th scope="col">{{T .Localizer "management_permission" nil}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,11 +35,11 @@
                                 <div class="btn-group" role="group" aria-label="Basic example">
                                     <button onclick="toggleUser({{.GID}},{{.IsAdmin}},'admin')" type="button"
                                         class="btn btn-sm btn-light">
-                                        {{if .IsAdmin}}取消{{else}}设置{{end}}管理
+                                        {{if .IsAdmin}}{{T $.Localizer "cancel" nil}}{{else}}{{T $.Localizer "grant" nil}}{{end}}
                                     </button>
                                     <button onclick="toggleUser({{.GID}},{{.IsBlocked}},'block')" type="button"
                                         class="btn btn-sm btn-secondary">
-                                        {{if .IsBlocked}}解禁{{else}}禁用{{end}}账户
+                                        {{if .IsBlocked}}{{T $.Localizer "unban" nil}}{{else}}{{T $.Localizer "ban" nil}}{{end}}
                                     </button>
                                 </div>
                             </td>
@@ -52,10 +52,10 @@
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     {{if gt .currentPage 1}}
-                    <li class="page-item"><a class="page-link" href="?page={{MathSub .currentPage 1}}">上一页</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{MathSub .currentPage 1}}">{{T .Localizer "prev_page" nil}}</a></li>
                     {{end}}
                     {{if lt .currentPage .allPage}}
-                    <li class="page-item"><a class="page-link" href="?page={{MathAdd .currentPage 1}}">下一页</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{MathAdd .currentPage 1}}">{{T .Localizer "next_page" nil}}</a></li>
                     {{end}}
                 </ul>
             </nav>

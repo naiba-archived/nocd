@@ -1,54 +1,55 @@
-# NoCD 持续交付系统
+## NoCD Continuous Delivery System
 
-![构建状态](https://github.com/naiba/nocd/workflows/Build%20Docker%20Image/badge.svg)
+![Build Status](https://github.com/naiba/nocd/workflows/Build%20Docker%20Image/badge.svg)
 
-**NoCD** 是一个 Go 实现的轻便可控的持续交付系统。
+**NoCD** is a lightweight and controllable continuous delivery system implemented by Go.
 
-## 界面预览
+## Interface preview
 
 | ![首页截图](https://github.com/naiba/nocd/raw/master/README/首页截图.png) | ![服务器管理](https://github.com/naiba/nocd/raw/master/README/服务器管理.png) | ![项目管理](https://github.com/naiba/nocd/raw/master/README/项目管理.png) |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | ![交付记录](https://github.com/naiba/nocd/raw/master/README/交付记录.png) | ![管理中心](https://github.com/naiba/nocd/raw/master/README/查看日志.png) | ![查看日志](https://github.com/naiba/nocd/raw/master/README/管理中心.png)  |
 
-## 功能特色
+## Features
 
-- 服务器：可以添加多个部署服务器
-- 项目：支持解析各种流行 Git 托管平台的 Webhook
-- 通知：灵活的自定义 Webhook
-- 交付记录：可以查看部署记录，用户可以停止部署中的流程
-- 管理面板：查看系统状态，管理用户，管理部署中的流程
+- Multi Language support: English, Chinese (PR is welcome)
+- Server: Multiple deployment servers can be added
+- Project: Support parsing Webhooks of various popular Git hosting platforms
+- Notification: Flexible custom Webhook
+- Delivery record: You can view the deployment record, and the user can stop the deployment process
+- Management panel: View system status, manage users, and manage deployment processes
 
-## 部署指北
+## Deployment means north
 
 ### Docker
 
-1. 创建配置文件（如`/data/nocd`文件夹）
+1. Create a configuration file (eg `/data/nocd` folder)
 
    ```shell
    nano /data/nocd/app.ini
    ```
 
-   文件内容参考下面（ `web_listen = 0.0.0.0:8000` 配置不要改）
+   Refer to the following for the content of the file (`web_listen = 0.0.0.0:8000` configuration do not change)
 
-2. 运行NoCD
+2. Run NoCD
 
    ```shell
    docker run -d --name=nocd -p 8000:8000 -v /data/nocd/:/data/conf docker.pkg.github.com/naiba/dockerfiles/nocd:latest
    ```
 
-### 源码编译
+### Source code compilation
 
-1. Clone 源代码
+1. Clone source code
 
-2. 进入应用目录 `cd nocd/cmd/web`
+2. Enter the application directory `cd nocd/cmd/web`
 
-3. 编译二进制
+3. Compile the binary
 
    ```shell
    go build
    ```
 
-4. 在 `conf/app.ini` 创建配置文件
+4. Create a configuration file in `conf/app.ini`
 
    ```ini
    [nocd]
@@ -58,31 +59,31 @@
    web_listen = 0.0.0.0:8000
    loc = Asia/Shanghai
    [third_party]
-   google_analysis = "NB-XXXXXX-1" # optional
    github_oauth2_client_id = example
    github_oauth2_client_secret = example
+   google_analysis = "NB-XXXXXX-1" # optional
    sentry_dsn = "https://example:xx@example.io/project_id" # optional
    ```
 
-5. 运行
+5. Run
 
    ```shell
    ./web
    ```
 
-6. 在 `GitHub` 设置回调：`http(s)://your_domain_name/oauth2/callback`
+6. Set the callback in `GitHub`: `http(s)://your_domain_name/oauth2/callback`
 
-## 常见问题
+## Common issue
 
-1. 为什么我的部署脚本总是执行失败 或者 根本没有执行？
+1. Why does my deployment script always fail to execute or not executed at all?
 
-    > 请检查您的 PATH 路径是否引入，建议提前 export 一下路径，自动部署的时候不会
+    > Please check whether your PATH path is imported, it is recommended to export the path in advance, it will not be automatically deployed
     >
-    > `source .bash_profile`。
+    > `source .bash_profile`.
 
-2. 如何保持后台运行？
+2. How to keep running in the background?
 
-    > 可以使用 `systemd` 。 更推荐使用docker方式运行。
+    > You can use `systemd`. It is more recommended to run in docker mode.
 
 ## License
 

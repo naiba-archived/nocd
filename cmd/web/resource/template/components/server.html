@@ -3,7 +3,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">服务器</h5>
+                <h5 class="modal-title">{{T .Localizer "nav_server" nil}}</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -12,38 +12,38 @@
                 <form id="formEditServer" onsubmit="return serverHandler()">
                     <input id="inputID" name="id" type="hidden">
                     <div class="form-group">
-                        <label for="inputName" class="col-form-label">备注名：</label>
+                        <label for="inputName" class="col-form-label">{{T .Localizer "remark" nil}}</label>
                         <input required name="name" type="text" class="form-control" id="inputName">
                     </div>
                     <div class="form-group">
-                        <label for="inputAddress" class="col-form-label">服务器地址：</label>
+                        <label for="inputAddress" class="col-form-label">{{T .Localizer "server_address" nil}}</label>
                         <input required name="address" type="text" class="form-control" id="inputAddress">
                     </div>
                     <div class="form-group">
-                        <label for="inputPort" class="col-form-label">SSH 端口号：</label>
+                        <label for="inputPort" class="col-form-label">{{T .Localizer "ssh_port" nil}}</label>
                         <input required name="port" type="text" class="form-control" id="inputPort">
                     </div>
                     <div class="form-group">
-                        <label for="inputLogin" class="col-form-label">SSH 用户名：</label>
+                        <label for="inputLogin" class="col-form-label">{{T .Localizer "ssh_login_name" nil}}</label>
                         <input required name="login" type="text" class="form-control" id="inputLogin">
                     </div>
                     <div class="form-group">
-                        <label for="inputLoginType">登录方式</label>
+                        <label for="inputLoginType">{{T .Localizer "ssh_login_method" nil}}</label>
                         <select name="login_type" class="form-control" id="inputLoginType">
-                            <option value="1">密码</option>
-                            <option value="2">私钥</option>
+                            <option value="1">{{T .Localizer "password" nil}}</option>
+                            <option value="2">{{T .Localizer "private_key" nil}}</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="inputPassword">密码或私钥</label>
+                        <label for="inputPassword">{{T .Localizer "password_or_private_key" nil}}</label>
                         <textarea name="password" class="form-control" id="inputPassword" rows="3"></textarea>
                     </div>
                     {{.csrf_token}}
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button id="btnSubmit" onclick="saveForm('#formEditServer')" class="btn btn-primary">添加</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{T .Localizer "cancel" nil}}</button>
+                <button id="btnSubmit" onclick="saveForm('#formEditServer')" class="btn btn-primary">{{T .Localizer "create" nil}}</button>
             </div>
         </div>
     </div>

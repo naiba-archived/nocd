@@ -1,0 +1,184 @@
+[site_title]
+other = "一个简单易用轻量级持续交付系统"
+[nav_server]
+other = "服务器"
+[nav_project]
+other = "项目"
+[nav_pipeline]
+other = "交付"
+[nav_dashboard]
+other = "管理面板"
+[nav_account_migrate]
+other = "账户迁移"
+[nav_logout]
+other = "注销"
+[nav_login]
+other = "登录"
+[footer_stat]
+other = "[统计] 用户 <b>{{.UserCount}}</b> 位, 服务器<b>{{.ServerCount}}</b> 台, 项目 <b>{{.RepoCount}}</b> 个, 交付流程 <b>{{.PipelineCount}}</b> 个,历史交付: <b>{{.PipeLogCount}}</b> 次, 运行中: <b>{{.RunningCount}}</b>."
+[js_copy_successful]
+other = "成功复制到剪贴版"
+[edit]
+other = "修改"
+[delete]
+other = "删除"
+[create]
+other = "创建"
+[update]
+other = "更新"
+[js_stop_deploy_confirm]
+other = "确定停止部署吗？"
+[js_stop_deploy_successful]
+other = "成功停止部署"
+[js_operation_successful]
+other = "操作成功"
+[js_operation_failed]
+other = "出现错误，请重试"
+[nav_user_management]
+other = "用户管理"
+[nav_deploying_management]
+other = "正在部署"
+[admin_welcome]
+other = "欢迎您，{{.GName}}"
+[num_of_goruntines]
+other = "运行的 Goroutine 数量"
+[memory_alloc]
+other = "当前内存使用量"
+[total_memory_alloc]
+other = "当前内存占用总量"
+[next_gc]
+other = "下次 GC 回收量"
+[num_gc]
+other = "已执行 GC 次数"
+[next_page]
+other = "下一页"
+[prev_page]
+other = "上一页"
+[err_server_connect]
+other = "服务器连接错误"
+[err_script_execute]
+other = "脚本执行错误"
+[err_running]
+other = "正在运行"
+[err_manual_stop]
+other = "人工停止"
+[err_execution_timeout]
+other = "执行超时"
+[unknown]
+other = "未知"
+[successful]
+other = "成功"
+[view_log]
+other = "查看日志"
+[deployment_duration]
+other = "部署时长"
+[triggered_on]
+other = "触发时间"
+[trigger]
+other = "触发者"
+[status]
+other = "状态"
+[nickname]
+other = "昵称"
+[last_active]
+other = "最后活跃"
+[management_permission]
+other = "管理员权限"
+[cancel]
+other = "取消"
+[grant]
+other = "授予"
+[ban]
+other = "禁用账户"
+[unban]
+other = "解禁账户"
+[account_transfer_alert]
+other = "此操作将会把账户下所有的<b>服务器</b>、<b>仓库</b>（及仓库<b>下属所有</b>的 交付流程、Webhook）迁移给对方。"
+[target_account]
+other = "对方 GitHub 登录名"
+[migrate]
+other = "迁移"
+[remark]
+other = "备注"
+[server_address]
+other = "服务器地址"
+[ssh_port]
+other = "SSH 端口号"
+[ssh_login_name]
+other = "SSH 登录名"
+[ssh_login_method]
+other = "登录方式"
+[password]
+other = "密码"
+[private_key]
+other = "私钥"
+[password_or_private_key]
+other = "密码或私钥"
+[delivery_result_push]
+other = "交付结果推送"
+[webhook_desc]
+other = "<p>更灵活的自定义 Webhook</p>可替换参数：触发者<code>#Pusher#</code>、日志<code>#Log#</code>、流程备注<code>#PipelineName#</code>、部署结果<code>#Status#</code>、流程ID<code>#PipelineID#</code>、部署开始时间<code>#StartedAt#</code>、部署结束时间<code>#StoppedAt#</code>。<br>可替换字段：<b>URL</b>、<b>Body</b> 的内容均能替换，如果是 GET 请求请把 query 参数以 JSON key value 格式放到 body 字段里面，方便URLEncode<br>填入 Body 的数据必须是正确的json格式。"
+[webhook_request_method]
+other = "请求方式"
+[webhook_request_type]
+other = "请求格式"
+[webhook_verify_ssl]
+other = "验证 SSL"
+[notify_if_successful]
+other = "如果交付成功也请给我通知"
+[enable]
+other = "启用"
+[webhook_management]
+other = "Webhook 管理"
+[push_success_message]
+other = "推送成功消息"
+[management]
+other = "管理"
+[nocd_desc]
+other = "开源持续交付系统"
+[nocd_desc_long]
+other = "由 Go 开发的持续交付系统，易安装、跨平台、轻量级。永久免费开源。是中小公司、工作室项目交付不二选择，居家旅行写代码的必备产品。"
+[easy_to_install]
+other = "易安装"
+[binary_deployment]
+other = "二进制<small class='text-muted'>部署</small>"
+[binary_deployment_long]
+other = "您除了可以根据操作系统平台下载 二进制运行，还可以通过 Docker 或 Vagrant，以及 包管理 安装。"
+[cross_platform]
+other = "跨平台"
+[cross_platform_desc]
+other = "跨平台<small class='text-muted'>编译</small>"
+[cross_platform_desc_long]
+other = "任何 Go 语言 支持的平台都可以运行 NoCD，包括 Windows、Mac、Linux 以及 ARM。"
+[lightweight]
+other = "轻量级"
+[lightweight_desc]
+other = "树莓派<small class='text-muted'>足矣</small>"
+[lightweight_desc_long]
+other = "一个廉价的树莓派的配置足以满足 NoCD 的最低系统硬件要求。甚至可以运行在 NAS 设备上。"
+[create_server]
+other = "创建服务器"
+[project_name]
+other = "项目名称"
+[project_platform]
+other = "托管平台"
+[pipeline_management]
+other = "管理交付流程"
+[pipeline_management_desc]
+other = "请给您的 Git 仓库 <b>添加 WebHook</b>，WebHook 地址与密钥在项目名称右边的按钮处复制！"
+[branch]
+other = "分支"
+[event]
+other = "事件"
+[required]
+other = "*必须"
+[script]
+other = "要执行的命令"
+[project_management]
+other = "项目管理"
+[delete_project_alert]
+other = "删除仓库，其下的 交付流程、日志及 Webhook 将会一并删除。"
+[click_to_copy_webhook_callback]
+other = "点击复制 WebHook 回调地址"
+[click_to_copy_webhook_secret]
+other = "点击复制 WebHook 密钥"

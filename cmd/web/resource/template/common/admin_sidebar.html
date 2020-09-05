@@ -1,15 +1,15 @@
 {{define "common/admin_sidebar"}}
 <div class="card">
     <div class="card-header">
-        管理面板
+        {{T .Localizer "nav_dashboard" nil}}
     </div>
     <div class="list-group list-group-flush">
         <a href="/admin/"
-            class="list-group-item list-group-item-action{{if eq .router "/admin/"}} active{{end}}">控制面板</a>
+            class="list-group-item list-group-item-action{{if eq .router "/admin/"}} active{{end}}">{{T .Localizer "nav_dashboard" nil}}</a>
         <a href="/admin/user/"
-            class="list-group-item list-group-item-action{{if eq .router "/admin/user/"}} active{{end}}">用户管理</a>
+            class="list-group-item list-group-item-action{{if eq .router "/admin/user/"}} active{{end}}">{{T .Localizer "nav_user_management" nil}}</a>
         <a href="/admin/running/"
-            class="list-group-item list-group-item-action{{if eq .router "/admin/running/"}} active{{end}}">正在部署</a>
+            class="list-group-item list-group-item-action{{if eq .router "/admin/running/"}} active{{end}}">{{T .Localizer "nav_deploying_management" nil}}</a>
     </div>
 </div>
 {{end}}

@@ -1,0 +1,184 @@
+[site_title]
+other = "a lightweight and controllable continuous delivery system"
+[nav_server]
+other = "Server"
+[nav_project]
+other = "Project"
+[nav_pipeline]
+other = "Pipeline"
+[nav_dashboard]
+other = "Dashboard"
+[nav_account_migrate]
+other = "Account Migrate"
+[nav_logout]
+other = "Logout"
+[nav_login]
+other = "Login"
+[footer_stat]
+other = "[Stat] <b>{{.UserCount}}</b> users, <b>{{.ServerCount}}</b> servers, <b>{{.RepoCount}}</b> projects, <b>{{.PipelineCount}}</b> piplines, <b>{{.PipeLogCount}}</b> deployed, <b>{{.RunningCount}}</b> running."
+[js_copy_successful]
+other = "Copy to clipboard successfully"
+[edit]
+other = "Edit"
+[delete]
+other = "Delete"
+[create]
+other = "Create"
+[update]
+other = "Update"
+[js_stop_deploy_confirm]
+other = "Are you sure to stop the deployment?"
+[js_stop_deploy_successful]
+other = "Deployment stopped successfully"
+[js_operation_successful]
+other = "Successful operation"
+[js_operation_failed]
+other = "An error occurred, please try again: "
+[nav_user_management]
+other = "User Management"
+[nav_deploying_management]
+other = "Deploying Management"
+[admin_welcome]
+other = "Welcome, {{.GName}}"
+[num_of_goruntines]
+other = "Number of Goroutines running"
+[memory_alloc]
+other = "Memory Alloc"
+[total_memory_alloc]
+other = "Total Memory Alloc"
+[next_gc]
+other = "Next GC"
+[num_gc]
+other = "GC Num"
+[next_page]
+other = "Next"
+[prev_page]
+other = "Prev"
+[err_server_connect]
+other = "Server connection error"
+[err_script_execute]
+other = "Script execution error"
+[err_running]
+other = "Running"
+[err_manual_stop]
+other = "Manual stop"
+[err_execution_timeout]
+other = "Execution timeout"
+[unknown]
+other = "Unknown"
+[successful]
+other = "Successful"
+[view_log]
+other = "View log"
+[deployment_duration]
+other = "Deployment duration"
+[triggered_on]
+other = "Triggered on"
+[trigger]
+other = "Trigger"
+[status]
+other = "Status"
+[nickname]
+other = "Nickname"
+[last_active]
+other = "Last active time"
+[management_permission]
+other = "SuperUser Permission"
+[cancel]
+other = "Cancel"
+[grant]
+other = "Grant"
+[ban]
+other = "Ban"
+[unban]
+other = "Unban"
+[account_transfer_alert]
+other = "This operation will migrate all the <b>server</b> and <b>warehouse</b> (and the delivery process and Webhook of the warehouse <b>subordinates</b>) under the account to the other party."
+[target_account]
+other = "The other party's GitHub login name"
+[migrate]
+other = "Migrate"
+[remark]
+other = "Remark"
+[server_address]
+other = "Server address"
+[ssh_port]
+other = "SSH port"
+[ssh_login_name]
+other = "SSH login name"
+[ssh_login_method]
+other = "SSH login method"
+[password]
+other = "Password"
+[private_key]
+other = "Private key"
+[password_or_private_key]
+other = "Password OR Private key"
+[delivery_result_push]
+other = "Delivery result push"
+[webhook_desc]
+other = "<p>More flexible custom Webhook</p> Replaceable parameters: trigger <code>#Pusher#</code>, log <code>#Log#</code>, process note <code>#PipelineName# </code>, deployment result <code>#Status#</code>, process ID <code>#PipelineID#</code>, deployment start time <code>#StartedAt#</code>, deployment end time <code >#StoppedAt#</code>. <br>Replaceable fields: The contents of <b>URL</b> and <b>Body</b> can be replaced. If it is a GET request, please put the query parameter in the body field in JSON key value format for convenience URLEncode<br>The data filled in Body must be in the correct json format."
+[webhook_request_method]
+other = "Request method"
+[webhook_request_type]
+other = "Request body type"
+[webhook_verify_ssl]
+other = "Verify SSL"
+[notify_if_successful]
+other = "Please notify me if the delivery is successful"
+[enable]
+other = "Enable"
+[webhook_management]
+other = "Webhook Management"
+[push_success_message]
+other = "Push success message"
+[management]
+other = "Management"
+[nocd_desc]
+other = "Open source continuous delivery system"
+[nocd_desc_long]
+other = "The continuous delivery system developed by Go is easy to install, cross-platform, and lightweight. Permanently free and open source. It is the best choice for small and medium-sized companies and studio project delivery, and is a must-have product for writing codes during home travel."
+[easy_to_install]
+other = "Easy to install"
+[binary_deployment]
+other = "Binary <small class='text-muted'>deployment</small>"
+[binary_deployment_long]
+other = "In addition to downloading the binary operation according to the operating system platform, you can also install it through Docker or Vagrant and package management."
+[cross_platform]
+other = "Cross-platform"
+[cross_platform_desc]
+other = "Cross-platform <small class='text-muted'>compilation</small>"
+[cross_platform_desc_long]
+other = "NoCD can be run on any platform supported by the Go language, including Windows, Mac, Linux, and ARM."
+[lightweight]
+other = "Lightweight"
+[lightweight_desc]
+other = "Raspberry Pi <small class='text-muted'>sufficient</small>"
+[lightweight_desc_long]
+other = "The configuration of a cheap Raspberry Pi is sufficient to meet NoCD's minimum system hardware requirements. It can even run on NAS devices."
+[create_server]
+other = "Create Server"
+[project_name]
+other = "Project name"
+[project_platform]
+other = "Git platform"
+[pipeline_management]
+other = "Pipeline Management"
+[pipeline_management_desc]
+other = "Please <b>add WebHook</b> to your Git repository. Copy the WebHook address and key at the button to the right of the project name!"
+[branch]
+other = "Branch"
+[event]
+other = "Event"
+[required]
+other = "*Required"
+[script]
+other = "Script to execute"
+[project_management]
+other = "Project Management"
+[delete_project_alert]
+other = "If you delete the git repository, pipelines, logs, and Webhooks under it will also be deleted."
+[click_to_copy_webhook_callback]
+other = "Click to copy WebHook callback address"
+[click_to_copy_webhook_secret]
+other = "Click to copy WebHook secret"

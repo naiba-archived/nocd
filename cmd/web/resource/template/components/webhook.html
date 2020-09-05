@@ -9,15 +9,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h5 class="card-title">交付结果推送</h5>
+                <h5 class="card-title">{{T .Localizer "delivery_result_push" nil}}</h5>
                 <div class="card-subtitle mb-2 text-muted">
-                    <p>更灵活的自定义 Webhook</p>
-                    可替换参数：触发者<code>#Pusher#</code>、日志<code>#Log#</code>、流程备注<code>#PipelineName#</code>、部署结果<code>#Status#</code>、流程ID<code>#PipelineID#</code>、部署开始时间<code>#StartedAt#</code>、部署结束时间<code>#StoppedAt#</code>。
-                    <br>
-                    可替换字段：<b>URL</b>、<b>Body</b> 的内容均能替换，如果是 GET 请求请把 query 参数以 JSON key value 格式放到 body 字段里面，方便
-                    URLEncode
-                    <br>
-                    填入 Body 的数据可以到 <a href="https://www.bejson.com/" target="_blank">JSON 校验工具</a> 校验一下是否正确。
+                    {{T .Localizer "webhook_desc" nil | unsafe}}
                 </div>
                 <form id="formWebhook" onsubmit="return webhookHandler()">
                     <input id="inputID" type="hidden" name="id">
@@ -28,14 +22,14 @@
                             placeholder="https://example.com/callback/#PipelineID#">
                     </div>
                     <div class="form-group">
-                        <label for="selectMethod">请求方式</label>
+                        <label for="selectMethod">{{T .Localizer "webhook_request_method" nil}}</label>
                         <select name="request_method" class="form-control" id="selectMethod">
                             <option value="1">Get</option>
                             <option value="2">Post</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="selectType">请求格式</label>
+                        <label for="selectType">{{T .Localizer "webhook_request_type" nil}}</label>
                         <select name="request_type" class="form-control" id="selectType">
                             <option value="1">JSON</option>
                             <option value="2">Form</option>
@@ -49,23 +43,23 @@
                     <div class="form-check mb-3">
                         <input name="verify_ssl" type="checkbox" class="form-check-input" id="checkVerifySSL"
                             value="true">
-                        <label class="form-check-label" for="checkVerifySSL">验证 SSL</label>
+                        <label class="form-check-label" for="checkVerifySSL">{{T .Localizer "webhook_verify_ssl" nil}}</label>
                     </div>
                     <div class="form-check mb-3">
                         <input name="push_success" type="checkbox" class="form-check-input" id="checkPushSuccess"
                             value="true">
-                        <label class="form-check-label" for="checkPushSuccess">推送交付成功的通知</label>
+                        <label class="form-check-label" for="checkPushSuccess">{{T .Localizer "notify_if_successful" nil}}</label>
                     </div>
                     <div class="form-check mb-3">
                         <input name="enable" type="checkbox" class="form-check-input" id="checkEnable" value="true">
-                        <label class="form-check-label" for="checkEnable">启用</label>
+                        <label class="form-check-label" for="checkEnable">{{T .Localizer "enable" nil}}</label>
                     </div>
                     {{.csrf_token}}
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                <button id="btnSubmit" onclick="saveForm('#formWebhook')" class="btn btn-primary">添加</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{T .Localizer "cancel" nil}}</button>
+                <button id="btnSubmit" onclick="saveForm('#formWebhook')" class="btn btn-primary">{{T .Localizer "create" nil}}</button>
             </div>
         </div>
     </div>

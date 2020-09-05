@@ -11,12 +11,12 @@
                     <thead class="thead-light">
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">所属流程</th>
-                            <th scope="col">状态</th>
-                            <th scope="col">触发者</th>
-                            <th scope="col" style="min-width: 200px;">触发时间</th>
-                            <th scope="col" style="min-width: 100px;">部署时长</th>
-                            <th scope="col">日志</th>
+                            <th scope="col">{{T .Localizer "nav_pipeline" nil}}</th>
+                            <th scope="col">{{T .Localizer "status" nil}}</th>
+                            <th scope="col">{{T .Localizer "trigger" nil}}</th>
+                            <th scope="col" style="min-width: 200px;">{{T .Localizer "triggered_on" nil}}</th>
+                            <th scope="col" style="min-width: 100px;">{{T .Localizer "deployment_duration" nil}}</th>
+                            <th scope="col">{{T .Localizer "view_log" nil}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -25,20 +25,20 @@
                             <th scope="row">{{$l.ID}}</th>
                             <td style="min-width: 200px">{{$l.Pipeline.Name}}</td>
                             <td>
-                                <button{{if eq $l.Status 1}} class="btn btn-success btn-sm">部署成功
+                                <button{{if eq $l.Status 1}} class="btn btn-success btn-sm">{{T $.Localizer "successful" nil}}
                                     </button>
                                     {{else if eq $l.Status 2}}
-                                    class="btn btn-dark btn-sm">服务器错误</button>
+                                    class="btn btn-dark btn-sm">{{T $.Localizer "err_server_connect" nil}}</button>
                                     {{else if eq $l.Status 3}}
-                                    class="btn btn-danger btn-sm">执行错误</button>
+                                    class="btn btn-danger btn-sm">{{T $.Localizer "err_script_execute" nil}}</button>
                                     {{else if eq $l.Status 4}}
-                                    class="btn btn-primary btn-sm">正在运行</button>
+                                    class="btn btn-primary btn-sm">{{T $.Localizer "err_running" nil}}</button>
                                     {{else if eq $l.Status 5}}
-                                    class="btn btn-info btn-sm">人工停止</button>
+                                    class="btn btn-info btn-sm">{{T $.Localizer "err_manual_stop" nil}}</button>
                                     {{else if eq $l.Status 6}}
-                                    class="btn btn-warning btn-sm">执行超时</button>
+                                    class="btn btn-warning btn-sm">{{T $.Localizer "err_execution_timeout" nil}}</button>
                                     {{else}}
-                                    class="btn btn-secondary btn-sm">未知状态</button>
+                                    class="btn btn-secondary btn-sm">{{T $.Localizer "unknown" nil}}</button>
                                     {{end}}
                             </td>
                             <td>{{$l.Pusher}}</td>
@@ -54,10 +54,10 @@
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     {{if gt .currentPage 1}}
-                    <li class="page-item"><a class="page-link" href="?page={{MathSub .currentPage 1}}">上一页</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{MathSub .currentPage 1}}">{{T .Localizer "prev_page" nil}}</a></li>
                     {{end}}
                     {{if lt .currentPage .allPage}}
-                    <li class="page-item"><a class="page-link" href="?page={{MathAdd .currentPage 1}}">下一页</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{MathAdd .currentPage 1}}">{{T .Localizer "next_page" nil}}</a></li>
                     {{end}}
                 </ul>
             </nav>

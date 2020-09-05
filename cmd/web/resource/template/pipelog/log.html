@@ -2,7 +2,7 @@
 {{template "common/header" .}}
 <div class="container">
     {{if eq .log.Status 4}}
-    <button class="btn btn-danger mb-3" onclick="stopDeploy({{.fromAdmin}})">停止部署</button>
+    <button class="btn btn-danger mb-3" onclick="stopDeploy({{.fromAdmin}})">{{T .Localizer "err_manual_stop" nil}}</button>
     {{end}}
     <div id="console" running="{{eq .log.Status 4}}" text="{{.log.Log}}">
     </div>

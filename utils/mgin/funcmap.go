@@ -14,11 +14,16 @@ import (
 	"time"
 
 	"github.com/naiba/nocd"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 )
 
 //FuncMap 自定义模板函数
-func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogService, webhookService nocd.WebhookService) template.FuncMap {
+func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogService,
+	webhookService nocd.WebhookService) template.FuncMap {
 	return template.FuncMap{
+		"unsafe": func(raw string) template.HTML {
+			return template.HTML(raw)
+		},
 		"RepoPipelines": func(rid uint) []nocd.Pipeline {
 			return pipelineService.RepoPipelines(&nocd.Repository{ID: rid})
 		},
@@ -42,25 +47,25 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 		},
 		"TimeDiff": func(t1, t2 time.Time) string {
 			if t2.IsZero() {
-				return "正在运行"
+				return "Running"
 			}
 			sec := t2.Sub(t1).Seconds()
 			if sec < 60 {
-				return fmt.Sprintf(" %.0f 秒", sec)
+				return fmt.Sprintf(" %.0f s", sec)
 			}
 			if sec < 60*60 {
-				return fmt.Sprintf(" %.0f 分钟", sec/60)
+				return fmt.Sprintf(" %.0f minute", sec/60)
 			}
 			if sec < 60*60*24 {
-				return fmt.Sprintf(" %.0f 小时", sec/60/60)
+				return fmt.Sprintf(" %.0f H", sec/60/60)
 			}
 			if sec < 60*60*24*30 {
-				return fmt.Sprintf(" %.0f 天", sec/60/60/24)
+				return fmt.Sprintf(" %.0f day", sec/60/60/24)
 			}
 			if sec < 60*60*24*30*12 {
-				return fmt.Sprintf(" %.0f 个月", sec/60/60/24/30)
+				return fmt.Sprintf(" %.0f month", sec/60/60/24/30)
 			}
-			return fmt.Sprintf(" %.0f 年", sec/60/60/24/30/12)
+			return fmt.Sprintf(" %.0f year", sec/60/60/24/30/12)
 		},
 		"Now": func() time.Time {
 			return time.Now().In(nocd.Loc)
@@ -76,5 +81,11 @@ func FuncMap(pipelineService nocd.PipelineService, pipelogService nocd.PipeLogSe
 			return o + n
 		},
 		"NumGoroutine": runtime.NumGoroutine,
+		"T": func(localizer *i18n.Localizer, key string, data interface{}) string {
+			return localizer.MustLocalize(&i18n.LocalizeConfig{
+				MessageID:    key,
+				TemplateData: data,
+			})
+		},
 	}
 }

@@ -5,11 +5,11 @@
         <div class="d-flex justify-content-center">
             <form id="formAddRepo" class="form-inline" onsubmit="return addRepoHandler('POST')">
                 <div class="form-group mx-sm-3 mb-2">
-                    <label for="inputName">项目名：</label>
-                    <input required name="name" type="text" class="form-control" id="inputName" placeholder="项目名称">
+                    <label for="inputName">{{T .Localizer "project_name" nil}}</label>
+                    <input required name="name" type="text" class="form-control" id="inputName">
                 </div>
                 <div class="form-group mx-sm-3 mb-2">
-                    <label for="selectPlatform">托管平台：</label>
+                    <label for="selectPlatform">{{T .Localizer "project_platform" nil}}</label>
                     <select name="platform" id="selectPlatform" class="form-control">
                         {{range $k,$v := .platforms}}
                         <option value="{{$k}}">{{$v}}</option>
@@ -17,7 +17,7 @@
                     </select>
                 </div>
                 {{.csrf_token}}
-                <button type="submit" class="btn btn-secondary mb-2 ml-3">添加项目</button>
+                <button type="submit" class="btn btn-secondary mb-2 ml-3">{{T .Localizer "create" nil}}</button>
             </form>
         </div>
     </div>
@@ -30,35 +30,35 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">管理交付流程</h5>
+                    <h5 class="modal-title">{{T .Localizer "pipeline_management" nil}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning" role="alert">
-                        请给您的 Git Repo <b>添加 WebHook</b>，WebHook 地址与密钥在项目名称右边的按钮处复制！
+                        {{T .Localizer "pipeline_management_desc" nil | unsafe}}
                     </div>
                     <form id="formAddPipeline" method="POST" onsubmit="return pipelineHandler(mth)">
                         <input id="inputHDRepoID" name="repo" type="hidden">
                         <input id="inputID" name="id" type="hidden">
                         <div class="form-group">
-                            <label for="iMEditPlName" class="col-form-label">流程备注：</label>
+                            <label for="iMEditPlName" class="col-form-label">{{T .Localizer "remark" nil}}</label>
                             <input required name="name" type="text" class="form-control" id="iMEditPlName">
                         </div>
                         <div class="form-group">
-                            <label for="inputBranch" class="col-form-label">监控分支：</label>
+                            <label for="inputBranch" class="col-form-label">{{T .Localizer "branch" nil}}</label>
                             <input required name="branch" type="text" class="form-control" id="inputBranch"
                                 value="master">
                         </div>
                         <div class="form-group">
-                            <p>响应事件：
-                                <small>（至少选择一个）</small>
+                            <p>{{T .Localizer "event" nil}}
+                                <small>{{T .Localizer "required" nil}}</small>
                             </p>
                             <div class="d-inline" id="listEventCheckbox"></div>
                         </div>
                         <div class="form-group">
-                            <label for="slMPlatform" class="col-form-label">部署服务器：</label>
+                            <label for="slMPlatform" class="col-form-label">{{T .Localizer "nav_server" nil}} </label>
                             <select name="server" class="custom-select my-1 mr-sm-2" id="slMPlatform">
                                 {{range $server := .servers}}
                                 <option value="{{.ID}}">{{.Name}} - {{.Address}}</option>
@@ -66,16 +66,18 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="inputShell" class="col-form-label">执行命令：</label>
-                            <textarea required name="shell" class="form-control" id="inputShell">./nb-deploy</textarea>
+                            <label for="inputShell" class="col-form-label">{{T .Localizer "script" nil}}</label>
+                            <textarea required name="shell" class="form-control"
+                                id="inputShell">bash ./nb-deploy</textarea>
                         </div>
                         {{.csrf_token}}
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button id="btnEditRepo" onclick="saveForm('#formAddPipeline')" class="btn btn-primary">添加
-                    </button>
+                    <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">{{T .Localizer "cancel" nil}}</button>
+                    <button id="btnEditRepo" onclick="saveForm('#formAddPipeline')"
+                        class="btn btn-primary">{{T .Localizer "create" nil}}</button>
                 </div>
             </div>
         </div>
@@ -86,23 +88,23 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">管理项目</h5>
+                    <h5 class="modal-title">{{T .Localizer "project_management" nil}}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="alert alert-warning" role="alert">
-                        删除仓库，其下的 交付流程、日志及 Webhook 将会一并删除。
+                        {{T .Localizer "delete_project_alert" nil}}
                     </div>
                     <form id="formEditRepo" onsubmit="return false;">
                         <input id="inputID" name="id" type="hidden">
                         <div class="form-group">
-                            <label for="inputName" class="col-form-label">项目名称：</label>
+                            <label for="inputName" class="col-form-label">{{T .Localizer "project_name" nil}}</label>
                             <input required name="name" type="text" class="form-control" id="inputName">
                         </div>
                         <div class="form-group">
-                            <label for="selectPlatform">托管平台：</label>
+                            <label for="selectPlatform">{{T .Localizer "project_platform" nil}}</label>
                             <select name="platform" id="selectPlatform" class="form-control">
                                 {{range $k,$v := .platforms}}
                                 <option value="{{$k}}">{{$v}}</option>
@@ -113,9 +115,10 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                    <button id="btnEditRepo" onclick="editRepoHandler('DELETE')" class="btn btn-danger">删除
-                        <button id="btnEditRepo" onclick="editRepoHandler('PATCH')" class="btn btn-primary">更新
+                    <button type="button" class="btn btn-secondary"
+                        data-dismiss="modal">{{T .Localizer "cancel" nil}}</button>
+                    <button id="btnEditRepo" onclick="editRepoHandler('DELETE')" class="btn btn-danger">{{T .Localizer "delete" nil}}
+                        <button id="btnEditRepo" onclick="editRepoHandler('PATCH')" class="btn btn-primary">{{T .Localizer "update" nil}}
                         </button>
                 </div>
             </div>
@@ -135,11 +138,11 @@
                     <div style="min-width: 150px">
                         <button type="button" class="btn btn-sm btn-secondary pr-1 pl-2 copy-btn"
                             data-text="{{$.domain}}/webhook/{{.ID}}" data-ext="protocol_prefix" data-toggle="tooltip"
-                            data-placement="top" title="点击复制 WebHook 地址">
+                            data-placement="top" title='{{T $.Localizer "click_to_copy_webhook_callback" nil}}'>
                             <i class="octicon octicon-plug"></i>
                         </button>
                         <button type="button" class="btn btn-sm btn-secondary pr-1 pl-2 copy-btn"
-                            data-text="{{.Secret}}" data-toggle="tooltip" data-placement="top" title="点击复制 WebHook 密钥">
+                            data-text="{{.Secret}}" data-toggle="tooltip" data-placement="top" title='{{T $.Localizer "click_to_copy_webhook_secret" nil}}'>
                             <i class="octicon octicon-gist-secret"></i>
                         </button>
                         <button class="btn btn-sm btn-secondary pr-1 pl-2" data-toggle="modal" data-target="#modalRepo"
@@ -157,10 +160,10 @@
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">备注</th>
-                                <th scope="col" style="min-width: 90px">最后触发</th>
-                                <th scope="col">状态</th>
-                                <th scope="col">管理</th>
+                                <th scope="col">{{T $.Localizer "remark" nil}}</th>
+                                <th scope="col" style="min-width: 90px">{{T $.Localizer "last_active" nil}}</th>
+                                <th scope="col">{{T $.Localizer "status" nil}}</th>
+                                <th scope="col">{{T $.Localizer "management" nil}}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -172,20 +175,20 @@
                                 <td>{{if eq (len $log.Pusher) 0}}Nobody{{else}}{{$log.Pusher}}{{end}}</td>
                                 <td>
                                     <a href="/pipelog/{{if lt 0 $log.ID }}{{$log.ID}}{{end}}" target="_blank"
-                                        {{if eq $log.Status 1}} class="btn btn-success btn-sm">部署成功
+                                        {{if eq $log.Status 1}} class="btn btn-success btn-sm">{{T $.Localizer "successful" nil}}
                                     </a>
                                     {{else if eq $log.Status 2}}
-                                    class="btn btn-dark btn-sm">服务器错误</a>
+                                    class="btn btn-dark btn-sm">{{T $.Localizer "err_server_connect" nil}}</a>
                                     {{else if eq $log.Status 3}}
-                                    class="btn btn-danger btn-sm">执行错误</a>
+                                    class="btn btn-danger btn-sm">{{T $.Localizer "err_script_execute" nil}}</a>
                                     {{else if eq $log.Status 4}}
-                                    class="btn btn-primary btn-sm">正在运行</a>
+                                    class="btn btn-primary btn-sm">{{T $.Localizer "err_running" nil}}</a>
                                     {{else if eq $log.Status 5}}
-                                    class="btn btn-info btn-sm">人工停止</a>
+                                    class="btn btn-info btn-sm">{{T $.Localizer "err_manual_stop" nil}}</a>
                                     {{else if eq $log.Status 6}}
-                                    class="btn btn-warning btn-sm">执行超时</a>
+                                    class="btn btn-warning btn-sm">{{T $.Localizer "err_execution_timeout" nil}}</a>
                                     {{else}}
-                                    class="btn btn-secondary btn-sm">未知状态</a>
+                                    class="btn btn-secondary btn-sm">{{T $.Localizer "unknown" nil}}</a>
                                     {{end}}
                                 </td>
                                 <td style="min-width: 130px">

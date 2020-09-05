@@ -8,15 +8,14 @@
         <div class="col-md-9 pt-2">
             <div class="card">
                 <div class="card-header">
-                    欢迎您，{{.user.GName}}
+                    {{T .Localizer "admin_welcome" .user}}
                 </div>
                 <div class="card-body">
-                    运行中的 Goroutine：{{NumGoroutine}}<br>
-                    当前内存使用量：{{.memory.Alloc}}<br>
-                    当前内存占用总量：{{.memory.TotalAlloc}}<br>
-                    当前内存占用总量：{{.memory.TotalAlloc}}<br>
-                    下次 GC 回收量：{{.memory.NextGC}}<br>
-                    已执行 GC 次数：{{.memory.NumGC}}<br>
+                    {{T .Localizer "num_of_goruntines" nil}}{{NumGoroutine}}<br>
+                    {{T .Localizer "memory_alloc" nil}}{{.memory.Alloc}}<br>
+                    {{T .Localizer "total_memory_alloc" nil}}{{.memory.TotalAlloc}}<br>
+                    {{T .Localizer "next_gc" nil}}{{.memory.NextGC}}<br>
+                    {{T .Localizer "num_gc" nil}}{{.memory.NumGC}}<br>
                 </div>
             </div>
         </div>

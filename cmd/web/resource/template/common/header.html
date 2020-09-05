@@ -3,17 +3,13 @@
 <html lang="zh">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
     <link rel="shortcut icon" type="image/png" href="/static/image/logo.png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
     <link href="https://cdn.bootcss.com/octicons/4.4.0/font/octicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/static/css/nocd.css?v20200824">
-
-    <title>NoCD —— Go 开源持续交付系统</title>
+    <link rel="stylesheet" href="/static/css/nocd.css?v20200906">
+    <title>NoCD :: {{T .Localizer "site_title" nil}}</title>
 </head>
 
 <body>
@@ -22,11 +18,11 @@
             <h5 class="my-0 mr-md-auto font-weight-normal"><a class="text-secondary" href="/">NoCD</a></h5>
             <nav class="my-2 my-md-0 mr-md-3">
                 <a class="p-2 {{if HasPrefix .router "/server/"}}text-dark{{else}}text-secondary{{end}}"
-                    href="/server/"><i class="octicon octicon-server"></i> 服务器</a>
+                    href="/server/"><i class="octicon octicon-server"></i> {{T .Localizer "nav_server" nil}}</a>
                 <a class="p-2 {{if HasPrefix .router "/repository/"}}text-dark{{else}}text-secondary{{end}}"
-                    href="/repository/"><i class="octicon octicon-repo"></i> 项目</a>
+                    href="/repository/"><i class="octicon octicon-repo"></i> {{T .Localizer "nav_project" nil}}</a>
                 <a class="p-2 {{if HasPrefix .router "/pipelog/"}}text-dark{{else}}text-secondary{{end}}"
-                    href="/pipelog/"><i class="octicon octicon-zap"></i> 交付</a>
+                    href="/pipelog/"><i class="octicon octicon-zap"></i> {{T .Localizer "nav_pipeline" nil}}</a>
             </nav>
             {{if .isLogin}}
             <div class="nav-item dropdown">
@@ -36,15 +32,16 @@
                 </a>
                 <div class="dropdown-menu" style="min-width: auto" aria-labelledby="navbarDropdownMenuLink">
                     {{if .user.IsAdmin}}
-                    <a class="dropdown-item" href="/admin"><i class="octicon octicon-settings"></i> 管理面板</a>
+                    <a class="dropdown-item" href="/admin"><i class="octicon octicon-settings"></i>
+                        {{T .Localizer "nav_dashboard" nil}}</a>
                     <div class="dropdown-divider"></div>
                     {{end}}
                     <button class="dropdown-item" data-toggle="modal" data-target="#modalAccountTransfer"><i
                             class="octicon octicon-sync"></i>
-                        账户迁移</button>
+                        {{T .Localizer "nav_account_migrate" nil}}</button>
                     <div class="dropdown-divider"></div>
                     <button class="dropdown-item" onclick="logout()"><i class="octicon octicon-sign-out"></i>
-                        注销</button>
+                        {{T .Localizer "nav_logout" nil}}</button>
                 </div>
             </div>
             {{else}}
@@ -52,7 +49,7 @@
                 {{.csrf_token}}
             </form>
             <button onclick="saveForm('#loginForm')" class="btn btn-outline-primary"><i
-                    class="octicon octicon-mark-github"></i> 登录
+                    class="octicon octicon-mark-github"></i> {{T .Localizer "nav_login" nil}}
             </button>
             {{end}}
         </div>

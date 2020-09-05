@@ -60,16 +60,16 @@ func init() {
 	}
 	RepoEvents = map[int]map[string]string{
 		RepoPlatGitHub: {
-			string(github.PushEvent): "推送(Push)",
+			string(github.PushEvent): "Push",
 		},
 		RepoPlatBitBucket: {
-			string(bitbucket.PullRequestMergedEvent): "合并(Merge)",
+			string(bitbucket.PullRequestMergedEvent): "Merge",
 		},
 		RepoPlatGitlab: {
-			string(gitlab.PushEvents): "推送(Push)",
+			string(gitlab.PushEvents): "Push",
 		},
 		RepoPlatGogs: {
-			string(gogs.PushEvent): "推送(Push)",
+			string(gogs.PushEvent): "Push",
 		},
 	}
 }

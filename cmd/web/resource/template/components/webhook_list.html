@@ -8,7 +8,7 @@
                     <div class="d-flex justify-content-between">
                         <h5 class="mt-1 limit-text-length">
                             <i class="octicon octicon-plug"></i>
-                            Webhook 管理
+                            {{T $.Localizer "webhook_management" nil}}
                         </h5>
                         <div>
                             <button class="btn btn-sm btn-secondary pr-1 pl-2" data-method="POST" data-toggle="modal"
@@ -24,9 +24,9 @@
                                     <th scope="col">#</th>
                                     <th scope="col">URL</th>
                                     <th scope="col">SSL</th>
-                                    <th scope="col">推送成功消息</th>
-                                    <th scope="col">启用</th>
-                                    <th scope="col">管理</th>
+                                    <th scope="col">{{T $.Localizer "push_success_message" nil}}</th>
+                                    <th scope="col">{{T $.Localizer "enable" nil}}</th>
+                                    <th scope="col">{{T $.Localizer "management" nil}}</th>
                                 </tr>
                             </thead>
                             <tbody>

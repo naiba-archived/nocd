@@ -60,3 +60,7 @@ a:hover {
 #console .line-number {
     color: green;
 }
+
+.form-group label {
+    margin-right: 1rem;
+}
