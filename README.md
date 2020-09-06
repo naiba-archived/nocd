@@ -4,7 +4,7 @@
 
 **NoCD** is a lightweight and controllable continuous delivery system implemented by Go.
 
-## Interface preview
+## Preview
 
 | ![首页截图](https://github.com/naiba/nocd/raw/master/README/首页截图.png) | ![服务器管理](https://github.com/naiba/nocd/raw/master/README/服务器管理.png) | ![项目管理](https://github.com/naiba/nocd/raw/master/README/项目管理.png) |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -19,7 +19,7 @@
 - Delivery record: You can view the deployment record, and the user can stop the deployment process
 - Management panel: View system status, manage users, and manage deployment processes
 
-## Deployment means north
+## Installation Guide
 
 ### Docker
 
@@ -73,7 +73,7 @@
 
 6. Set the callback in `GitHub`: `http(s)://your_domain_name/oauth2/callback`
 
-## Common issue
+## FAQs
 
 1. Why does my deployment script always fail to execute or not executed at all?
 
