@@ -9,7 +9,7 @@ package nocd
 type Pipeline struct {
 	ID           uint   `form:"id" binding:"min=0"`
 	Name         string `form:"name" binding:"required,min=1,max=12"`
-	Branch       string `form:"branch" binding:"required,alphanum,min=1,max=30"`
+	Branch       string `form:"branch" binding:"required,min=1,max=30"`
 	Events       string
 	Shell        string `form:"shell" binding:"required,min=3,max=1000"`
 	UserID       uint
