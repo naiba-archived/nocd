@@ -34,7 +34,7 @@
 2. Run NoCD
 
    ```shell
-   docker run -d --name=nocd -p 8000:8000 -v /data/nocd/:/data/conf docker.pkg.github.com/naiba/dockerfiles/nocd:latest
+   docker run -d --name=nocd -p 8000:8000 -v /data/nocd/:/data/conf docker.pkg.github.com/naiba/nocd/web:latest
    ```
 
 ### Source code compilation
