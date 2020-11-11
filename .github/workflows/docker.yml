@@ -10,10 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+
       - name: docker build & push
-        env:
-          DockerPassword: ${{ secrets.PACKAGE_TOKEN }}
         run: |
-          docker build --no-cache -t docker.pkg.github.com/naiba/dockerfiles/nocd .
-          docker login -u naiba -p $DockerPassword docker.pkg.github.com
-          docker push docker.pkg.github.com/naiba/dockerfiles/nocd
+          docker build -t docker.pkg.github.com/${{ github.repository }}/web .
+          docker push docker.pkg.github.com/${{ github.repository }}/web
