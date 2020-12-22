@@ -1,57 +1,56 @@
-## NoCD Continuous Delivery System
+# NoCD 持续交付系统
 
-![Build Status](https://github.com/naiba/nocd/workflows/Build%20Docker%20Image/badge.svg) <a href="README_zh-CN.md">
-    <img height="20px" src="https://img.shields.io/badge/CN-flag.svg?color=555555&style=flat&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjAwIDgwMCIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPg0KPHBhdGggZmlsbD0iI2RlMjkxMCIgZD0ibTAsMGgxMjAwdjgwMGgtMTIwMHoiLz4NCjxwYXRoIGZpbGw9IiNmZmRlMDAiIGQ9Im0tMTYuNTc5Niw5OS42MDA3bDIuMzY4Ni04LjEwMzItNi45NTMtNC43ODgzIDguNDM4Ni0uMjUxNCAyLjQwNTMtOC4wOTI0IDIuODQ2Nyw3Ljk0NzkgOC40Mzk2LS4yMTMxLTYuNjc5Miw1LjE2MzQgMi44MTA2LDcuOTYwNy02Ljk3NDctNC43NTY3LTYuNzAyNSw1LjEzMzF6IiB0cmFuc2Zvcm09Im1hdHJpeCg5LjkzMzUyIC4yNzc0NyAtLjI3NzQ3IDkuOTMzNTIgMzI0LjI5MjUgLTY5NS4yNDE1KSIvPg0KPHBhdGggZmlsbD0iI2ZmZGUwMCIgaWQ9InN0YXIiIGQ9Im0zNjUuODU1MiwzMzIuNjg5NWwyOC4zMDY4LDExLjM3NTcgMTkuNjcyMi0yMy4zMTcxLTIuMDcxNiwzMC40MzY3IDI4LjI1NDksMTEuNTA0LTI5LjU4NzIsNy40MzUyLTIuMjA5NywzMC40MjY5LTE2LjIxNDItMjUuODQxNS0yOS42MjA2LDcuMzAwOSAxOS41NjYyLTIzLjQwNjEtMTYuMDk2OC0yNS45MTQ4eiIvPg0KPGcgZmlsbD0iI2ZmZGUwMCI+DQo8cGF0aCBkPSJtNTE5LjA3NzksMTc5LjMxMjlsLTMwLjA1MzQtNS4yNDE4LTE0LjM5NDUsMjYuODk3Ni00LjMwMTctMzAuMjAyMy0zMC4wMjkzLTUuMzc4MSAyNy4zOTQ4LTEzLjQyNDItNC4xNjQ3LTMwLjIyMTUgMjEuMjMyNiwyMS45MDU3IDI3LjQ1NTQtMTMuMjk5OC0xNC4yNzIzLDI2Ljk2MjcgMjEuMTMzMSwyMi4wMDE3eiIvPg0KPHBhdGggZD0ibTQ1NS4yNTkyLDMxNS45Nzk1bDkuMzczNC0yOS4wMzE0LTI0LjYzMjUtMTcuOTk3OCAzMC41MDctLjA1NjYgOS41MDUtMjguOTg4NiA5LjQ4MSwyOC45OTY0IDMwLjUwNywuMDgxOC0yNC42NDc0LDE3Ljk3NzQgOS4zNDkzLDI5LjAzOTItMjQuNzE0LTE3Ljg4NTgtMjQuNzI4OCwxNy44NjUzeiIvPg0KPC9nPg0KPHVzZSB4bGluazpocmVmPSIjc3RhciIgdHJhbnNmb3JtPSJtYXRyaXgoLjk5ODYzIC4wNTIzNCAtLjA1MjM0IC45OTg2MyAxOS40MDAwNSAtMzAwLjUzNjgxKSIvPg0KPC9zdmc+DQo=">
-  </a>
+![构建状态](https://github.com/naiba/nocd/workflows/Build%20Docker%20Image/badge.svg) <a href="README_en-US.md">
+    <img height="20px" src="https://img.shields.io/badge/EN-flag.svg?color=555555&style=flat&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2aWV3Qm94PSIwIDAgNjAgMzAiIGhlaWdodD0iNjAwIj4NCjxkZWZzPg0KPGNsaXBQYXRoIGlkPSJ0Ij4NCjxwYXRoIGQ9Im0zMCwxNWgzMHYxNXp2MTVoLTMwemgtMzB2LTE1enYtMTVoMzB6Ii8+DQo8L2NsaXBQYXRoPg0KPC9kZWZzPg0KPHBhdGggZmlsbD0iIzAwMjQ3ZCIgZD0ibTAsMHYzMGg2MHYtMzB6Ii8+DQo8cGF0aCBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNiIgZD0ibTAsMGw2MCwzMG0wLTMwbC02MCwzMCIvPg0KPHBhdGggc3Ryb2tlPSIjY2YxNDJiIiBzdHJva2Utd2lkdGg9IjQiIGQ9Im0wLDBsNjAsMzBtMC0zMGwtNjAsMzAiIGNsaXAtcGF0aD0idXJsKCN0KSIvPg0KPHBhdGggc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEwIiBkPSJtMzAsMHYzMG0tMzAtMTVoNjAiLz4NCjxwYXRoIHN0cm9rZT0iI2NmMTQyYiIgc3Ryb2tlLXdpZHRoPSI2IiBkPSJtMzAsMHYzMG0tMzAtMTVoNjAiLz4NCjwvc3ZnPg0K">
+</a>
 
-**NoCD** is a lightweight and controllable continuous delivery system implemented by Go.
+**NoCD** 是一个轻量可控的持续交付系统。
 
-## Preview
+## 界面预览
 
 | ![首页截图](https://github.com/naiba/nocd/raw/master/README/首页截图.png) | ![服务器管理](https://github.com/naiba/nocd/raw/master/README/服务器管理.png) | ![项目管理](https://github.com/naiba/nocd/raw/master/README/项目管理.png) |
 | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | ![交付记录](https://github.com/naiba/nocd/raw/master/README/交付记录.png) | ![管理中心](https://github.com/naiba/nocd/raw/master/README/查看日志.png) | ![查看日志](https://github.com/naiba/nocd/raw/master/README/管理中心.png)  |
 
-## Features
+## 功能特色
 
-- Multi Language support: English, Chinese (PR is welcome)
-- Server: Multiple deployment servers can be added
-- Project: Support parsing Webhooks of various popular Git hosting platforms
-- Notification: Flexible custom Webhook
-- Delivery record: You can view the deployment record, and the user can stop the deployment process
-- Management panel: View system status, manage users, and manage deployment processes
+- 服务器：可以添加多个部署服务器
+- 项目：支持解析各种流行 Git 托管平台的 Webhook
+- 通知：灵活的自定义 Webhook
+- 交付记录：可以查看部署记录，用户可以停止部署中的流程
+- 管理面板：查看系统状态，管理用户，管理部署中的流程
 
-## Installation Guide
+## 部署指北
 
 ### Docker
 
-1. Create a configuration file (eg `/data/nocd` folder)
+1. 创建配置文件（如`/data/nocd`文件夹）
 
    ```shell
    nano /data/nocd/app.ini
    ```
 
-   Refer to the following for the content of the file (`web_listen = 0.0.0.0:8000` configuration do not change)
+   文件内容参考下面（ `web_listen = 0.0.0.0:8000` 配置不要改）
 
-2. Run NoCD
+2. 运行NoCD
 
    ```shell
    docker run -d --name=nocd -p 8000:8000 -v /data/nocd/:/data/conf ghcr.io/naiba/nocd:latest
    ```
 
-### Source code compilation
+### 源码编译
 
-1. Clone source code
+1. Clone 源代码
 
-2. Enter the application directory `cd nocd/cmd/web`
+2. 进入应用目录 `cd nocd/cmd/web`
 
-3. Compile the binary
+3. 编译二进制
 
    ```shell
    go build
    ```
 
-4. Create a configuration file in `conf/app.ini`
+4. 在 `conf/app.ini` 创建配置文件
 
    ```ini
    [nocd]
@@ -61,31 +60,31 @@
    web_listen = 0.0.0.0:8000
    loc = Asia/Shanghai
    [third_party]
+   google_analysis = "NB-XXXXXX-1" # optional
    github_oauth2_client_id = example
    github_oauth2_client_secret = example
-   google_analysis = "NB-XXXXXX-1" # optional
    sentry_dsn = "https://example:xx@example.io/project_id" # optional
    ```
 
-5. Run
+5. 运行
 
    ```shell
    ./web
    ```
 
-6. Set the callback in `GitHub`: `http(s)://your_domain_name/oauth2/callback`
+6. 在 `GitHub` 设置回调：`http(s)://your_domain_name/oauth2/callback`
 
-## FAQs
+## 常见问题
 
-1. Why does my deployment script always fail to execute or not executed at all?
+1. 为什么我的部署脚本总是执行失败 或者 根本没有执行？
 
-    > Please check whether your PATH path is imported, it is recommended to export the path in advance, it will not be automatically deployed
+    > 请检查您的 PATH 路径是否引入，建议提前 export 一下路径，自动部署的时候不会
     >
-    > `source .bash_profile`.
+    > `source .bash_profile`。
 
-2. How to keep running in the background?
+2. 如何保持后台运行？
 
-    > You can use `systemd`. It is more recommended to run in docker mode.
+    > 可以使用 `systemd` 。 更推荐使用docker方式运行。
 
 ## License
 

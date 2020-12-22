@@ -257,9 +257,11 @@ func procWebhook(wg *sync.WaitGroup, w nocd.Webhook, status string, pipeline *no
 	if err == nil {
 		if w.RequestMethod == nocd.WebhookRequestMethodGET {
 			// GET 请求的 Webhook
+			var queryValue = reqURL.Query()
 			for k, v := range data {
-				reqURL.Query().Set(k, replaceParamsInString(v, status, pipeline, deployLog))
+				queryValue.Set(k, replaceParamsInString(v, status, pipeline, deployLog))
 			}
+			reqURL.RawQuery = queryValue.Encode()
 			resp, err = client.Get(reqURL.String())
 		} else {
 			// POST 请求的 Webhook
