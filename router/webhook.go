@@ -6,12 +6,7 @@
 package router
 
 import (
-	"crypto/tls"
-	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"net/http"
-	"net/url"
 	"reflect"
 	"strconv"
 	"strings"
@@ -225,7 +220,7 @@ func deploy(pipeline nocd.Pipeline, who string) {
 
 func procWebhook(wg *sync.WaitGroup, w nocd.Webhook, status string, pipeline *nocd.Pipeline, deployLog *nocd.PipeLog) {
 	defer wg.Done()
-	var verifySSL, pushSuccess bool
+	var pushSuccess bool
 
 	// 检查 Webhook 状态
 	if w.Enable == nil || !*w.Enable {
@@ -237,90 +232,9 @@ func procWebhook(wg *sync.WaitGroup, w nocd.Webhook, status string, pipeline *no
 	if !pushSuccess && deployLog.Status == nocd.PipeLogStatusSuccess {
 		return
 	}
-	if w.VerifySSL != nil && *w.VerifySSL {
-		verifySSL = true
-	}
 
 	nocd.Logger().Infoln("Webhook 触发", w.ID, w.URL)
-	var err error
-	transCfg := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: verifySSL},
-	}
-	client := &http.Client{Transport: transCfg, Timeout: time.Minute * 10}
-	var reqURL *url.URL
-	reqURL, err = url.Parse(w.URL)
-	var data map[string]string
-	if err == nil && (w.RequestMethod == nocd.WebhookRequestMethodGET || w.RequestType == nocd.WebhookRequestTypeForm) {
-		err = json.Unmarshal([]byte(w.RequestBody), &data)
-	}
-	var resp *http.Response
-	if err == nil {
-		if w.RequestMethod == nocd.WebhookRequestMethodGET {
-			// GET 请求的 Webhook
-			var queryValue = reqURL.Query()
-			for k, v := range data {
-				queryValue.Set(k, replaceParamsInString(v, status, pipeline, deployLog))
-			}
-			reqURL.RawQuery = queryValue.Encode()
-			resp, err = client.Get(reqURL.String())
-		} else {
-			// POST 请求的 Webhook
-			if w.RequestType == nocd.WebhookRequestTypeForm {
-				params := url.Values{}
-				for k, v := range data {
-					params.Add(k, replaceParamsInString(v, status, pipeline, deployLog))
-				}
-				resp, err = client.PostForm(reqURL.String(), params)
-			} else {
-				jsonValue := replaceParamsInJSON(w.RequestBody, status, pipeline, deployLog)
-				nocd.Logger().Infof("Webhook Post JSON: %s", jsonValue)
-				if err == nil {
-					resp, err = client.Post(reqURL.String(), "application/json", strings.NewReader(jsonValue))
-				}
-			}
-		}
-	}
-	if err != nil {
+	if err := w.Send(status, pipeline, deployLog); err != nil {
 		nocd.Logger().Error(err)
-		return
 	}
-	if resp != nil && (resp.StatusCode < 200 || resp.StatusCode > 299) {
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			nocd.Logger().Error(err)
-		}
-		nocd.Logger().Error(string(body))
-	}
-}
-
-func replaceParamsInString(str string, status string, pipeline *nocd.Pipeline, pipelog *nocd.PipeLog) string {
-	str = strings.ReplaceAll(str, "#Pusher#", pipelog.Pusher)
-	str = strings.ReplaceAll(str, "#Log#", pipelog.Log)
-	str = strings.ReplaceAll(str, "#Status#", status)
-	str = strings.ReplaceAll(str, "#PipelineName#", pipeline.Name)
-	str = strings.ReplaceAll(str, "#PipelineID#", fmt.Sprintf("%d", pipeline.ID))
-	str = strings.ReplaceAll(str, "#StartedAt#", pipelog.StartedAt.String())
-	str = strings.ReplaceAll(str, "#StoppedAt#", pipelog.StoppedAt.String())
-	return str
-}
-
-func replaceParamsInJSON(str string, status string, pipeline *nocd.Pipeline, pipelog *nocd.PipeLog) string {
-	str = strings.ReplaceAll(str, "#Pusher#", jsonEscape(pipelog.Pusher))
-	str = strings.ReplaceAll(str, "#Log#", jsonEscape(pipelog.Log))
-	str = strings.ReplaceAll(str, "#Status#", jsonEscape(status))
-	str = strings.ReplaceAll(str, "#PipelineName#", jsonEscape(pipeline.Name))
-	str = strings.ReplaceAll(str, "#PipelineID#", jsonEscape(pipeline.ID))
-	str = strings.ReplaceAll(str, "#StartedAt#", jsonEscape(pipelog.StartedAt.String()))
-	str = strings.ReplaceAll(str, "#StoppedAt#", jsonEscape(pipelog.StoppedAt.String()))
-	return str
-}
-
-func jsonEscape(raw interface{}) string {
-	b, _ := json.Marshal(raw)
-	strb := string(b)
-	if strings.HasPrefix(strb, "\"") {
-		return strb[1 : len(strb)-1]
-	}
-	return strb
 }

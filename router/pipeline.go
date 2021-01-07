@@ -7,7 +7,6 @@ package router
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -40,20 +39,9 @@ func pipelineWebhook(c *gin.Context) {
 		c.String(http.StatusForbidden, "数据不规范，请检查后重新填写"+err.Error())
 		return
 	}
-	var err error
-	if wb.RequestType == nocd.WebhookRequestTypeForm {
-		var kv map[string]string
-		err = json.Unmarshal([]byte(wb.RequestBody), &kv)
-	} else {
-		var data interface{}
-		jsonValue := replaceParamsInJSON(wb.RequestBody, "部署成功", &nocd.Pipeline{}, &nocd.PipeLog{})
-		err = json.Unmarshal([]byte(jsonValue), &data)
-		if err != nil {
-			err = fmt.Errorf("JSON解析有误，请确认：%s", jsonValue)
-		}
-	}
+	err := wb.Send("测试消息", &nocd.Pipeline{}, &nocd.PipeLog{})
 	if err != nil {
-		c.String(http.StatusForbidden, "输入不符合规范：Body解析错误"+err.Error())
+		c.String(http.StatusForbidden, "测试消息发送失败"+err.Error())
 		return
 	}
 	if wb.RequestType < nocd.WebhookRequestTypeJSON || wb.RequestType > nocd.WebhookRequestTypeForm || wb.RequestMethod < nocd.WebhookRequestMethodGET || wb.RequestMethod > nocd.WebhookRequestMethodPOST {
