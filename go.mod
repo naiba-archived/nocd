@@ -9,7 +9,7 @@ require (
 	github.com/getsentry/raven-go v0.2.0
 	github.com/gin-contrib/sentry v0.0.0-20191119142041-ff0e9556d1b7
 	github.com/gin-contrib/sessions v0.0.3
-	github.com/gin-gonic/gin v1.6.2
+	github.com/gin-gonic/gin v1.7.0
 	github.com/gogits/go-gogs-client v0.0.0-20200308113729-26bb60b9a908 // indirect
 	github.com/gogs/go-gogs-client v0.0.0-20200308113729-26bb60b9a908
 	github.com/google/go-github v17.0.0+incompatible
@@ -21,7 +21,7 @@ require (
 	github.com/sirupsen/logrus v1.5.0
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/utrack/gin-csrf v0.0.0-20190424104817-40fb8d2c8fca
-	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
+	golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 	golang.org/x/text v0.3.2
 	gopkg.in/go-playground/webhooks.v5 v5.15.0
