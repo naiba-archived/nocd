@@ -8,7 +8,7 @@ require (
 	github.com/getsentry/raven-go v0.2.0
 	github.com/gin-contrib/sentry v0.0.0-20191119142041-ff0e9556d1b7
 	github.com/gin-contrib/sessions v0.0.3
-	github.com/gin-gonic/gin v1.6.2
+	github.com/gin-gonic/gin v1.7.0
 	github.com/gogs/go-gogs-client v0.0.0-20200308113729-26bb60b9a908
 	github.com/google/go-github v17.0.0+incompatible
 	github.com/jinzhu/gorm v1.9.12
@@ -30,7 +30,7 @@ require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.13.0 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
-	github.com/go-playground/validator/v10 v10.2.0 // indirect
+	github.com/go-playground/validator/v10 v10.4.1 // indirect
 	github.com/gogits/go-gogs-client v0.0.0-20200308113729-26bb60b9a908 // indirect
 	github.com/golang/protobuf v1.3.3 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
